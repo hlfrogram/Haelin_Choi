@@ -1,0 +1,868 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#e9e5db">
+<title>나와 닮은 철학자 찾기</title>
+<meta name="description" content="열두 가지 상황에서 고른 답으로, 서른두 명의 철학자 중 나와 가장 닮은 한 사람을 찾아봅니다.">
+<style>
+:root {
+  --page: #e9e5db; --ink: #1a1915; --gold: #c09a55; --gold-btn: #dbb871; --cream: #f5efe2;
+  --muted: rgba(245, 239, 226, .62); --line: rgba(192, 154, 85, .5);
+  --serif: "Nanum Myeongjo", "Noto Serif KR", "Noto Serif CJK KR", "AppleMyungjo", "Batang", serif;
+  --sans: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--page); color: var(--ink); font-family: var(--sans); -webkit-text-size-adjust: 100%;
+  padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px); }
+button { font-family: inherit; }
+.stage { max-width: 460px; margin: 0 auto; padding: 14px 12px 40px; }
+.card { --n: 15px; position: relative; color: var(--cream); border: 7px solid var(--gold); padding: 30px 22px;
+  background-origin: border-box; background-clip: border-box;
+  background:
+    radial-gradient(circle at 0 0, var(--page) 0 var(--n), var(--gold) var(--n) calc(var(--n) + 3px), transparent calc(var(--n) + 3px)) top left / 44px 44px no-repeat,
+    radial-gradient(circle at 100% 0, var(--page) 0 var(--n), var(--gold) var(--n) calc(var(--n) + 3px), transparent calc(var(--n) + 3px)) top right / 44px 44px no-repeat,
+    radial-gradient(circle at 0 100%, var(--page) 0 var(--n), var(--gold) var(--n) calc(var(--n) + 3px), transparent calc(var(--n) + 3px)) bottom left / 44px 44px no-repeat,
+    radial-gradient(circle at 100% 100%, var(--page) 0 var(--n), var(--gold) var(--n) calc(var(--n) + 3px), transparent calc(var(--n) + 3px)) bottom right / 44px 44px no-repeat,
+    var(--ink); }
+.card, .modal p, .toast { word-break: keep-all; overflow-wrap: break-word; }
+.card + .card { margin-top: 18px; }
+.rule { height: 1px; background: var(--line); margin: 18px 0; border: 0; }
+.serif { font-family: var(--serif); }
+
+/* 시작 화면 */
+.start { text-align: center; padding-top: 38px; }
+.kicker { margin: 0 0 14px; color: var(--muted); font-size: 14px; letter-spacing: .04em; }
+.title { margin: 0; font-family: var(--serif); font-weight: 800; line-height: 1.12; }
+.title .gold { display: block; color: var(--gold); font-size: clamp(32px, 9.5vw, 44px); }
+.title .main { display: block; color: var(--cream); font-size: clamp(46px, 14vw, 62px); }
+.lead { margin: 0; font-size: 17px; }
+.note { margin: 22px 0 6px; font-size: 17px; font-weight: 700; line-height: 1.5; }
+.meta { margin: 0; color: var(--muted); font-size: 14px; }
+.ornament { display: block; width: 62%; max-width: 250px; margin: 26px auto 6px; }
+.btn-gold { display: block; width: 100%; margin-top: 18px; padding: 18px; border: 0; border-radius: 4px; cursor: pointer;
+  background: var(--gold-btn); color: var(--ink); font-size: 22px; font-weight: 800;
+  box-shadow: 0 5px 0 #8a6f3c, 0 12px 24px rgba(0, 0, 0, .16); }
+.btn-gold:active { transform: translateY(2px); box-shadow: 0 3px 0 #8a6f3c; }
+.link { display: block; margin: 18px 2px 0; padding: 4px 0; border: 0; background: none; color: #6f6a5c; font-size: 14px;
+  text-decoration: underline; cursor: pointer; }
+
+/* 질문 화면 */
+.quiz { display: flex; flex-direction: column; min-height: calc(100vh - 30px); min-height: calc(100dvh - 30px); }
+.q-meta { display: flex; justify-content: space-between; color: var(--gold-btn); font-size: 14px; letter-spacing: .06em; }
+.q-title { margin: 8px 0 0; color: var(--gold); font-family: var(--serif); font-size: 32px; line-height: 1.2; }
+.q-text { margin: 0; font-family: var(--serif); font-size: 22px; font-weight: 700; line-height: 1.6; }
+.q-prompt { margin: 14px 0 0; color: var(--muted); font-size: 16px; }
+.spacer { flex: 1; min-height: 24px; }
+.timer { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; color: var(--gold-btn); font-size: 14px; }
+.timer .bar { flex: 1; height: 3px; background: rgba(192, 154, 85, .25); }
+.timer .bar i { display: block; height: 100%; width: 100%; background: var(--gold-btn); }
+.options { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.options li { border-bottom: 1px solid var(--line); }
+.options button { display: block; width: 100%; padding: 18px 4px; border: 0; background: none; text-align: left; cursor: pointer;
+  color: var(--cream); font-family: var(--serif); font-size: 18px; line-height: 1.5; }
+.options button:hover { background: rgba(192, 154, 85, .08); }
+.options button:focus-visible, .btn-gold:focus-visible, .link:focus-visible { outline: 2px solid var(--gold-btn); outline-offset: 2px; }
+.options .no { margin-right: 10px; color: var(--gold); }
+
+/* 모달·토스트 */
+.modal { position: fixed; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center;
+  padding: 20px; background: rgba(26, 25, 21, .6); }
+.modal .card { width: 100%; max-width: 420px; }
+.modal h2 { margin: 0 0 12px; color: var(--gold); font-family: var(--serif); font-size: 24px; }
+.modal p { margin: 0 0 12px; font-size: 15px; line-height: 1.6; }
+.toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 20; max-width: 90vw;
+  transform: translateX(-50%); padding: 12px 18px; background: var(--ink); color: var(--cream); border: 1px solid var(--gold);
+  border-radius: 4px; font-size: 15px; word-break: break-all; }
+
+/* 결과 화면 */
+.hero { text-align: center; }
+.result-name { margin: 0; font-family: var(--serif); font-size: clamp(38px, 11vw, 52px); font-weight: 800; line-height: 1.15; }
+.match-pct { margin: 0; color: var(--gold-btn); font-size: 22px; font-weight: 800; }
+.result-years { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
+.result-quote { margin: 4px 0 8px; font-family: var(--serif); font-size: 21px; font-weight: 700; line-height: 1.55; }
+.result-tagline { margin: 0; color: var(--muted); font-size: 15px; }
+.emblem { display: block; width: 64%; max-width: 260px; margin: 22px auto 0; }
+.btn-dark { display: block; width: 100%; margin-top: 18px; padding: 17px; border: 0; background: var(--ink); color: var(--cream);
+  font-size: 17px; font-weight: 800; cursor: pointer; }
+.btn-row { display: flex; gap: 10px; margin-top: 10px; }
+.btn-line { flex: 1; padding: 15px 8px; border: 2px solid var(--ink); background: transparent; color: var(--ink);
+  font-size: 16px; font-weight: 700; cursor: pointer; }
+.btn-dark:focus-visible, .btn-line:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.btn-row + .card { margin-top: 22px; }
+.h { margin: 26px 0 10px; color: var(--gold); font-family: var(--serif); font-size: 24px; }
+.h:first-child { margin-top: 0; }
+.bio, .work { margin: 0; font-family: var(--serif); font-size: 17px; line-height: 1.7; }
+.thoughts { border-top: 1px solid var(--line); }
+.row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.side { color: var(--muted); font-size: 15px; }
+.side.right { text-align: right; }
+.side.on { color: var(--cream); font-weight: 800; }
+.dots { display: flex; gap: 18px; }
+.dot { width: 14px; height: 14px; border-radius: 50%; background: #3b3426; }
+.dot.me { background: var(--gold-btn); }
+.dot.phil { box-shadow: 0 0 0 3px var(--ink), 0 0 0 5px var(--cream); }
+.legend { display: flex; align-items: center; gap: 8px; margin: 14px 0 0; color: var(--muted); font-size: 14px; }
+.key { display: inline-block; width: 12px; height: 12px; margin-left: 6px; border-radius: 50%; background: #3b3426; }
+.key.me { background: var(--gold-btn); }
+.key.phil { box-shadow: 0 0 0 2px var(--cream); }
+.minis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.mini { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }
+.mini .emblem { width: 100%; max-width: none; margin: 0 0 8px; }
+.mini .label { color: var(--muted); font-size: 12px; }
+.mini .name { font-family: var(--serif); font-size: 17px; font-weight: 800; line-height: 1.3; }
+.mini .pct { color: var(--gold-btn); font-size: 14px; }
+.critique { margin: 22px 0 0; font-family: var(--serif); font-size: 20px; font-weight: 700; line-height: 1.55; }
+.critique-by { margin: 8px 0 0; color: var(--muted); font-size: 14px; }
+
+/* 친구 비교 */
+.invite { margin: 16px 0 0; padding: 12px 10px; border: 1px solid var(--line); color: var(--gold-btn); font-size: 14px; line-height: 1.6; }
+.compare-pct { margin: 0; color: var(--gold-btn); font-family: var(--serif); font-size: 26px; font-weight: 800; }
+.compare-sub { margin: 8px 0 0; color: var(--muted); font-size: 15px; }
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// 철학자 32명. years·place·work는 사실 정보, 나머지 문구는 이 프로젝트에서 새로 쓴 것.
+const PHILOSOPHERS = [
+  { id: "socrates", name: "소크라테스", years: "기원전 470~399", place: "그리스(아테네)", vector: [2,4,1,4,1],
+    quote: "따져 묻지 않는 삶은 살아볼 만한 삶이라 하기 어렵다.",
+    tagline: "묻는 일을 멈추지 않은 철학자",
+    bio: "아테네 광장을 돌며 사람들에게 질문을 던졌다. 아는 척하는 이들의 허점을 드러내다 고발당했고, 재판 끝에 독배를 받았다. 글은 남기지 않아 제자들의 기록으로 전해진다.",
+    work: "직접 저서 없음 (플라톤이 기록한 『변론』)",
+    critique: "답을 안다고 했지? 그럼 이유를 세 번만 더 설명해 보게." },
+  { id: "plato", name: "플라톤", years: "기원전 427~347", place: "그리스(아테네)", vector: [1,4,1,1,4],
+    quote: "눈에 보이는 것 너머에 변하지 않는 참모습이 있다.",
+    tagline: "이데아로 세상을 설명한 철학자",
+    bio: "소크라테스의 제자로, 아카데메이아라는 학교를 세워 학문을 가르쳤다. 대화 형식으로 철학을 썼고 이상적인 나라의 모습을 그려 보였다. 서양 철학 전체의 뿌리라 불린다.",
+    work: "『국가』",
+    critique: "자네 선택은 벽에 비친 그림자만 보고 내린 결정 같군." },
+  { id: "aristotle", name: "아리스토텔레스", years: "기원전 384~322", place: "그리스(스타게이로스)", vector: [1,4,4,2,3],
+    quote: "좋은 삶은 올바른 습관을 거듭하는 데서 만들어진다.",
+    tagline: "중용을 말한 철학자",
+    bio: "플라톤의 학교에서 20년 가까이 공부한 뒤 자신의 학교 리케이온을 세웠다. 논리학, 윤리학, 생물학 등 거의 모든 분야를 체계적으로 다뤘다. 알렉산드로스 대왕의 스승이기도 했다.",
+    work: "『니코마코스 윤리학』",
+    critique: "극단으로만 달리지 말고 알맞은 지점을 찾는 연습부터 하게." },
+  { id: "epicurus", name: "에피쿠로스", years: "기원전 341~270", place: "그리스(사모스)", vector: [3,2,4,4,5],
+    quote: "좋은 친구와 소박한 식탁이면 마음은 충분히 평온하다.",
+    tagline: "고요한 즐거움을 권한 철학자",
+    bio: "아테네 변두리에 '정원'이라 불린 공동체를 만들어 친구들과 함께 살았다. 그가 말한 쾌락은 사치가 아니라 고통과 불안이 없는 상태였다. 죽음을 두려워할 이유가 없다고 가르쳤다.",
+    work: "『주요 교설』",
+    critique: "그렇게 바쁘게 사는 동안 정작 즐거운 순간은 몇 번이나 챙겼나?" },
+  { id: "diogenes", name: "디오게네스", years: "기원전 약 412~323", place: "그리스(시노페)", vector: [4,1,4,5,1],
+    quote: "체면과 관습을 벗어던질 때 사람은 비로소 자유로워진다.",
+    tagline: "통 속에서 살았다고 전해지는 철학자",
+    bio: "집 없이 거리에서 지내며 관습과 허세를 거침없이 비웃었다. 알렉산드로스 대왕 앞에서도 햇빛이나 가리지 말라고 했다는 일화가 전한다. 소박한 삶 자체를 철학으로 삼았다.",
+    work: "직접 저서 없음 (『그리스 철학자 열전』 속 일화)",
+    critique: "남들이 박수 쳐 줄 길만 골라 온 건 아닌가?" },
+  { id: "epictetus", name: "에픽테토스", years: "약 55~135", place: "로마 제국(히에라폴리스)", vector: [1,2,2,2,4],
+    quote: "내 힘으로 바꿀 수 있는 일에만 마음을 쓰는 것이 평온의 시작이다.",
+    tagline: "노예에서 스토아 철학의 스승이 된 철학자",
+    bio: "노예로 태어났지만 자유를 얻은 뒤 철학을 가르쳤다. 우리가 통제할 수 있는 것과 없는 것을 구분하라고 거듭 강조했다. 가르침은 제자 아리아노스의 기록으로 전해진다.",
+    work: "『엥케이리디온』",
+    critique: "바꿀 수 없는 일에 쓴 밤이 며칠인지 세어 본 적 있나?" },
+  { id: "marcus-aurelius", name: "마르쿠스 아우렐리우스", years: "121~180", place: "로마 제국(로마)", vector: [1,5,2,1,3],
+    quote: "오늘 맡은 일을 성실히 해내는 것으로 하루는 충분하다.",
+    tagline: "황제이면서 스토아 철학자였던 사람",
+    bio: "로마 제국의 황제로 전쟁터와 궁정을 오가며 일했다. 틈틈이 스스로를 다잡는 글을 써 두었고, 그것이 훗날 책으로 묶였다. 의무와 절제를 삶의 중심에 두었다.",
+    work: "『명상록』",
+    critique: "하기 싫은 일 앞에서 핑계를 찾는 순간 자네는 이미 한 발 물러선 걸세." },
+  { id: "augustine", name: "아우구스티누스", years: "354~430", place: "로마 제국(히포)", vector: [4,4,1,1,4],
+    quote: "마음은 참된 안식을 찾기 전까지 가만히 있지 못한다.",
+    tagline: "방황 끝에 신앙을 철학으로 풀어낸 철학자",
+    bio: "젊은 시절 방황과 쾌락에 빠졌다가 회심해 기독교 사상가가 되었다. 자신의 삶을 솔직하게 되돌아본 글로 이름을 남겼다. 시간과 의지에 대한 사유로도 유명하다.",
+    work: "『고백록』",
+    critique: "자네가 그토록 쫓는 것이 정말 마음을 채워 주던가?" },
+  { id: "aquinas", name: "토마스 아퀴나스", years: "1225~1274", place: "이탈리아(아퀴노 인근)", vector: [2,5,1,1,5],
+    quote: "믿음과 이성은 서로를 밀어내지 않고 함께 진리로 나아간다.",
+    tagline: "믿음과 이성을 이어 붙인 철학자",
+    bio: "도미니코 수도회 수사로 파리와 이탈리아에서 가르쳤다. 아리스토텔레스의 철학을 기독교 신학과 결합해 거대한 체계를 세웠다. 중세 철학을 대표하는 인물로 꼽힌다.",
+    work: "『신학대전』",
+    critique: "생각은 많은데 질서가 없군. 근거부터 한 줄로 세워 보게." },
+  { id: "machiavelli", name: "마키아벨리", years: "1469~1527", place: "이탈리아(피렌체)", vector: [1,2,5,1,1],
+    quote: "좋은 의도만으로는 나라를 지키기 어렵다. 현실을 읽는 눈이 먼저다.",
+    tagline: "이상보다 현실을 앞세운 정치사상가",
+    bio: "피렌체 공화국에서 외교관으로 일하다 정변으로 자리를 잃고 시골로 물러났다. 그 시기에 권력이 어떻게 얻어지고 유지되는지를 냉정하게 분석한 책을 썼다. 정치를 도덕과 떼어 본 사람으로 평가받는다.",
+    work: "『군주론』",
+    critique: "그 선의가 통하지 않을 때 자네의 다음 수는 무엇인가?" },
+  { id: "hobbes", name: "홉스", years: "1588~1679", place: "영국(맘즈버리)", vector: [1,3,3,1,3],
+    quote: "모두가 모두를 두려워하는 곳에서는 강한 질서가 평화의 조건이 된다.",
+    tagline: "질서 없이는 평화도 없다고 본 철학자",
+    bio: "영국 내전의 혼란기에 살며 국가가 왜 필요한지를 고민했다. 사람들이 서로 약속해 주권자에게 권한을 넘긴다는 사회 계약 이론을 펼쳤다. 근대 정치철학의 출발점으로 꼽힌다.",
+    work: "『리바이어던』",
+    critique: "규칙이 없어도 다들 알아서 잘 지낼 거라고 정말 믿나?" },
+  { id: "descartes", name: "데카르트", years: "1596~1650", place: "프랑스(라에)", vector: [1,1,2,3,5],
+    quote: "모든 것을 의심해 보아도, 의심하고 있는 나 자신만은 남는다.",
+    tagline: "의심에서 출발한 근대 철학의 시조",
+    bio: "프랑스에서 태어나 네덜란드 등지에서 연구하며 수학과 철학을 함께 다뤘다. 확실한 지식의 기초를 찾으려고 모든 것을 의심하는 방법을 택했다. 좌표 기하학을 만든 수학자이기도 하다.",
+    work: "『방법서설』",
+    critique: "그 확신, 한 번이라도 의심해 보고 내놓은 건가?" },
+  { id: "spinoza", name: "스피노자", years: "1632~1677", place: "네덜란드(암스테르담)", vector: [1,3,3,4,5],
+    quote: "세상을 이해할수록 감정에 끌려다니는 일이 줄어든다.",
+    tagline: "신과 자연을 하나로 본 철학자",
+    bio: "유대인 공동체에서 쫓겨난 뒤 렌즈를 갈아 생계를 이으며 사색했다. 신과 자연이 같다고 보는 독자적인 체계를 기하학 방식으로 서술했다. 생전에는 위험한 사상가로 취급받았다.",
+    work: "『에티카』",
+    critique: "화가 나는 이유부터 이해하면 그 화는 절반으로 줄 텐데." },
+  { id: "locke", name: "로크", years: "1632~1704", place: "영국(링턴)", vector: [2,2,2,5,2],
+    quote: "누구에게나 자기 삶과 자유, 재산을 함부로 빼앗기지 않을 권리가 있다.",
+    tagline: "개인의 권리를 앞세운 철학자",
+    bio: "의사이자 정치 조언자로 일하며 영국의 정치 격변을 가까이서 겪었다. 정부는 시민의 동의 위에 서야 하며 이를 어기면 저항할 수 있다고 주장했다. 이 생각은 근대 민주주의에 큰 영향을 주었다.",
+    work: "『통치론』",
+    critique: "권리를 요구하는 만큼 책임질 준비도 되어 있나?" },
+  { id: "hume", name: "흄", years: "1711~1776", place: "영국(에든버러)", vector: [5,3,4,2,4],
+    quote: "이성은 감정을 섬기는 도구에 가깝다고 보았다.",
+    tagline: "경험과 감정을 중시한 철학자",
+    bio: "스코틀랜드 출신으로, 지식은 오직 경험에서 나온다고 보았다. 원인과 결과도 습관에서 비롯된 믿음일 뿐이라는 도발적인 주장을 폈다. 훗날 칸트에게 깊은 충격을 준 사상가다.",
+    work: "『인간 본성에 관한 논고』",
+    critique: "이성적으로 골랐다고? 그 밑에 깔린 기분은 모른 척하는군." },
+  { id: "rousseau", name: "루소", years: "1712~1778", place: "스위스(제네바)", vector: [5,5,4,4,3],
+    quote: "사람은 본래 자유롭지만 사회 속에서는 늘 무언가에 매여 산다.",
+    tagline: "자연과 공동의 뜻을 말한 철학자",
+    bio: "제네바에서 태어나 프랑스에서 활동하며 문명이 오히려 사람을 타락시킬 수 있다고 비판했다. 개인의 자유와 공동체의 뜻을 어떻게 조화시킬지 고민했다. 그의 사상은 프랑스 혁명에 영향을 주었다.",
+    work: "『사회계약론』",
+    critique: "머리로만 계산하지 말고 마음이 진짜 원하는 것부터 들어 보게." },
+  { id: "kant", name: "칸트", years: "1724~1804", place: "프로이센(쾨니히스베르크)", vector: [1,3,1,2,3],
+    quote: "모두가 따라도 괜찮은 원칙이 아니라면 그대로 행동하지 말라.",
+    tagline: "원칙으로 도덕을 세운 철학자",
+    bio: "평생 고향 쾨니히스베르크에서 가르치며 규칙적인 생활로 유명했다. 인간의 이성이 무엇을 알 수 있고 어떻게 행동해야 하는지를 체계적으로 따졌다. 도덕은 결과가 아니라 원칙에 달려 있다고 보았다.",
+    work: "『도덕형이상학 정초』",
+    critique: "상황이 그랬다는 말은 원칙을 어긴 사람이 가장 먼저 꺼내는 변명이지." },
+  { id: "hegel", name: "헤겔", years: "1770~1831", place: "독일(슈투트가르트)", vector: [2,5,4,2,2],
+    quote: "대립은 사라지지 않고, 부딪치면서 더 높은 단계로 나아간다.",
+    tagline: "대립 속에서 역사를 읽은 철학자",
+    bio: "독일 관념론을 완성한 철학자로 베를린 대학에서 가르쳤다. 사상과 역사가 대립과 종합을 거치며 발전한다고 보았다. 마르크스를 비롯한 많은 사상가가 그의 영향을 받았다.",
+    work: "『정신현상학』",
+    critique: "맞다 틀리다만 따지니 더 큰 그림이 안 보이는 걸세." },
+  { id: "bentham", name: "벤담", years: "1748~1832", place: "영국(런던)", vector: [1,5,5,3,1],
+    quote: "더 많은 사람이 더 행복해지는 쪽이 더 나은 선택이다.",
+    tagline: "행복의 총합을 따진 철학자",
+    bio: "법과 제도를 개혁하려 했던 영국의 사상가로, 공리주의를 처음 체계화했다. 행복의 양을 따져 정책을 판단하자고 주장했다. 자신의 유해를 보존해 전시하도록 유언했다는 일화로도 알려져 있다.",
+    work: "『도덕과 입법의 원리 서설』",
+    critique: "마음 편한 선택과 더 많은 사람에게 나은 선택은 다를 수 있다네." },
+  { id: "mill", name: "존 스튜어트 밀", years: "1806~1873", place: "영국(런던)", vector: [1,4,5,4,3],
+    quote: "남에게 해를 끼치지 않는다면 각자 자기 방식대로 살 자유가 있다.",
+    tagline: "개인의 자유를 지킨 철학자",
+    bio: "어릴 때부터 아버지에게 엄격한 영재 교육을 받았고, 훗날 공리주의를 다듬었다. 의회 의원으로 일하며 여성 참정권을 주장하기도 했다. 다수의 압력으로부터 개인을 지켜야 한다고 강조했다.",
+    work: "『자유론』",
+    critique: "다수가 편하다는 이유로 소수의 길까지 막고 있지는 않은가?" },
+  { id: "schopenhauer", name: "쇼펜하우어", years: "1788~1860", place: "독일(단치히)", vector: [5,1,3,3,5],
+    quote: "끝없는 욕망 때문에 삶은 만족과 권태 사이를 오간다.",
+    tagline: "삶의 고통을 직시한 철학자",
+    bio: "세상의 밑바탕에 끝없이 갈망하는 의지가 있다고 보았다. 그래서 삶에는 고통이 많다고 진단하며 예술과 연민에서 위안을 찾으라고 했다. 염세주의자로 불리지만 독설과 유머도 풍부했다.",
+    work: "『의지와 표상으로서의 세계』",
+    critique: "가진 것을 다시 갈망으로 바꾸는 건 자네 쪽 솜씨일세." },
+  { id: "kierkegaard", name: "키르케고르", years: "1813~1855", place: "덴마크(코펜하겐)", vector: [4,1,3,4,4],
+    quote: "삶은 남이 정해 준 정답이 아니라 내가 책임지고 뛰어드는 선택이다.",
+    tagline: "홀로 결단하는 삶을 말한 철학자",
+    bio: "코펜하겐에서 평생 살며 사회와 교회의 안일함을 비판했다. 개인이 불안 속에서 스스로 결단해야 한다고 보아 실존철학의 선구자로 불린다. 약혼을 파기한 경험도 글에 깊이 반영되었다.",
+    work: "『공포와 전율』",
+    critique: "군중 속에 편히 있다가 홀로 서야 할 순간이 오면 어쩔 텐가?" },
+  { id: "marx", name: "마르크스", years: "1818~1883", place: "독일(트리어)", vector: [2,5,4,4,1],
+    quote: "사람의 생각은 그가 살아가는 물질적 조건 위에서 자라난다.",
+    tagline: "경제 구조로 사회를 분석한 철학자",
+    bio: "독일에서 태어나 영국 런던에서 망명 생활을 하며 자본주의를 분석했다. 사회의 변화는 생산 방식과 계급 갈등에서 나온다고 설명했다. 철학을 현실을 바꾸는 도구로 삼으려 했다.",
+    work: "『자본』",
+    critique: "자네의 노력이 누구의 주머니를 채우는지 한번 따져 보게." },
+  { id: "nietzsche", name: "니체", years: "1844~1900", place: "독일(뢰켄)", vector: [5,1,5,5,2],
+    quote: "남이 정한 가치를 거부하고 자기만의 가치를 스스로 만들어 가라.",
+    tagline: "자기 삶의 가치를 스스로 세우라고 외친 철학자",
+    bio: "젊은 나이에 교수가 되었지만 건강 문제로 일찍 물러나 여러 곳을 떠돌며 글을 썼다. 기존의 도덕과 신념을 날카롭게 의심하고 자신만의 가치를 창조하라고 외쳤다. 말년에는 정신 질환으로 고통받았다.",
+    work: "『차라투스트라는 이렇게 말했다』",
+    critique: "그 안전한 선택, 자네가 원한 건가 남들이 원할 것 같은 건가?" },
+  { id: "sartre", name: "사르트르", years: "1905~1980", place: "프랑스(파리)", vector: [3,2,5,5,1],
+    quote: "사람은 먼저 존재하고, 어떤 사람이 될지는 선택으로 만들어진다.",
+    tagline: "선택이 곧 나라고 말한 철학자",
+    bio: "철학자이자 소설가, 극작가로 활동하며 프랑스 지성계를 이끌었다. 인간에게는 정해진 본성이 없어 자유롭고, 그래서 자신의 선택에 전적으로 책임진다고 주장했다. 노벨 문학상 수상자로 결정되었으나 거부한 일로도 알려져 있다.",
+    work: "『존재와 무』",
+    critique: "환경 탓은 이제 그만. 어떤 사람이 될지는 지금도 자네가 고르고 있네." },
+  { id: "beauvoir", name: "보부아르", years: "1908~1986", place: "프랑스(파리)", vector: [3,4,5,5,1],
+    quote: "누구도 태어날 때부터 정해진 역할을 가지고 있지는 않다.",
+    tagline: "정해진 역할에 질문을 던진 철학자",
+    bio: "파리에서 철학을 공부하고 작가이자 사상가로 활동했다. 사회가 여성에게 부여해 온 역할을 분석해 20세기 페미니즘에 큰 영향을 주었다. 사르트르와 평생 지적 동반자로 지냈다.",
+    work: "『제2의 성』",
+    critique: "당연하다고 여기는 그 역할, 누가 정해 준 건지 따져 봤나?" },
+  { id: "camus", name: "카뮈", years: "1913~1960", place: "프랑스령 알제리(몽도비)", vector: [5,3,4,5,3],
+    quote: "삶에 정해진 답이 없어도 그 안에서 기꺼이 살아가는 일이 곧 반항이다.",
+    tagline: "부조리 속에서 살기를 택한 철학자",
+    bio: "알제리에서 가난하게 자라 작가이자 저널리스트로 활동했다. 의미를 구하는 인간과 침묵하는 세계 사이의 어긋남을 부조리라 부르고, 그럼에도 삶을 긍정하라고 말했다. 1957년 노벨 문학상을 받았다.",
+    work: "『시시포스 신화』",
+    critique: "의미가 없다고 주저앉기엔 자네가 해 볼 일이 아직 많네." },
+  { id: "wittgenstein", name: "비트겐슈타인", years: "1889~1951", place: "오스트리아(빈)", vector: [1,2,4,2,5],
+    quote: "말로 분명히 할 수 없는 것 앞에서는 입을 다무는 편이 낫다.",
+    tagline: "언어의 한계를 따진 철학자",
+    bio: "빈의 부유한 가문에서 태어나 영국 케임브리지에서 철학을 했다. 말과 세계의 관계를 파고들어 현대 분석철학에 큰 영향을 주었다. 한때 철학의 문제가 모두 풀렸다고 믿고 시골 교사로 일하기도 했다.",
+    work: "『논리-철학 논고』",
+    critique: "그 말이 정확히 무슨 뜻인지 한 문장으로 정리해 보게." },
+  { id: "confucius", name: "공자", years: "기원전 551~479", place: "중국(노나라)", vector: [3,5,2,1,2],
+    quote: "사람 사이의 도리를 갈고닦는 일이 삶의 중심이다.",
+    tagline: "인과 예를 가르친 스승",
+    bio: "춘추시대 노나라에서 태어나 여러 나라를 돌며 도덕 정치를 설득했다. 인(仁)과 예(禮)를 바탕으로 사람이 갖출 덕을 가르쳤고, 제자들이 그 말을 모아 책으로 남겼다. 동아시아 문화 전반에 오랫동안 영향을 미쳤다.",
+    work: "『논어』 (제자들이 기록)",
+    critique: "자네의 도리가 가까운 사람들에게는 제대로 닿고 있는가?" },
+  { id: "mencius", name: "맹자", years: "기원전 약 372~289", place: "중국(추나라)", vector: [4,5,2,3,1],
+    quote: "사람은 누구나 남의 아픔을 외면하지 못하는 마음을 지니고 태어난다.",
+    tagline: "사람의 선한 본성을 믿은 철학자",
+    bio: "공자의 사상을 이어받아 여러 군주에게 어진 정치를 조언했다. 인간은 본래 선한 싹을 갖고 있어 교육과 환경으로 키울 수 있다고 보았다. 백성이 나라의 근본이라는 주장으로도 유명하다.",
+    work: "『맹자』",
+    critique: "남의 곤경 앞에서 계산부터 했다면 그건 자네 본모습이 아닐 걸세." },
+  { id: "laozi", name: "노자", years: "생몰년 미상 (기원전 6세기경 전승)", place: "중국(초나라)", vector: [5,3,5,5,5],
+    quote: "애써 막지 않고 흐름을 따르면 오히려 일이 순조로워진다.",
+    tagline: "물처럼 살라고 한 철학자",
+    bio: "전승에 따르면 주나라의 도서 관리였다가 서쪽으로 떠나며 『도덕경』을 남겼다. 억지로 하지 않고 자연의 흐름에 맞추는 무위를 강조했다. 실존 여부와 생애는 확실하지 않다.",
+    work: "『도덕경』",
+    critique: "그렇게 힘주어 움켜쥐니 손에서 더 빨리 빠져나가는 걸세." },
+  { id: "zhuangzi", name: "장자", years: "기원전 약 369~286", place: "중국(송나라)", vector: [4,1,5,4,5],
+    quote: "내가 나비 꿈을 꾼 걸까, 나비가 사람 꿈을 꾸는 걸까.",
+    tagline: "나비 꿈으로 경계를 흐린 철학자",
+    bio: "관직을 거절하고 가난하게 살며 우화와 비유로 자유로운 삶을 이야기했다. 옳고 그름, 삶과 죽음의 경계도 상대적이라는 시선을 보여 주었다. 노자와 함께 도가 사상의 큰 축으로 꼽힌다.",
+    work: "『장자』",
+    critique: "그 잣대로 세상을 재단하다 자네만 갑갑해지지 않겠나?" },
+];
+
+if (typeof module !== 'undefined') module.exports = { PHILOSOPHERS };
+
+// 상황 12개. 축: A 이성(-)↔감정(+), B 나(-)↔우리(+), C 규칙(-)↔상황(+), D 질서(-)↔자유(+), E 행동(-)↔관조(+)
+const QUESTIONS = [
+  { id: "q1", title: "구명보트의 마지막 자리", timed: false,
+    text: "정원이 다 찬 구명보트에 자리가 하나 남았습니다. 아이를 안은 낯선 사람, 몸이 불편한 노인, 오랜 친구가 보트 옆에 서 있습니다.",
+    prompt: "그 자리를 누구에게 주겠습니까?",
+    options: [
+      { text: "아이를 안은 사람. 살아갈 날이 더 많은 쪽이 먼저다", effects: { B: 2, C: -1 } },
+      { text: "제비를 뽑는다. 누구도 특별 대우하지 않는다", effects: { B: 1, C: -2 } },
+      { text: "오랜 친구에게 준다. 내 사람부터 지킨다", effects: { B: -1, C: 2 } },
+      { text: "내가 먼저 내려서 자리를 하나 더 만든다", effects: { B: 2, C: 1 } },
+    ] },
+  { id: "q2", title: "동창의 이력서", timed: false,
+    text: "오랜 동창이 면접을 앞두고, 이력서에 없는 경력을 한 줄만 넣어 달라고 부탁합니다. 확인할 사람은 거의 없습니다.",
+    prompt: "그 부탁을 어떻게 하겠습니까?",
+    options: [
+      { text: "거절한다. 거짓은 친구 사이에서도 거짓이다", effects: { C: -2, B: -1 } },
+      { text: "해 준다. 친구가 일자리를 얻는 일이 더 중요하다", effects: { C: 2, B: 1 } },
+      { text: "없는 경력 대신 진짜 강점을 함께 찾아 써 준다", effects: { C: 1, B: 1, A: -1 } },
+      { text: "이번 한 번만 해 주고 다시는 안 된다고 못 박는다", effects: { C: 2, B: -1 } },
+    ] },
+  { id: "q3", title: "건널목", timed: true,
+    text: "횡단보도 신호가 빨간불입니다. 건너편에서 아이가 공을 따라 차도로 뛰어들려 하고, 차 한 대가 다가오고 있습니다.",
+    prompt: "신호를 어기고 뛰어듭니까? 7초 안에 고르세요.",
+    options: [
+      { text: "뛰어든다. 생각할 틈이 없다", effects: { A: 2, C: 2 } },
+      { text: "소리쳐 아이를 멈추게 하고 신호는 지킨다", effects: { A: -1, C: -2 } },
+      { text: "다가오는 차를 향해 두 팔을 크게 흔든다", effects: { A: -2, C: 1 } },
+      { text: "얼어붙어 한동안 아무것도 하지 못한다", effects: { A: 2, C: -1 } },
+    ] },
+  { id: "q4", title: "우연히 읽은 일기", timed: false,
+    text: "친구의 책상에 펼쳐진 일기장에서, 나에 대한 서운한 속마음을 우연히 읽었습니다. 친구는 내가 읽은 줄 모릅니다.",
+    prompt: "어떻게 하겠습니까?",
+    options: [
+      { text: "못 본 척하고 평소처럼 지낸다", effects: { D: -1, A: -1 } },
+      { text: "읽었다고 솔직히 털어놓고 이야기를 나눈다", effects: { D: 1, A: 1 } },
+      { text: "내 행동을 하나씩 돌아보고 고칠 점을 정리한다", effects: { A: -2, D: -1 } },
+      { text: "서운해서 한동안 거리를 둔다", effects: { A: 2, D: 1 } },
+    ] },
+  { id: "q5", title: "3년째 같은 야근", timed: false,
+    text: "퇴근 시간이 가까워질 때마다 같은 보고서를 같은 양식으로 올립니다. 벌써 3년째이고, 앞으로도 비슷할 것 같습니다.",
+    prompt: "이 반복되는 삶을 어떻게 대하겠습니까?",
+    options: [
+      { text: "판을 바꿀 계획을 세우고 당장 움직인다", effects: { E: -2, D: 2 } },
+      { text: "일은 그대로 두고, 퇴근 후 시간을 나만의 것으로 채운다", effects: { E: 1, D: 1 } },
+      { text: "이 반복에서 내가 무엇을 얻고 있는지 곰곰이 따져 본다", effects: { E: 2, D: -1 } },
+      { text: "맡은 일을 흠 없이 해내는 데서 자부심을 찾는다", effects: { E: -1, D: -2 } },
+    ] },
+  { id: "q6", title: "예언자의 한마디", timed: false,
+    text: "용하다는 예언자가 당신의 앞날을 보았다며, 단 한 가지만 알려 주겠다고 합니다. 좋은 일인지 나쁜 일인지는 말해 주지 않습니다.",
+    prompt: "들어 보겠습니까?",
+    options: [
+      { text: "듣는다. 알아야 대비할 수 있다", effects: { E: -2, A: -1 } },
+      { text: "듣지 않는다. 모르고 사는 편이 낫다", effects: { E: 1, A: 1 } },
+      { text: "듣고 나서 그 말이 사실인지부터 의심한다", effects: { E: 2, A: -2 } },
+      { text: "그때그때 기분이 끌리는 대로 정한다", effects: { A: 2, E: -1 } },
+    ] },
+  { id: "q7", title: "만장일치 속의 반대", timed: false,
+    text: "회의에서 모두가 찬성하는 안건 하나에 나만 마음이 걸립니다. 분위기는 이미 결론 쪽으로 기울었습니다.",
+    prompt: "어떻게 하겠습니까?",
+    options: [
+      { text: "걸리는 점을 끝까지 말하고 표결에 부친다", effects: { B: -1, D: 2 } },
+      { text: "분위기를 해치지 않게 따르고, 나중에 조용히 짚는다", effects: { B: 2, D: -1 } },
+      { text: "찬성한 사람들에게 이유를 하나씩 물어본다", effects: { B: 1, D: 1 } },
+      { text: "내 몫만 하고 이 일에서 빠진다", effects: { B: -2, D: 1 } },
+    ] },
+  { id: "q8", title: "새벽의 비밀 번호", timed: false,
+    text: "새벽 두 시, 모르는 번호로 문자가 옵니다. '아이가 아파요. 병원까지 태워 줄 수 있나요?' 가까이 사는 사람 같지만 사기일 수도 있습니다.",
+    prompt: "어떻게 하겠습니까?",
+    options: [
+      { text: "일단 전화를 걸어 목소리를 듣고 판단한다", effects: { A: -1, C: 2 } },
+      { text: "원칙대로 응하지 않고 119를 안내한다", effects: { A: -1, C: -2 } },
+      { text: "마음이 급해져 옷부터 입고 나선다", effects: { A: 2, C: 1 } },
+      { text: "의심스러워서 답장을 보내지 않는다", effects: { A: -2, C: -1 } },
+    ] },
+  { id: "q9", title: "무한 휴가", timed: false,
+    text: "한 달 동안 아무 의무 없이 쉴 수 있는 시간이 생겼습니다. 돈 걱정도 없습니다.",
+    prompt: "어떻게 보내겠습니까?",
+    options: [
+      { text: "미뤄 둔 일과 계획을 하나씩 해치운다", effects: { E: -2, D: -1 } },
+      { text: "일정 없이 발길 닿는 대로 돌아다닌다", effects: { E: -1, D: 2 } },
+      { text: "책을 읽고 생각하며 조용히 지낸다", effects: { E: 2, D: 1 } },
+      { text: "오래 못 만난 사람들과 밀린 이야기를 나눈다", effects: { E: -1, D: 1 } },
+    ] },
+  { id: "q10", title: "낡은 다리의 철거", timed: false,
+    text: "마을 사람들이 오래 건너온 다리가 안전 진단에서 위험 판정을 받았습니다. 철거하면 먼 길로 돌아가야 하고, 두면 사고가 날 수 있습니다. 결정은 당신 몫입니다.",
+    prompt: "어떻게 하겠습니까?",
+    options: [
+      { text: "규정대로 즉시 통행을 막고 철거한다", effects: { B: 1, C: -2 } },
+      { text: "임시로 보수하고 주민들과 상의해 정한다", effects: { B: 2, C: 1 } },
+      { text: "이용객이 가장 많은 시간대만 열어 둔다", effects: { B: 1, C: 2 } },
+      { text: "내 책임이 되지 않도록 상급 기관에 판단을 넘긴다", effects: { B: -2, C: -1 } },
+    ] },
+  { id: "q11", title: "마지막 한 시간", timed: true,
+    text: "알림이 울렸습니다. 당신에게 남은 시간은 정확히 한 시간입니다.",
+    prompt: "무엇을 하겠습니까? 7초 안에 고르세요.",
+    options: [
+      { text: "가장 소중한 사람에게 달려가 안아 준다", effects: { A: 2, E: -2 } },
+      { text: "혼자 조용히 지나온 삶을 돌아본다", effects: { A: -1, E: 2 } },
+      { text: "미뤄 둔 일 하나를 끝낸다", effects: { A: -2, E: -1 } },
+      { text: "창밖을 바라보며 아무 생각 없이 앉아 있는다", effects: { A: 1, E: 2 } },
+    ] },
+  { id: "q12", title: "오래된 편지", timed: false,
+    text: "서랍에서 10년 전 쓴 편지가 나왔습니다. 친구에게 '언젠가 같이 가게를 열자'고 적은 약속입니다. 친구는 잊은 듯하고, 지금 나는 안정된 직장에 다닙니다.",
+    prompt: "그 약속을 어떻게 하겠습니까?",
+    options: [
+      { text: "약속은 약속이다. 연락해서 진지하게 다시 꺼낸다", effects: { B: 1, C: -2 } },
+      { text: "사정이 달라졌으니 편지는 추억으로 남긴다", effects: { B: -1, C: 2 } },
+      { text: "친구에게 먼저 물어보고 둘이 함께 정한다", effects: { B: 2, C: 1 } },
+      { text: "내가 지금 진짜 원하는 일인지부터 다시 묻는다", effects: { B: -2, C: 1 } },
+    ] },
+];
+
+if (typeof module !== 'undefined') module.exports = { QUESTIONS };
+
+// 핵심 로직: 점수, 거리, 순위, 답안 코드. 순수 함수만 둔다.
+const AXES = ['A', 'B', 'C', 'D', 'E'];
+const MAX_DISTANCE = Math.sqrt(80);
+
+function scoreAnswers(answers, questions) {
+  return AXES.map((axis) => {
+    let sum = 0;
+    let count = 0;
+    questions.forEach((question, i) => {
+      const choice = answers[i];
+      if (choice === null || choice === undefined) return;
+      const option = question.options[choice];
+      if (!option || typeof option.effects[axis] !== 'number') return;
+      sum += option.effects[axis];
+      count += 1;
+    });
+    const value = count === 0 ? 3 : 3 + sum / count;
+    return Math.min(5, Math.max(1, value));
+  });
+}
+
+function distance(a, b) {
+  let total = 0;
+  for (let i = 0; i < a.length; i += 1) total += (a[i] - b[i]) ** 2;
+  return Math.sqrt(total);
+}
+
+function matchPercent(a, b) {
+  const pct = Math.round(100 * (1 - distance(a, b) / MAX_DISTANCE));
+  return Math.min(100, Math.max(0, pct));
+}
+
+function rankPhilosophers(userVec, list) {
+  const rows = list.map((p) => ({
+    p,
+    d: Math.round(distance(userVec, p.vector) * 1e9) / 1e9,
+    a: Math.abs(userVec[0] - p.vector[0]),
+    b: Math.abs(userVec[1] - p.vector[1]),
+    c: Math.abs(userVec[2] - p.vector[2]),
+  }));
+  rows.sort((x, y) => x.d - y.d || x.a - y.a || x.b - y.b || x.c - y.c);
+  const percent = {};
+  rows.forEach((r) => { percent[r.p.id] = matchPercent(userVec, r.p.vector); });
+  return {
+    best: rows[0].p,
+    similar: [rows[1].p, rows[2].p],
+    opposite: rows[rows.length - 1].p,
+    percent,
+  };
+}
+
+function encodeAnswers(answers) {
+  return answers.map((a) => (a === null || a === undefined ? '-' : String(a))).join('');
+}
+
+function decodeAnswers(s) {
+  if (typeof s !== 'string' || !/^[0-3-]{12}$/.test(s)) return null;
+  return [...s].map((ch) => (ch === '-' ? null : Number(ch)));
+}
+
+if (typeof module !== 'undefined') {
+  module.exports = {
+    AXES, MAX_DISTANCE, scoreAnswers, distance, matchPercent,
+    rankPhilosophers, encodeAnswers, decodeAnswers,
+  };
+}
+
+// 경과 시간 기준 카운트다운. now()와 시작 시각의 차로 계산하므로 탭이 백그라운드에 있어도 정확하다.
+function createTimer(durationMs, now, onTick, onExpire) {
+  let startAt = 0;
+  let active = false;
+  function tick() {
+    if (!active) return;
+    const remaining = Math.max(0, durationMs - (now() - startAt));
+    onTick(Math.ceil(remaining / 1000), remaining / durationMs);
+    if (remaining <= 0) {
+      active = false;
+      onExpire();
+    }
+  }
+  return {
+    start() { startAt = now(); active = true; onTick(Math.ceil(durationMs / 1000), 1); },
+    tick,
+    stop() { active = false; },
+  };
+}
+
+if (typeof module !== 'undefined') module.exports = { createTimer };
+
+// 공유: 결과 이미지(Canvas 2D로 직접 그림)와 친구 비교 링크
+const _core = (typeof module !== 'undefined') ? require('./core.js') : { encodeAnswers, matchPercent };
+
+function buildCompareLink(answers, location) {
+  return location.origin + location.pathname + '#a=' + _core.encodeAnswers(answers);
+}
+
+function wrapLines(ctx, text, maxWidth) {
+  const lines = [];
+  let line = '';
+  for (const ch of text) {
+    if (line && ctx.measureText(line + ch).width > maxWidth) { lines.push(line); line = ch.trim() === '' ? '' : ch; } else line += ch;
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+function drawResultCanvas(canvas, result) {
+  const W = 1080;
+  const H = 1350;
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  const best = result.ranking.best;
+  const pct = result.ranking.percent[best.id];
+  const serif = '"Nanum Myeongjo","Noto Serif KR","AppleMyungjo","Batang",serif';
+  const sans = '"Pretendard","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif';
+
+  ctx.fillStyle = '#e9e5db'; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#c09a55'; ctx.fillRect(60, 60, W - 120, H - 120);
+  ctx.fillStyle = '#1a1915'; ctx.fillRect(80, 80, W - 160, H - 160);
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'alphabetic';
+
+  ctx.fillStyle = '#c09a55'; ctx.font = '36px ' + sans;
+  ctx.fillText('나와 가장 닮은 철학자', W / 2, 190);
+
+  let size = 124;
+  ctx.font = '800 ' + size + 'px ' + serif;
+  while (size > 56 && ctx.measureText(best.name).width > W - 280) { size -= 4; ctx.font = '800 ' + size + 'px ' + serif; }
+  ctx.fillStyle = '#f5efe2'; ctx.fillText(best.name, W / 2, 330);
+
+  ctx.fillStyle = '#c09a55'; ctx.fillRect(180, 375, W - 360, 2);
+  ctx.fillStyle = '#dbb871'; ctx.font = '800 60px ' + sans; ctx.fillText(pct + '% 닮음', W / 2, 460);
+  ctx.fillStyle = 'rgba(245,239,226,0.62)'; ctx.font = '30px ' + sans; ctx.fillText(best.years + ' · ' + best.place, W / 2, 515);
+  ctx.fillStyle = '#c09a55'; ctx.fillRect(180, 550, W - 360, 2);
+
+  ctx.fillStyle = '#f5efe2'; ctx.font = '700 44px ' + serif;
+  wrapLines(ctx, '“' + best.quote + '”', W - 340).slice(0, 4).forEach((line, i) => ctx.fillText(line, W / 2, 640 + i * 68));
+
+  const cx = W / 2;
+  const cy = 1030;
+  ctx.strokeStyle = '#c09a55'; ctx.lineWidth = 5; ctx.beginPath(); ctx.arc(cx, cy, 150, 0, Math.PI * 2); ctx.stroke();
+  ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, 130, 0, Math.PI * 2); ctx.stroke();
+  ctx.fillStyle = '#dbb871'; ctx.font = '800 150px ' + serif; ctx.fillText(best.name.charAt(0), cx, cy + 52);
+
+  ctx.fillStyle = 'rgba(245,239,226,0.62)'; ctx.font = '28px ' + sans;
+  ctx.fillText('나와 닮은 철학자 찾기', W / 2, H - 130);
+}
+
+async function saveImage(result, deps) {
+  const canvas = deps.makeCanvas();
+  (deps.draw || drawResultCanvas)(canvas, result);
+  const blob = await deps.toBlob(canvas);
+  if (!blob) throw new Error('이미지를 만들지 못했어요');
+  const name = 'philosopher-match.png';
+  const file = typeof File !== 'undefined' ? new File([blob], name, { type: 'image/png' }) : blob;
+  const attempt = deps.share ? deps.share(file) : null;
+  if (attempt) {
+    try { await attempt; return 'shared'; } catch (e) { if (e && e.name === 'AbortError') return 'shared'; }
+  }
+  deps.download(blob, name);
+  return 'downloaded';
+}
+
+if (typeof module !== 'undefined') module.exports = { buildCompareLink, saveImage, drawResultCanvas };
+
+// UI: 상태, 화면 렌더링, 이벤트
+if (typeof document !== 'undefined') (function () {
+  const $app = document.getElementById('app');
+  const NUMS = ['①', '②', '③', '④'];
+  const TIMED_MS = 7000;
+  const state = { screen: 'start', index: 0, answers: [], result: null, friendAnswers: null };
+  let timer = null;
+  let tickHandle = null;
+  let lockedUntil = 0;
+  let modalOpen = false;
+
+  const nowMs = () => (typeof window.__now === 'function' ? window.__now() : performance.now());
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  function ornamentSvg() {
+    return '<svg class="ornament" viewBox="0 0 200 150" role="img" aria-label="고대 신전 장식" xmlns="http://www.w3.org/2000/svg">' +
+      '<g fill="none" stroke="#c09a55" stroke-width="3"><circle cx="100" cy="78" r="64" opacity=".5"/><circle cx="100" cy="78" r="50"/></g>' +
+      '<g fill="#c09a55"><path d="M52 52h96l-48-26z"/><rect x="56" y="56" width="88" height="7"/>' +
+      '<rect x="64" y="68" width="10" height="46"/><rect x="95" y="68" width="10" height="46"/><rect x="126" y="68" width="10" height="46"/>' +
+      '<rect x="52" y="116" width="96" height="8"/></g></svg>';
+  }
+
+  function startHtml() {
+    return '<main class="stage"><section class="card start">' +
+      '<p class="kicker">열두 가지 상황 · 서른두 명의 철학자</p>' +
+      '<h1 class="title"><span class="gold">나와 닮은</span><span class="main">철학자는?</span></h1>' +
+      '<div class="rule"></div><p class="lead">고른 답으로 가장 닮은 사람을 찾아 드립니다</p><div class="rule"></div>' +
+      '<p class="note">맞고 틀린 답은 없어요.<br>지금의 나와 가까운 쪽을 골라 보세요.</p>' +
+      '<p class="meta">약 3분이 걸립니다</p>' +
+      (state.friendAnswers ? '<p class="invite">친구가 답을 보내 왔어요. 같은 질문을 풀면 둘이 얼마나 닮았는지 알려 드려요.</p>' : '') + ornamentSvg() +
+      '</section><button class="btn-gold" id="start-btn" type="button">시작해 볼까요 →</button>' +
+      '<button class="link" id="privacy-btn" type="button">개인정보 처리방침</button></main>';
+  }
+
+  function quizHtml() {
+    const q = QUESTIONS[state.index];
+    const options = q.options.map((o, i) =>
+      '<li><button type="button" data-i="' + i + '"><span class="no">' + NUMS[i] + '</span>' + esc(o.text) + '</button></li>').join('');
+    return '<main class="stage"><section class="card quiz">' +
+      '<div class="q-meta"><span class="count">' + (state.index + 1) + ' / ' + QUESTIONS.length + '</span>' +
+      (q.timed ? '<span class="fast">즉답 모드</span>' : '') + '</div>' +
+      '<h2 class="q-title">' + esc(q.title) + '</h2><div class="rule"></div>' +
+      '<p class="q-text">' + esc(q.text) + '</p><p class="q-prompt">' + esc(q.prompt) + '</p><div class="spacer"></div>' +
+      (q.timed ? '<div class="timer"><div class="bar"><i></i></div><span class="sec">7초</span></div>' : '') +
+      '<ol class="options">' + options + '</ol></section></main>';
+  }
+
+  function modalHtml() {
+    return '<div class="modal" role="dialog" aria-modal="true" aria-label="개인정보 처리방침"><section class="card">' +
+      '<h2>개인정보 처리방침</h2>' +
+      '<p>이 사이트는 답변이나 결과를 서버로 보내거나 저장하지 않습니다. 모든 계산은 이 기기의 브라우저 안에서만 이루어집니다.</p>' +
+      '<p>‘친구와 견주어 보기’ 링크에는 선택한 보기 번호만 담기며, 이름이나 연락처 같은 개인 정보는 들어가지 않습니다.</p>' +
+      '<button class="btn-gold" id="modal-close" type="button">닫기</button></section></div>';
+  }
+
+  const AXIS_LABELS = [['이성', '감정'], ['나', '우리'], ['규칙', '상황'], ['질서', '자유'], ['행동', '관조']];
+  const subj = (name) => {
+    const c = name.charCodeAt(name.length - 1);
+    return name + (c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28 !== 0 ? '이' : '가');
+  };
+
+  // 이름 첫 글자 + 철학자마다 조금씩 다른 눈금 링 (이니셜이 같아도 구별되도록 id로 변형)
+  function emblemSvg(p) {
+    let h = 0;
+    for (const ch of p.id) h += ch.charCodeAt(0);
+    const count = 8 + (h % 7);
+    let ticks = '';
+    for (let i = 0; i < count; i += 1) {
+      ticks += '<rect x="98" y="16" width="4" height="9" transform="rotate(' + (i * 360 / count + (h % 30)) + ' 100 100)"/>';
+    }
+    return '<svg class="emblem" viewBox="0 0 200 200" role="img" aria-label="' + esc(p.name) + ' 엠블럼" xmlns="http://www.w3.org/2000/svg">' +
+      '<rect width="200" height="200" fill="#14130f"/>' +
+      '<g fill="none" stroke="#c09a55"><circle cx="100" cy="100" r="78" stroke-width="3"/><circle cx="100" cy="100" r="68" stroke-width="1" opacity=".7"/></g>' +
+      '<g fill="#c09a55" opacity=".85">' + ticks + '</g>' +
+      '<text x="100" y="128" text-anchor="middle" font-family="Nanum Myeongjo, Noto Serif KR, serif" font-size="84" font-weight="800" fill="#dbb871">' +
+      esc(p.name.charAt(0)) + '</text></svg>';
+  }
+
+  function resultHtml() {
+    const { vector, ranking } = state.result;
+    const best = ranking.best;
+    const pct = ranking.percent;
+    const rows = AXIS_LABELS.map(([left, right], axis) => {
+      const me = Math.round(vector[axis]);
+      const ph = best.vector[axis];
+      const dots = [1, 2, 3, 4, 5].map((n) =>
+        '<span class="dot' + (n === me ? ' me' : '') + (n === ph ? ' phil' : '') + '"></span>').join('');
+      return '<div class="row"><span class="side' + (me <= 2 ? ' on' : '') + '">' + left + '</span><span class="dots">' + dots +
+        '</span><span class="side right' + (me >= 4 ? ' on' : '') + '">' + right + '</span></div>';
+    }).join('');
+    let compare = '';
+    if (state.friendAnswers) {
+      const fv = scoreAnswers(state.friendAnswers, QUESTIONS);
+      const fb = rankPhilosophers(fv, PHILOSOPHERS).best;
+      compare = '<section class="card compare-box"><h2 class="h">친구와 비교</h2><p class="compare-pct">친구와의 일치도 ' +
+        matchPercent(vector, fv) + '%</p><p class="compare-sub">친구와 가장 닮은 철학자는 ' + esc(fb.name) + '입니다</p></section>';
+    }
+    const mini = (p, label) => '<div class="mini">' + emblemSvg(p) + '<span class="label">' + label + '</span><span class="name">' +
+      esc(p.name) + '</span><span class="pct">' + pct[p.id] + '%</span></div>';
+    return '<main class="stage">' +
+      '<section class="card hero"><p class="kicker">나와 가장 닮은 철학자</p><h1 class="result-name">' + esc(best.name) + '</h1>' +
+      '<div class="rule"></div><p class="match-pct">' + pct[best.id] + '% 닮음</p>' +
+      '<p class="result-years">' + esc(best.years) + ' · ' + esc(best.place) + '</p><div class="rule"></div>' +
+      '<p class="result-quote">“' + esc(best.quote) + '”</p><p class="result-tagline">' + esc(best.tagline) + '</p>' +
+      emblemSvg(best) + '</section>' +
+      '<button class="btn-dark" type="button" data-act="save">결과 카드 저장</button>' +
+      '<div class="btn-row"><button class="btn-line" type="button" data-act="compare">친구와 견주어 보기</button>' +
+      '<button class="btn-line" type="button" data-act="retry">처음부터 다시</button></div>' +
+      compare + '<section class="card detail"><h2 class="h">어떤 사람이었을까</h2><p class="bio">' + esc(best.bio) + '</p>' +
+      '<h2 class="h">대표 저서</h2><p class="work">' + esc(best.work) + '</p>' +
+      '<h2 class="h">내 생각의 다섯 갈래</h2><div class="thoughts">' + rows + '</div>' +
+      '<p class="legend"><i class="key me"></i>내 답 <i class="key phil"></i>' + esc(best.name) + '</p></section>' +
+      '<section class="card others"><h2 class="h">이웃한 생각들</h2><div class="minis">' +
+      mini(ranking.similar[0], '가까운 철학자') + mini(ranking.similar[1], '가까운 철학자') + mini(ranking.opposite, '정반대 철학자') +
+      '</div><blockquote class="critique">“' + esc(ranking.opposite.critique) + '”</blockquote>' +
+      '<p class="critique-by">' + esc(subj(ranking.opposite.name)) + ' 나에게 하는 말</p></section></main>';
+  }
+
+  function toast(msg) {
+    document.querySelectorAll('.toast').forEach((n) => n.remove());
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.setAttribute('role', 'status');
+    el.textContent = msg;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3500);
+  }
+
+  const defaultDeps = {
+    makeCanvas: () => document.createElement('canvas'),
+    toBlob: (cv) => new Promise((resolve) => cv.toBlob(resolve, 'image/png')),
+    share: (file) => (navigator.canShare && navigator.canShare({ files: [file] }) ? navigator.share({ files: [file], title: '나와 닮은 철학자' }) : null),
+    download: (blob, name) => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    },
+  };
+
+  async function onSave(btn) {
+    if (btn.disabled) return;
+    btn.disabled = true;
+    try {
+      const how = await saveImage(state.result, window.philo.deps);
+      if (how === 'downloaded') toast('이미지를 저장했어요');
+    } catch (e) {
+      toast('이미지를 저장하지 못했어요. 잠시 뒤 다시 시도해 주세요.');
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  async function onCompare() {
+    const link = buildCompareLink(Array.from(state.answers), window.location);
+    try {
+      if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error('clipboard unavailable');
+      await navigator.clipboard.writeText(link);
+      toast('링크를 복사했어요. 친구에게 보내 보세요.');
+    } catch (e) {
+      toast('이 링크를 복사해 친구에게 보내 주세요: ' + link);
+    }
+  }
+
+  function parseHash() {
+    const m = /^#a=(.*)$/.exec(window.location.hash || '');
+    state.friendAnswers = m ? decodeAnswers(m[1]) : null;
+  }
+
+  function stopTimer() {
+    if (timer) timer.stop();
+    timer = null;
+    if (tickHandle) clearInterval(tickHandle);
+    tickHandle = null;
+  }
+
+  function startTimer() {
+    const bar = $app.querySelector('.timer .bar i');
+    const sec = $app.querySelector('.timer .sec');
+    timer = createTimer(TIMED_MS, nowMs, (s, ratio) => {
+      bar.style.width = (ratio * 100) + '%';
+      sec.textContent = s + '초';
+    }, () => chooseOption(null));
+    timer.start();
+    tickHandle = setInterval(() => { if (timer) timer.tick(); }, 100);
+  }
+
+  function render() {
+    stopTimer();
+    let html = '';
+    if (state.screen === 'start') html = startHtml();
+    else if (state.screen === 'quiz') html = quizHtml();
+    else html = resultHtml();
+    $app.innerHTML = html + (modalOpen ? modalHtml() : '');
+    document.documentElement.scrollTop = 0;
+    if (state.screen === 'quiz' && QUESTIONS[state.index].timed) startTimer();
+  }
+
+  function startQuiz() {
+    state.screen = 'quiz';
+    state.index = 0;
+    state.answers = [];
+    state.result = null;
+    lockedUntil = nowMs() + 250;
+    render();
+  }
+
+  function retry() {
+    state.screen = 'start';
+    state.index = 0;
+    state.answers = [];
+    state.result = null;
+    render();
+  }
+
+  function finish(answers) {
+    state.answers = answers.slice();
+    const vector = scoreAnswers(state.answers, QUESTIONS);
+    state.result = { vector, ranking: rankPhilosophers(vector, PHILOSOPHERS) };
+    state.screen = 'result';
+    render();
+  }
+
+  function chooseOption(choice) {
+    if (state.screen !== 'quiz') return;
+    const t = nowMs();
+    if (choice !== null && t < lockedUntil) return;
+    lockedUntil = t + 250;
+    state.answers[state.index] = choice;
+    if (state.index < QUESTIONS.length - 1) {
+      state.index += 1;
+      render();
+    } else {
+      finish(state.answers);
+    }
+  }
+
+  $app.addEventListener('click', (e) => {
+    const el = e.target.closest('button');
+    if (!el) return;
+    if (el.id === 'start-btn') startQuiz();
+    else if (el.id === 'privacy-btn') { modalOpen = true; render(); }
+    else if (el.id === 'modal-close') { modalOpen = false; render(); }
+    else if (el.dataset.i !== undefined) chooseOption(Number(el.dataset.i));
+    else if (el.dataset.act === 'retry') retry();
+    else if (el.dataset.act === 'save') onSave(el);
+    else if (el.dataset.act === 'compare') onCompare();
+  });
+  document.addEventListener('visibilitychange', () => { if (timer) timer.tick(); });
+
+  window.philo = { deps: defaultDeps, rank: (v) => rankPhilosophers(v, PHILOSOPHERS), state, chooseOption, startQuiz, finish, render, tickTimer: () => { if (timer) timer.tick(); } };
+  parseHash();
+  render();
+})();
+
+</script>
+</body>
+</html>
