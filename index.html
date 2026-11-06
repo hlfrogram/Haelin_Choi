@@ -17,7 +17,7 @@
 html, body { margin: 0; }
 body { background: var(--page); color: var(--ink); font-family: var(--sans); -webkit-text-size-adjust: 100%;
   padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px); }
-button { font-family: inherit; }
+button { font-family: inherit; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 .stage { max-width: 460px; margin: 0 auto; padding: 14px 12px 40px; }
 .card { --n: 15px; position: relative; color: var(--cream); border: 7px solid var(--gold); padding: 30px 22px;
   background-origin: border-box; background-clip: border-box;
@@ -63,7 +63,6 @@ button { font-family: inherit; }
 .options li { border-bottom: 1px solid var(--line); }
 .options button { display: block; width: 100%; padding: 18px 4px; border: 0; background: none; text-align: left; cursor: pointer;
   color: var(--cream); font-family: var(--serif); font-size: 18px; line-height: 1.5; }
-.options button:hover { background: rgba(192, 154, 85, .08); }
 .options button:focus-visible, .btn-gold:focus-visible, .link:focus-visible { outline: 2px solid var(--gold-btn); outline-offset: 2px; }
 .options .no { margin-right: 10px; color: var(--gold); }
 
@@ -122,6 +121,60 @@ button { font-family: inherit; }
 .compare-pct { margin: 0; color: var(--gold-btn); font-family: var(--serif); font-size: 26px; font-weight: 800; }
 .compare-sub { margin: 8px 0 0; color: var(--muted); font-size: 15px; }
 
+/* 안내 문구·관리자 */
+.notice { margin: 4px 2px 0; color: #8a8576; font-size: 12px; }
+.admin-bar { display: flex; justify-content: flex-end; margin-bottom: 6px; }
+.admin-link { padding: 4px 2px; border: 0; background: none; color: #8a8576; font-size: 12px; text-decoration: underline; cursor: pointer; }
+.pw { width: 100%; margin: 6px 0 4px; padding: 14px; border: 1px solid var(--line); background: #0f0e0b; color: var(--cream); font-size: 17px; }
+.pw:focus-visible { outline: 2px solid var(--gold-btn); outline-offset: 1px; }
+.err { margin: 8px 0 0; color: #e3a089; font-size: 14px; }
+.stage.admin { max-width: 760px; }
+.admin-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.admin-top .h { margin: 0; }
+.admin-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.mini-btn { padding: 8px 10px; border: 1px solid var(--gold); background: transparent; color: var(--cream); font-size: 13px; cursor: pointer; }
+.mini-btn:disabled { opacity: .4; cursor: default; }
+.mini-btn:focus-visible { outline: 2px solid var(--gold-btn); outline-offset: 2px; }
+.admin-loading, .admin-error, .truncated, .note-small { margin: 18px 0 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+.admin-error { color: #e3a089; }
+.truncated { color: var(--gold-btn); }
+.stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 18px; }
+.stat { display: flex; flex-direction: column; gap: 4px; padding: 14px; border: 1px solid var(--line); }
+.stat .k { color: var(--muted); font-size: 13px; }
+.stat .v { color: var(--gold-btn); font-family: var(--serif); font-size: 24px; font-weight: 800; }
+.bar-row { display: grid; grid-template-columns: minmax(70px, 38%) 1fr auto; align-items: center; gap: 10px; padding: 5px 0; font-size: 14px; }
+.bar-row .lab { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar-row .track { height: 10px; background: rgba(192, 154, 85, .15); }
+.bar-row .track i { display: block; height: 100%; background: var(--gold-btn); }
+.bar-row .val { min-width: 64px; text-align: right; color: var(--muted); font-size: 13px; }
+.q-block { margin-top: 18px; padding-top: 10px; border-top: 1px solid var(--line); }
+.q-block h3 { margin: 0 0 6px; font-family: var(--serif); font-size: 17px; }
+.q-block small { color: var(--muted); font-family: var(--sans); font-size: 12px; font-weight: 400; }
+.q-missing { margin: 6px 0 0; color: var(--gold-btn); font-size: 13px; }
+
+/* 타이머: 숫자를 크게, 마지막 3초는 붉게 */
+.timer { gap: 14px; margin-bottom: 12px; font-size: 14px; }
+.timer .bar { height: 10px; border-radius: 5px; overflow: hidden; background: rgba(192, 154, 85, .22); }
+.timer .bar i { border-radius: 5px; transition: background .2s; }
+.timer .sec { display: flex; align-items: baseline; justify-content: flex-end; gap: 2px; min-width: 70px; }
+.timer .sec .n { font-family: var(--serif); font-size: 54px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; display: inline-block; }
+.timer .sec small { font-size: 16px; font-weight: 700; }
+.timer.urgent { color: #ff8a70; }
+.timer.urgent .bar i { background: #ff8a70; }
+.timer.urgent .n { animation: tick-pulse 1s ease-in-out infinite; }
+@keyframes tick-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+@media (prefers-reduced-motion: reduce) { .timer.urgent .n { animation: none; } }
+
+/* 철학자 이미지, 더보기, 공개 분포 */
+.portrait { object-fit: cover; aspect-ratio: 1 / 1; background: #14130f; }
+.more-link { display: inline-block; margin-top: 12px; color: var(--gold-btn); font-size: 15px; font-weight: 700; text-decoration: underline; }
+.btn-line.wide { display: block; width: 100%; margin-top: 10px; }
+.public-total { margin: 18px 0 8px; font-size: 16px; }
+.public-total b { color: var(--gold-btn); font-family: var(--serif); font-size: 22px; }
+.public-empty { margin: 22px 0 0; color: var(--muted); font-size: 15px; line-height: 1.6; }
+.bar-row.mine .lab, .bar-row.mine .val { color: var(--cream); font-weight: 800; }
+.bar-row.mine .track i { background: var(--cream); }
+
 </style>
 </head>
 <body>
@@ -134,55 +187,55 @@ const PHILOSOPHERS = [
     tagline: "묻는 일을 멈추지 않은 철학자",
     bio: "아테네 광장을 돌며 사람들에게 질문을 던졌다. 아는 척하는 이들의 허점을 드러내다 고발당했고, 재판 끝에 독배를 받았다. 글은 남기지 않아 제자들의 기록으로 전해진다.",
     work: "직접 저서 없음 (플라톤이 기록한 『변론』)",
-    critique: "답을 안다고 했지?ㅋㅋ 그럼 이유를 세 번만 더 설명해 보던가~." },
+    critique: "답을 안다고 했지? 그럼 이유를 세 번만 더 설명해 보게." },
   { id: "plato", name: "플라톤", years: "기원전 427~347", place: "그리스(아테네)", vector: [1,4,1,1,4],
     quote: "눈에 보이는 것 너머에 변하지 않는 참모습이 있다.",
     tagline: "이데아로 세상을 설명한 철학자",
     bio: "소크라테스의 제자로, 아카데메이아라는 학교를 세워 학문을 가르쳤다. 대화 형식으로 철학을 썼고 이상적인 나라의 모습을 그려 보였다. 서양 철학 전체의 뿌리라 불린다.",
     work: "『국가』",
-    critique: "자네 선택은 벽에 비친 그림자만 보고 내린 결정 같군.ㅋ" },
+    critique: "자네 선택은 벽에 비친 그림자만 보고 내린 결정 같군." },
   { id: "aristotle", name: "아리스토텔레스", years: "기원전 384~322", place: "그리스(스타게이로스)", vector: [1,4,4,2,3],
     quote: "좋은 삶은 올바른 습관을 거듭하는 데서 만들어진다.",
     tagline: "중용을 말한 철학자",
     bio: "플라톤의 학교에서 20년 가까이 공부한 뒤 자신의 학교 리케이온을 세웠다. 논리학, 윤리학, 생물학 등 거의 모든 분야를 체계적으로 다뤘다. 알렉산드로스 대왕의 스승이기도 했다.",
     work: "『니코마코스 윤리학』",
-    critique: "ㅉㅉ 극단으로만 달리지 말고 알맞은 지점을 찾는 연습부터 하게." },
+    critique: "극단으로만 달리지 말고 알맞은 지점을 찾는 연습부터 하게." },
   { id: "epicurus", name: "에피쿠로스", years: "기원전 341~270", place: "그리스(사모스)", vector: [3,2,4,4,5],
     quote: "좋은 친구와 소박한 식탁이면 마음은 충분히 평온하다.",
     tagline: "고요한 즐거움을 권한 철학자",
     bio: "아테네 변두리에 '정원'이라 불린 공동체를 만들어 친구들과 함께 살았다. 그가 말한 쾌락은 사치가 아니라 고통과 불안이 없는 상태였다. 죽음을 두려워할 이유가 없다고 가르쳤다.",
     work: "『주요 교설』",
-    critique: "그렇게 바쁘게 사는 동안 정작 즐거운 순간은 몇 번이나 챙겼나...?" },
+    critique: "그렇게 바쁘게 사는 동안 정작 즐거운 순간은 몇 번이나 챙겼나?" },
   { id: "diogenes", name: "디오게네스", years: "기원전 약 412~323", place: "그리스(시노페)", vector: [4,1,4,5,1],
     quote: "체면과 관습을 벗어던질 때 사람은 비로소 자유로워진다.",
     tagline: "통 속에서 살았다고 전해지는 철학자",
     bio: "집 없이 거리에서 지내며 관습과 허세를 거침없이 비웃었다. 알렉산드로스 대왕 앞에서도 햇빛이나 가리지 말라고 했다는 일화가 전한다. 소박한 삶 자체를 철학으로 삼았다.",
     work: "직접 저서 없음 (『그리스 철학자 열전』 속 일화)",
-    critique: "남들이 박수 쳐 줄 길만 골라 온 건 아닌가??" },
+    critique: "남들이 박수 쳐 줄 길만 골라 온 건 아닌가?" },
   { id: "epictetus", name: "에픽테토스", years: "약 55~135", place: "로마 제국(히에라폴리스)", vector: [1,2,2,2,4],
     quote: "내 힘으로 바꿀 수 있는 일에만 마음을 쓰는 것이 평온의 시작이다.",
     tagline: "노예에서 스토아 철학의 스승이 된 철학자",
     bio: "노예로 태어났지만 자유를 얻은 뒤 철학을 가르쳤다. 우리가 통제할 수 있는 것과 없는 것을 구분하라고 거듭 강조했다. 가르침은 제자 아리아노스의 기록으로 전해진다.",
     work: "『엥케이리디온』",
-    critique: "바꿀 수 없는 일에 쓴 밤이 며칠인지 세어 본 적 있나? 그 시간에 잠을 자거라" },
+    critique: "바꿀 수 없는 일에 쓴 밤이 며칠인지 세어 본 적 있나?" },
   { id: "marcus-aurelius", name: "마르쿠스 아우렐리우스", years: "121~180", place: "로마 제국(로마)", vector: [1,5,2,1,3],
     quote: "오늘 맡은 일을 성실히 해내는 것으로 하루는 충분하다.",
     tagline: "황제이면서 스토아 철학자였던 사람",
     bio: "로마 제국의 황제로 전쟁터와 궁정을 오가며 일했다. 틈틈이 스스로를 다잡는 글을 써 두었고, 그것이 훗날 책으로 묶였다. 의무와 절제를 삶의 중심에 두었다.",
     work: "『명상록』",
-    critique: "하기 싫은 일 앞에서 핑계를 찾는 순간... 자네는 이미 한 발 물러선 걸세.ㅋ" },
+    critique: "하기 싫은 일 앞에서 핑계를 찾는 순간 자네는 이미 한 발 물러선 걸세." },
   { id: "augustine", name: "아우구스티누스", years: "354~430", place: "로마 제국(히포)", vector: [4,4,1,1,4],
     quote: "마음은 참된 안식을 찾기 전까지 가만히 있지 못한다.",
     tagline: "방황 끝에 신앙을 철학으로 풀어낸 철학자",
     bio: "젊은 시절 방황과 쾌락에 빠졌다가 회심해 기독교 사상가가 되었다. 자신의 삶을 솔직하게 되돌아본 글로 이름을 남겼다. 시간과 의지에 대한 사유로도 유명하다.",
     work: "『고백록』",
-    critique: "자네가 그토록 쫓는 것이 정말 마음을 채워 주던가?(ㅋㅋ?)" },
+    critique: "자네가 그토록 쫓는 것이 정말 마음을 채워 주던가?" },
   { id: "aquinas", name: "토마스 아퀴나스", years: "1225~1274", place: "이탈리아(아퀴노 인근)", vector: [2,5,1,1,5],
     quote: "믿음과 이성은 서로를 밀어내지 않고 함께 진리로 나아간다.",
     tagline: "믿음과 이성을 이어 붙인 철학자",
     bio: "도미니코 수도회 수사로 파리와 이탈리아에서 가르쳤다. 아리스토텔레스의 철학을 기독교 신학과 결합해 거대한 체계를 세웠다. 중세 철학을 대표하는 인물로 꼽힌다.",
     work: "『신학대전』",
-    critique: "생각은 많은데 질서가 없군. ㅉ 근거부터 한 줄로 세워 보게." },
+    critique: "생각은 많은데 질서가 없군. 근거부터 한 줄로 세워 보게." },
   { id: "machiavelli", name: "마키아벨리", years: "1469~1527", place: "이탈리아(피렌체)", vector: [1,2,5,1,1],
     quote: "좋은 의도만으로는 나라를 지키기 어렵다. 현실을 읽는 눈이 먼저다.",
     tagline: "이상보다 현실을 앞세운 정치사상가",
@@ -194,31 +247,31 @@ const PHILOSOPHERS = [
     tagline: "질서 없이는 평화도 없다고 본 철학자",
     bio: "영국 내전의 혼란기에 살며 국가가 왜 필요한지를 고민했다. 사람들이 서로 약속해 주권자에게 권한을 넘긴다는 사회 계약 이론을 펼쳤다. 근대 정치철학의 출발점으로 꼽힌다.",
     work: "『리바이어던』",
-    critique: "규칙이 없어도 다들 알아서 잘 지낼 거라고 정말 믿나...?" },
+    critique: "규칙이 없어도 다들 알아서 잘 지낼 거라고 정말 믿나?" },
   { id: "descartes", name: "데카르트", years: "1596~1650", place: "프랑스(라에)", vector: [1,1,2,3,5],
     quote: "모든 것을 의심해 보아도, 의심하고 있는 나 자신만은 남는다.",
     tagline: "의심에서 출발한 근대 철학의 시조",
     bio: "프랑스에서 태어나 네덜란드 등지에서 연구하며 수학과 철학을 함께 다뤘다. 확실한 지식의 기초를 찾으려고 모든 것을 의심하는 방법을 택했다. 좌표 기하학을 만든 수학자이기도 하다.",
     work: "『방법서설』",
-    critique: "그 확신, 한 번이라도 '의심'해 보고 내놓은 건가?" },
+    critique: "그 확신, 한 번이라도 의심해 보고 내놓은 건가?" },
   { id: "spinoza", name: "스피노자", years: "1632~1677", place: "네덜란드(암스테르담)", vector: [1,3,3,4,5],
     quote: "세상을 이해할수록 감정에 끌려다니는 일이 줄어든다.",
     tagline: "신과 자연을 하나로 본 철학자",
     bio: "유대인 공동체에서 쫓겨난 뒤 렌즈를 갈아 생계를 이으며 사색했다. 신과 자연이 같다고 보는 독자적인 체계를 기하학 방식으로 서술했다. 생전에는 위험한 사상가로 취급받았다.",
     work: "『에티카』",
-    critique: "화가 나는 이유부터 이해하면 그 화는 절반으로 줄 텐데.ㅋㅋ;" },
+    critique: "화가 나는 이유부터 이해하면 그 화는 절반으로 줄 텐데." },
   { id: "locke", name: "로크", years: "1632~1704", place: "영국(링턴)", vector: [2,2,2,5,2],
     quote: "누구에게나 자기 삶과 자유, 재산을 함부로 빼앗기지 않을 권리가 있다.",
     tagline: "개인의 권리를 앞세운 철학자",
     bio: "의사이자 정치 조언자로 일하며 영국의 정치 격변을 가까이서 겪었다. 정부는 시민의 동의 위에 서야 하며 이를 어기면 저항할 수 있다고 주장했다. 이 생각은 근대 민주주의에 큰 영향을 주었다.",
     work: "『통치론』",
-    critique: "권리를 요구하는 만큼 책임질 준비도 되어 있나? 음... 아닌듯?" },
+    critique: "권리를 요구하는 만큼 책임질 준비도 되어 있나?" },
   { id: "hume", name: "흄", years: "1711~1776", place: "영국(에든버러)", vector: [5,3,4,2,4],
     quote: "이성은 감정을 섬기는 도구에 가깝다고 보았다.",
     tagline: "경험과 감정을 중시한 철학자",
     bio: "스코틀랜드 출신으로, 지식은 오직 경험에서 나온다고 보았다. 원인과 결과도 습관에서 비롯된 믿음일 뿐이라는 도발적인 주장을 폈다. 훗날 칸트에게 깊은 충격을 준 사상가다.",
     work: "『인간 본성에 관한 논고』",
-    critique: "이성적으로 골랐다고? 그 밑에 깔린 기분은 모른 척하는군.ㅉㅉ" },
+    critique: "이성적으로 골랐다고? 그 밑에 깔린 기분은 모른 척하는군." },
   { id: "rousseau", name: "루소", years: "1712~1778", place: "스위스(제네바)", vector: [5,5,4,4,3],
     quote: "사람은 본래 자유롭지만 사회 속에서는 늘 무언가에 매여 산다.",
     tagline: "자연과 공동의 뜻을 말한 철학자",
@@ -230,25 +283,25 @@ const PHILOSOPHERS = [
     tagline: "원칙으로 도덕을 세운 철학자",
     bio: "평생 고향 쾨니히스베르크에서 가르치며 규칙적인 생활로 유명했다. 인간의 이성이 무엇을 알 수 있고 어떻게 행동해야 하는지를 체계적으로 따졌다. 도덕은 결과가 아니라 원칙에 달려 있다고 보았다.",
     work: "『도덕형이상학 정초』",
-    critique: "상황이 그랬다는 말은 '원칙을 어긴 사람'(너)이 가장 먼저 꺼내는 변명이지." },
+    critique: "상황이 그랬다는 말은 원칙을 어긴 사람이 가장 먼저 꺼내는 변명이지." },
   { id: "hegel", name: "헤겔", years: "1770~1831", place: "독일(슈투트가르트)", vector: [2,5,4,2,2],
     quote: "대립은 사라지지 않고, 부딪치면서 더 높은 단계로 나아간다.",
     tagline: "대립 속에서 역사를 읽은 철학자",
     bio: "독일 관념론을 완성한 철학자로 베를린 대학에서 가르쳤다. 사상과 역사가 대립과 종합을 거치며 발전한다고 보았다. 마르크스를 비롯한 많은 사상가가 그의 영향을 받았다.",
     work: "『정신현상학』",
-    critique: "맞다 틀리다만 따지니 더 큰 그림이 안 보이는 걸세.ㅉㅉ;" },
+    critique: "맞다 틀리다만 따지니 더 큰 그림이 안 보이는 걸세." },
   { id: "bentham", name: "벤담", years: "1748~1832", place: "영국(런던)", vector: [1,5,5,3,1],
     quote: "더 많은 사람이 더 행복해지는 쪽이 더 나은 선택이다.",
     tagline: "행복의 총합을 따진 철학자",
     bio: "법과 제도를 개혁하려 했던 영국의 사상가로, 공리주의를 처음 체계화했다. 행복의 양을 따져 정책을 판단하자고 주장했다. 자신의 유해를 보존해 전시하도록 유언했다는 일화로도 알려져 있다.",
     work: "『도덕과 입법의 원리 서설』",
-    critique: "마음 편한 선택과 더 많은 사람에게 나은 선택은 다를 수 있다네...!" },
+    critique: "마음 편한 선택과 더 많은 사람에게 나은 선택은 다를 수 있다네." },
   { id: "mill", name: "존 스튜어트 밀", years: "1806~1873", place: "영국(런던)", vector: [1,4,5,4,3],
     quote: "남에게 해를 끼치지 않는다면 각자 자기 방식대로 살 자유가 있다.",
     tagline: "개인의 자유를 지킨 철학자",
     bio: "어릴 때부터 아버지에게 엄격한 영재 교육을 받았고, 훗날 공리주의를 다듬었다. 의회 의원으로 일하며 여성 참정권을 주장하기도 했다. 다수의 압력으로부터 개인을 지켜야 한다고 강조했다.",
     work: "『자유론』",
-    critique: "다수가 편하다는 이유로 소수의 길까지 막고 있지는 않은가??" },
+    critique: "다수가 편하다는 이유로 소수의 길까지 막고 있지는 않은가?" },
   { id: "schopenhauer", name: "쇼펜하우어", years: "1788~1860", place: "독일(단치히)", vector: [5,1,3,3,5],
     quote: "끝없는 욕망 때문에 삶은 만족과 권태 사이를 오간다.",
     tagline: "삶의 고통을 직시한 철학자",
@@ -260,19 +313,19 @@ const PHILOSOPHERS = [
     tagline: "홀로 결단하는 삶을 말한 철학자",
     bio: "코펜하겐에서 평생 살며 사회와 교회의 안일함을 비판했다. 개인이 불안 속에서 스스로 결단해야 한다고 보아 실존철학의 선구자로 불린다. 약혼을 파기한 경험도 글에 깊이 반영되었다.",
     work: "『공포와 전율』",
-    critique: "군중 속에 편히 있다가 홀로 서야 할 순간이 오면 어쩔 텐가...?" },
+    critique: "군중 속에 편히 있다가 홀로 서야 할 순간이 오면 어쩔 텐가?" },
   { id: "marx", name: "마르크스", years: "1818~1883", place: "독일(트리어)", vector: [2,5,4,4,1],
     quote: "사람의 생각은 그가 살아가는 물질적 조건 위에서 자라난다.",
     tagline: "경제 구조로 사회를 분석한 철학자",
     bio: "독일에서 태어나 영국 런던에서 망명 생활을 하며 자본주의를 분석했다. 사회의 변화는 생산 방식과 계급 갈등에서 나온다고 설명했다. 철학을 현실을 바꾸는 도구로 삼으려 했다.",
     work: "『자본』",
-    critique: "자네의 노력이 '누구'의 주머니를 채우는지 한번 따져 보게." },
+    critique: "자네의 노력이 누구의 주머니를 채우는지 한번 따져 보게." },
   { id: "nietzsche", name: "니체", years: "1844~1900", place: "독일(뢰켄)", vector: [5,1,5,5,2],
     quote: "남이 정한 가치를 거부하고 자기만의 가치를 스스로 만들어 가라.",
     tagline: "자기 삶의 가치를 스스로 세우라고 외친 철학자",
     bio: "젊은 나이에 교수가 되었지만 건강 문제로 일찍 물러나 여러 곳을 떠돌며 글을 썼다. 기존의 도덕과 신념을 날카롭게 의심하고 자신만의 가치를 창조하라고 외쳤다. 말년에는 정신 질환으로 고통받았다.",
     work: "『차라투스트라는 이렇게 말했다』",
-    critique: "그 안전한 선택, 자네가 원한 건가 남들이 원할 것 같은 건가...?" },
+    critique: "그 안전한 선택, 자네가 원한 건가 남들이 원할 것 같은 건가?" },
   { id: "sartre", name: "사르트르", years: "1905~1980", place: "프랑스(파리)", vector: [3,2,5,5,1],
     quote: "사람은 먼저 존재하고, 어떤 사람이 될지는 선택으로 만들어진다.",
     tagline: "선택이 곧 나라고 말한 철학자",
@@ -290,7 +343,7 @@ const PHILOSOPHERS = [
     tagline: "부조리 속에서 살기를 택한 철학자",
     bio: "알제리에서 가난하게 자라 작가이자 저널리스트로 활동했다. 의미를 구하는 인간과 침묵하는 세계 사이의 어긋남을 부조리라 부르고, 그럼에도 삶을 긍정하라고 말했다. 1957년 노벨 문학상을 받았다.",
     work: "『시시포스 신화』",
-    critique: "의미가 없다고 주저앉기엔 자네가 해 볼 일이 아직 많네.ㅎ_ㅎ" },
+    critique: "의미가 없다고 주저앉기엔 자네가 해 볼 일이 아직 많네." },
   { id: "wittgenstein", name: "비트겐슈타인", years: "1889~1951", place: "오스트리아(빈)", vector: [1,2,4,2,5],
     quote: "말로 분명히 할 수 없는 것 앞에서는 입을 다무는 편이 낫다.",
     tagline: "언어의 한계를 따진 철학자",
@@ -324,6 +377,13 @@ const PHILOSOPHERS = [
 ];
 
 if (typeof module !== 'undefined') module.exports = { PHILOSOPHERS };
+
+// 결과 화면 '어떤 사람이었을까' 아래 '더보기' 링크. 철학자 id → https 주소. 비어 있으면 링크가 나타나지 않는다.
+const MORE_LINKS = {
+  // 예: plato: 'https://example.com/plato',
+};
+
+if (typeof module !== 'undefined') module.exports = { MORE_LINKS };
 
 // 상황 12개. 축: A 이성(-)↔감정(+), B 나(-)↔우리(+), C 규칙(-)↔상황(+), D 질서(-)↔자유(+), E 행동(-)↔관조(+)
 const QUESTIONS = [
@@ -506,6 +566,234 @@ if (typeof module !== 'undefined') {
   };
 }
 
+// Supabase 설정. 세 값을 채우면 결과 저장과 관리자 통계가 켜진다. 비워 두면 예전처럼 동작한다.
+// SUPABASE_ANON_KEY는 공개되어도 되는 'anon public' 키다. service_role 키는 절대 넣지 말 것.
+const CONFIG = {
+  SUPABASE_URL: 'https://vtpootsgqbxhdxcgjqmz.supabase.co',
+  SUPABASE_ANON_KEY: 'sb_publishable_BTtb5VOUJIXSDoV8CmXfrA_SxaS9Bhk',
+  ADMIN_EMAIL: '',
+  // 철학자 이미지를 올린 폴더 경로(예: 'img/'). 파일 이름은 <철학자id>.jpg. 비워 두면 문자 엠블럼을 쓴다.
+  IMAGE_DIR: '',
+};
+
+if (typeof module !== 'undefined') module.exports = { CONFIG };
+
+// 통계: 전송 데이터 만들기, 집계, CSV. 순수 함수만 둔다.
+const _statsCore = (typeof module !== 'undefined') ? require('./core.js') : { encodeAnswers };
+const DB_ANSWERS = /^[0-3]{2}[0-3-][0-3]{7}[0-3-][0-3]$/;
+const KST_MS = 9 * 3600 * 1000;
+const DAY_MS = 86400000;
+const CIRCLED = ['①', '②', '③', '④'];
+
+const kstIso = (ms) => new Date(ms + KST_MS).toISOString();
+const kstDay = (ms) => kstIso(ms).slice(0, 10);
+const kstDateTime = (ms) => kstIso(ms).slice(0, 19).replace('T', ' ');
+const pct = (n, d) => (d ? Math.round((n / d) * 1000) / 10 : '');
+const countDash = (s) => (s.match(/-/g) || []).length;
+
+function buildPayload(answers, result, fromFriend) {
+  if (!Array.isArray(answers) || answers.length !== 12) return null;
+  const code = _statsCore.encodeAnswers(answers);
+  if (!DB_ANSWERS.test(code)) return null;
+  const best = result.ranking.best;
+  const v = result.vector.map((x) => Math.round(x * 100) / 100);
+  return {
+    answers: code,
+    philosopher_id: best.id,
+    match_percent: result.ranking.percent[best.id],
+    axis_a: v[0], axis_b: v[1], axis_c: v[2], axis_d: v[3], axis_e: v[4],
+    from_friend: Boolean(fromFriend),
+  };
+}
+
+function aggregate(rows, now, philosophers, questions) {
+  const todayStr = kstDay(now);
+  const weekStart = kstDay(now - 6 * DAY_MS);
+  const perDay = {};
+  let today = 0;
+  let last7 = 0;
+  let matchSum = 0;
+  let friendCount = 0;
+  let timeoutAny = 0;
+  let timeoutBoth = 0;
+  const byId = {};
+  const qstats = questions.map(() => ({ counts: [0, 0, 0, 0], answered: 0, missing: 0 }));
+
+  rows.forEach((r) => {
+    const day = kstDay(Date.parse(r.created_at));
+    perDay[day] = (perDay[day] || 0) + 1;
+    if (day === todayStr) today += 1;
+    if (day >= weekStart && day <= todayStr) last7 += 1;
+    matchSum += Number(r.match_percent) || 0;
+    if (r.from_friend) friendCount += 1;
+    byId[r.philosopher_id] = (byId[r.philosopher_id] || 0) + 1;
+    const code = typeof r.answers === 'string' ? r.answers : '';
+    if (code.length !== questions.length) return;
+    const missing = countDash(code);
+    if (missing >= 1) timeoutAny += 1;
+    if (missing === 2) timeoutBoth += 1;
+    [...code].forEach((ch, i) => {
+      if (ch === '-') qstats[i].missing += 1;
+      else if (ch >= '0' && ch <= '3') { qstats[i].counts[Number(ch)] += 1; qstats[i].answered += 1; }
+    });
+  });
+
+  const daily = [];
+  for (let i = 13; i >= 0; i -= 1) {
+    const date = kstDay(now - i * DAY_MS);
+    daily.push({ date, count: perDay[date] || 0 });
+  }
+  const byPhilosopher = philosophers
+    .map((p, order) => ({ id: p.id, name: p.name, count: byId[p.id] || 0, order }))
+    .sort((a, b) => b.count - a.count || a.order - b.order)
+    .map(({ id, name, count }) => ({ id, name, count }));
+
+  return {
+    total: rows.length, today, last7, daily,
+    avgMatch: rows.length ? Math.round((matchSum / rows.length) * 10) / 10 : null,
+    friendCount, timeoutAny, timeoutBoth, byPhilosopher, questions: qstats,
+  };
+}
+
+function csvEscape(v) {
+  if (v === null || v === undefined) return '';
+  const s = String(v);
+  return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+const csvLine = (cells) => cells.map(csvEscape).join(',');
+
+function toRawCsv(rows, philosophers) {
+  const names = {};
+  philosophers.forEach((p) => { names[p.id] = p.name; });
+  const header = ['시각(한국시간)', '철학자id', '철학자', '일치율', '축A', '축B', '축C', '축D', '축E', '친구링크', '시간초과수'];
+  for (let i = 1; i <= 12; i += 1) header.push('q' + i);
+  const lines = [csvLine(header)];
+  rows.forEach((r) => {
+    const code = typeof r.answers === 'string' ? r.answers : '';
+    const qs = [...code.padEnd(12, ' ').slice(0, 12)].map((ch) => (ch >= '0' && ch <= '3' ? String(Number(ch) + 1) : ''));
+    lines.push(csvLine([
+      kstDateTime(Date.parse(r.created_at)), r.philosopher_id, names[r.philosopher_id] || r.philosopher_id, r.match_percent,
+      r.axis_a, r.axis_b, r.axis_c, r.axis_d, r.axis_e, r.from_friend ? 'Y' : 'N', countDash(code), ...qs,
+    ]));
+  });
+  return '\uFEFF' + lines.join('\r\n');
+}
+
+function toSummaryCsv(stats, questions) {
+  const t = stats.total;
+  const lines = [['구분', '항목', '라벨', '건수', '비율(%)', '분모']];
+  lines.push(['전체', '전체 참여', '', t, '', '']);
+  lines.push(['전체', '오늘', '', stats.today, pct(stats.today, t), t]);
+  lines.push(['전체', '최근 7일', '', stats.last7, pct(stats.last7, t), t]);
+  lines.push(['전체', '평균 일치율', '', '', stats.avgMatch === null ? '' : stats.avgMatch, t]);
+  lines.push(['전체', '친구 링크 유입', '', stats.friendCount, pct(stats.friendCount, t), t]);
+  lines.push(['전체', '시간 초과 1개 이상', '', stats.timeoutAny, pct(stats.timeoutAny, t), t]);
+  lines.push(['전체', '시간 초과 2개', '', stats.timeoutBoth, pct(stats.timeoutBoth, t), t]);
+  stats.byPhilosopher.forEach((p) => lines.push(['철학자', p.id, p.name, p.count, pct(p.count, t), t]));
+  questions.forEach((q, i) => {
+    const s = stats.questions[i];
+    q.options.forEach((o, j) => lines.push(['문항', 'q' + (i + 1), q.title + ' / ' + CIRCLED[j] + ' ' + o.text, s.counts[j], pct(s.counts[j], s.answered), s.answered]));
+    if (q.timed) lines.push(['문항', 'q' + (i + 1), q.title + ' / 시간 초과', s.missing, pct(s.missing, t), t]);
+  });
+  return '\uFEFF' + lines.map(csvLine).join('\r\n');
+}
+
+// 공개 분포: [{philosopher_id, count}] → 32명 전체를 많은 순으로
+function publicDistribution(rows, philosophers) {
+  const byId = {};
+  rows.forEach((r) => { byId[r.philosopher_id] = (byId[r.philosopher_id] || 0) + (Number(r.count) || 0); });
+  const list = philosophers
+    .map((p, order) => ({ id: p.id, name: p.name, count: byId[p.id] || 0, order }))
+    .sort((a, b) => b.count - a.count || a.order - b.order)
+    .map(({ id, name, count }) => ({ id, name, count }));
+  return { total: list.reduce((n, x) => n + x.count, 0), list };
+}
+
+if (typeof module !== 'undefined') module.exports = { buildPayload, aggregate, toRawCsv, toSummaryCsv, csvEscape, publicDistribution };
+
+// Supabase REST·Auth 호출. 외부 라이브러리 없이 fetch만 쓴다. fetch는 주입받아 테스트할 수 있다.
+const ROW_COLUMNS = 'created_at,answers,philosopher_id,match_percent,axis_a,axis_b,axis_c,axis_d,axis_e,from_friend,timeout_count';
+
+// 새 형식 키(sb_...)는 JWT가 아니라서 apikey 헤더에만 넣는다. (Authorization에 넣으면 Invalid JWT로 거부됨)
+// 예전 JWT 형식 anon 키는 Authorization에도 넣는다.
+function restHeaders(cfg) {
+  const key = cfg.SUPABASE_ANON_KEY;
+  return key.startsWith('sb_') ? { apikey: key } : { apikey: key, Authorization: 'Bearer ' + key };
+}
+
+async function submitResult(payload, cfg, fetchFn, delayFn) {
+  const delay = delayFn || ((ms) => new Promise((resolve) => setTimeout(resolve, ms)));
+  const attempt = async () => {
+    let res;
+    try {
+      res = await fetchFn(cfg.SUPABASE_URL + '/rest/v1/results', {
+        method: 'POST',
+        headers: { ...restHeaders(cfg), 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+        body: JSON.stringify(payload),
+        keepalive: true,
+      });
+    } catch (e) {
+      return { ok: false, retry: true };
+    }
+    if (res.ok) return { ok: true };
+    return { ok: false, retry: res.status >= 500 || res.status === 429 };
+  };
+  let r = await attempt();
+  if (r.ok) return true;
+  if (!r.retry) return false;
+  await delay(2000);
+  r = await attempt();
+  return r.ok;
+}
+
+async function adminLogin(password, cfg, fetchFn) {
+  const res = await fetchFn(cfg.SUPABASE_URL + '/auth/v1/token?grant_type=password', {
+    method: 'POST',
+    headers: { apikey: cfg.SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: cfg.ADMIN_EMAIL, password }),
+  });
+  if (!res.ok) throw new Error('login failed');
+  const data = await res.json();
+  if (!data || !data.access_token) throw new Error('login failed');
+  return data.access_token;
+}
+
+async function fetchAllRows(token, cfg, fetchFn, opts) {
+  const pageSize = (opts && opts.pageSize) || 1000;
+  const maxRows = (opts && opts.maxRows) || 20000;
+  const rows = [];
+  let from = 0;
+  while (rows.length < maxRows) {
+    const res = await fetchFn(cfg.SUPABASE_URL + '/rest/v1/results?select=' + ROW_COLUMNS + '&order=created_at.desc', {
+      headers: {
+        apikey: cfg.SUPABASE_ANON_KEY,
+        Authorization: 'Bearer ' + token,
+        'Range-Unit': 'items',
+        Range: from + '-' + (from + pageSize - 1),
+      },
+    });
+    if (!res.ok) throw new Error('fetch failed');
+    const page = await res.json();
+    rows.push(...page);
+    if (page.length < pageSize) return { rows, truncated: false };
+    from += pageSize;
+  }
+  return { rows, truncated: true };
+}
+
+// 공개 화면용: 철학자별 인원수만 돌려주는 DB 함수(rpc). 개별 응답은 읽을 수 없다.
+async function fetchPublicCounts(cfg, fetchFn) {
+  const res = await fetchFn(cfg.SUPABASE_URL + '/rest/v1/rpc/philosopher_counts', {
+    method: 'POST',
+    headers: { ...restHeaders(cfg), 'Content-Type': 'application/json' },
+    body: '{}',
+  });
+  if (!res.ok) throw new Error('fetch failed');
+  return res.json();
+}
+
+if (typeof module !== 'undefined') module.exports = { submitResult, adminLogin, fetchAllRows, fetchPublicCounts };
+
 // 경과 시간 기준 카운트다운. now()와 시작 시각의 차로 계산하므로 탭이 백그라운드에 있어도 정확하다.
 function createTimer(durationMs, now, onTick, onExpire) {
   let startAt = 0;
@@ -610,11 +898,15 @@ if (typeof document !== 'undefined') (function () {
   const $app = document.getElementById('app');
   const NUMS = ['①', '②', '③', '④'];
   const TIMED_MS = 7000;
-  const state = { screen: 'start', index: 0, answers: [], result: null, friendAnswers: null };
+  const state = { screen: 'start', index: 0, answers: [], result: null, friendAnswers: null, adminToken: null, admin: null, prevScreen: null, publicData: null };
+  const cfg = CONFIG;
   let timer = null;
   let tickHandle = null;
   let lockedUntil = 0;
   let modalOpen = false;
+  let loginOpen = false;
+  let loginError = '';
+  let loginBusy = false;
 
   const nowMs = () => (typeof window.__now === 'function' ? window.__now() : performance.now());
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -628,7 +920,7 @@ if (typeof document !== 'undefined') (function () {
   }
 
   function startHtml() {
-    return '<main class="stage"><section class="card start">' +
+    return '<main class="stage">' + adminBarHtml() + '<section class="card start">' +
       '<p class="kicker">열두 가지 상황 · 서른두 명의 철학자</p>' +
       '<h1 class="title"><span class="gold">나와 닮은</span><span class="main">철학자는?</span></h1>' +
       '<div class="rule"></div><p class="lead">고른 답으로 가장 닮은 사람을 찾아 드립니다</p><div class="rule"></div>' +
@@ -636,7 +928,9 @@ if (typeof document !== 'undefined') (function () {
       '<p class="meta">약 3분이 걸립니다</p>' +
       (state.friendAnswers ? '<p class="invite">친구가 답을 보내 왔어요. 같은 질문을 풀면 둘이 얼마나 닮았는지 알려 드려요.</p>' : '') + ornamentSvg() +
       '</section><button class="btn-gold" id="start-btn" type="button">시작해 볼까요 →</button>' +
-      '<button class="link" id="privacy-btn" type="button">개인정보 처리방침</button></main>';
+      (cloudOn() ? '<button class="link" id="public-btn" type="button">지금까지 나온 철학자 분포 보기</button>' : '') +
+      '<button class="link" id="privacy-btn" type="button">개인정보 처리방침</button>' +
+      (cloudOn() ? '<p class="notice">설문 결과는 자동으로 저장됩니다.</p>' : '') + '</main>';
   }
 
   function quizHtml() {
@@ -648,16 +942,8 @@ if (typeof document !== 'undefined') (function () {
       (q.timed ? '<span class="fast">즉답 모드</span>' : '') + '</div>' +
       '<h2 class="q-title">' + esc(q.title) + '</h2><div class="rule"></div>' +
       '<p class="q-text">' + esc(q.text) + '</p><p class="q-prompt">' + esc(q.prompt) + '</p><div class="spacer"></div>' +
-      (q.timed ? '<div class="timer"><div class="bar"><i></i></div><span class="sec">7초</span></div>' : '') +
+      (q.timed ? '<div class="timer" role="timer" aria-label="남은 시간"><div class="bar"><i></i></div><span class="sec"><b class="n">7</b><small>초</small></span></div>' : '') +
       '<ol class="options">' + options + '</ol></section></main>';
-  }
-
-  function modalHtml() {
-    return '<div class="modal" role="dialog" aria-modal="true" aria-label="개인정보 처리방침"><section class="card">' +
-      '<h2>개인정보 처리방침</h2>' +
-      '<p>이 사이트는 답변이나 결과를 서버로 보내거나 저장하지 않습니다. 모든 계산은 이 기기의 브라우저 안에서만 이루어집니다.</p>' +
-      '<p>‘친구와 견주어 보기’ 링크에는 선택한 보기 번호만 담기며, 이름이나 연락처 같은 개인 정보는 들어가지 않습니다.</p>' +
-      '<button class="btn-gold" id="modal-close" type="button">닫기</button></section></div>';
   }
 
   const AXIS_LABELS = [['이성', '감정'], ['나', '우리'], ['규칙', '상황'], ['질서', '자유'], ['행동', '관조']];
@@ -702,18 +988,19 @@ if (typeof document !== 'undefined') (function () {
       compare = '<section class="card compare-box"><h2 class="h">친구와 비교</h2><p class="compare-pct">친구와의 일치도 ' +
         matchPercent(vector, fv) + '%</p><p class="compare-sub">친구와 가장 닮은 철학자는 ' + esc(fb.name) + '입니다</p></section>';
     }
-    const mini = (p, label) => '<div class="mini">' + emblemSvg(p) + '<span class="label">' + label + '</span><span class="name">' +
+    const mini = (p, label) => '<div class="mini">' + portraitHtml(p) + '<span class="label">' + label + '</span><span class="name">' +
       esc(p.name) + '</span><span class="pct">' + pct[p.id] + '%</span></div>';
     return '<main class="stage">' +
       '<section class="card hero"><p class="kicker">나와 가장 닮은 철학자</p><h1 class="result-name">' + esc(best.name) + '</h1>' +
       '<div class="rule"></div><p class="match-pct">' + pct[best.id] + '% 닮음</p>' +
       '<p class="result-years">' + esc(best.years) + ' · ' + esc(best.place) + '</p><div class="rule"></div>' +
       '<p class="result-quote">“' + esc(best.quote) + '”</p><p class="result-tagline">' + esc(best.tagline) + '</p>' +
-      emblemSvg(best) + '</section>' +
+      portraitHtml(best) + '</section>' +
       '<button class="btn-dark" type="button" data-act="save">결과 카드 저장</button>' +
       '<div class="btn-row"><button class="btn-line" type="button" data-act="compare">친구와 견주어 보기</button>' +
       '<button class="btn-line" type="button" data-act="retry">처음부터 다시</button></div>' +
-      compare + '<section class="card detail"><h2 class="h">어떤 사람이었을까</h2><p class="bio">' + esc(best.bio) + '</p>' +
+      (cloudOn() ? '<button class="btn-line wide" type="button" data-act="public">지금까지 나온 철학자 분포 보기</button>' : '') +
+      compare + '<section class="card detail"><h2 class="h">어떤 사람이었을까</h2><p class="bio">' + esc(best.bio) + '</p>' + moreLinkHtml(best) +
       '<h2 class="h">대표 저서</h2><p class="work">' + esc(best.work) + '</p>' +
       '<h2 class="h">내 생각의 다섯 갈래</h2><div class="thoughts">' + rows + '</div>' +
       '<p class="legend"><i class="key me"></i>내 답 <i class="key phil"></i>' + esc(best.name) + '</p></section>' +
@@ -721,6 +1008,179 @@ if (typeof document !== 'undefined') (function () {
       mini(ranking.similar[0], '가까운 철학자') + mini(ranking.similar[1], '가까운 철학자') + mini(ranking.opposite, '정반대 철학자') +
       '</div><blockquote class="critique">“' + esc(ranking.opposite.critique) + '”</blockquote>' +
       '<p class="critique-by">' + esc(subj(ranking.opposite.name)) + ' 나에게 하는 말</p></section></main>';
+  }
+
+  // ---- Supabase 저장 / 관리자 통계 ----
+  const fetchFn = (...a) => window.philo.fetch(...a);
+  const cloudOn = () => Boolean(cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY);
+  const adminOn = () => cloudOn() && Boolean(cfg.ADMIN_EMAIL);
+  const pctText = (n, d) => (d ? (Math.round((n / d) * 1000) / 10) + '%' : '-');
+
+  function sendResult() {
+    if (!cloudOn() || !state.result || state.result.sent) return;
+    state.result.sent = true;
+    const payload = buildPayload(state.answers, state.result, Array.isArray(state.friendAnswers));
+    if (!payload) return;
+    submitResult(payload, cfg, fetchFn, (ms) => window.philo.delay(ms)).catch(() => {});
+  }
+
+  function adminBarHtml() {
+    if (!adminOn()) return '';
+    return '<div class="admin-bar"><button class="admin-link" id="admin-btn" type="button">' +
+      (state.adminToken ? '통계 보기' : '관리자 로그인') + '</button></div>';
+  }
+
+  function modalHtml() {
+    const body = cloudOn()
+      ? '<p>이 사이트는 설문 결과를 통계 목적으로 익명으로 서버에 저장합니다. 저장되는 것은 12개 문항에서 고른 보기 번호(시간 초과 포함), 결과 철학자와 일치율, 성향 점수, 참여 시각뿐이며 이름·연락처 같은 개인정보는 받지 않습니다.</p>' +
+        '<p>‘지금까지 나온 철학자 분포’ 화면에는 철학자별 인원수만 공개되고, 개별 응답은 공개되지 않습니다. 서버(Supabase)의 접속 기록에는 접속 IP 등이 남을 수 있습니다. ‘친구와 견주어 보기’ 링크에는 선택한 보기 번호만 담깁니다.</p>'
+      : '<p>이 사이트는 답변이나 결과를 서버로 보내거나 저장하지 않습니다. 모든 계산은 이 기기의 브라우저 안에서만 이루어집니다.</p>' +
+        '<p>‘친구와 견주어 보기’ 링크에는 선택한 보기 번호만 담기며, 이름이나 연락처 같은 개인 정보는 들어가지 않습니다.</p>';
+    return '<div class="modal" role="dialog" aria-modal="true" aria-label="개인정보 처리방침"><section class="card">' +
+      '<h2>개인정보 처리방침</h2>' + body +
+      '<button class="btn-gold" id="modal-close" type="button">닫기</button></section></div>';
+  }
+
+  function loginModalHtml() {
+    return '<div class="modal" role="dialog" aria-modal="true" aria-label="관리자 로그인"><section class="card">' +
+      '<h2>관리자 로그인</h2>' +
+      '<input id="admin-pw" class="pw" type="password" autocomplete="current-password" placeholder="비밀번호" aria-label="관리자 비밀번호">' +
+      (loginError ? '<p class="err" role="alert">' + esc(loginError) + '</p>' : '') +
+      '<button class="btn-gold" id="admin-submit" type="button"' + (loginBusy ? ' disabled' : '') + '>로그인</button>' +
+      '<button class="link" id="admin-cancel" type="button">닫기</button></section></div>';
+  }
+
+  function barRow(label, value, max, valueText, cls) {
+    const w = max ? Math.round((value / max) * 100) : 0;
+    return '<div class="bar-row' + (cls ? ' ' + cls : '') + '"><span class="lab">' + esc(label) + '</span><span class="track"><i style="width:' + w + '%"></i></span>' +
+      '<span class="val">' + esc(valueText) + '</span></div>';
+  }
+
+  function adminHtml() {
+    const a = state.admin;
+    const ready = Boolean(a && a.stats);
+    const dis = ready ? '' : ' disabled';
+    let html = '<main class="stage admin"><section class="card"><div class="admin-top"><h1 class="h">통계</h1><div class="admin-actions">' +
+      '<button class="mini-btn" type="button" data-act="admin-refresh">새로고침</button>' +
+      '<button class="mini-btn" type="button" data-act="csv-raw"' + dis + '>응답 원본 CSV</button>' +
+      '<button class="mini-btn" type="button" data-act="csv-summary"' + dis + '>통계 요약 CSV</button>' +
+      '<button class="mini-btn" type="button" data-act="admin-back">사이트로 돌아가기</button>' +
+      '<button class="mini-btn" type="button" data-act="admin-logout">로그아웃</button></div></div>';
+    if (!a || a.loading) return html + '<p class="admin-loading">불러오는 중…</p></section></main>';
+    if (a.error) return html + '<p class="admin-error">통계를 불러오지 못했어요. 새로고침하거나, 로그아웃 후 다시 로그인해 주세요.</p></section></main>';
+    const s = a.stats;
+    const t = s.total;
+    html += (a.truncated ? '<p class="truncated">최근 20,000건 기준입니다.</p>' : '') +
+      '<div class="stats-grid">' +
+      '<div class="stat"><span class="k">전체 참여</span><span class="v stat-total">' + t + '</span></div>' +
+      '<div class="stat"><span class="k">오늘</span><span class="v stat-today">' + s.today + '</span></div>' +
+      '<div class="stat"><span class="k">최근 7일</span><span class="v stat-week">' + s.last7 + '</span></div>' +
+      '<div class="stat"><span class="k">평균 일치율</span><span class="v stat-avg">' + (s.avgMatch === null ? '-' : s.avgMatch + '%') + '</span></div>' +
+      '<div class="stat"><span class="k">친구 링크 유입</span><span class="v stat-friend">' + s.friendCount + ' (' + pctText(s.friendCount, t) + ')</span></div>' +
+      '<div class="stat"><span class="k">시간 초과 1개 이상</span><span class="v stat-timeout">' + s.timeoutAny + ' (' + pctText(s.timeoutAny, t) + ')</span></div>' +
+      '<div class="stat"><span class="k">시간 초과 2개</span><span class="v stat-timeout2">' + s.timeoutBoth + ' (' + pctText(s.timeoutBoth, t) + ')</span></div></div>';
+    const dmax = Math.max(1, ...s.daily.map((d) => d.count));
+    html += '<h2 class="h">최근 14일 참여</h2><div class="daily">' +
+      s.daily.map((d) => barRow(d.date.slice(5), d.count, dmax, String(d.count))).join('') + '</div>';
+    const pmax = Math.max(1, ...s.byPhilosopher.map((p) => p.count));
+    html += '<h2 class="h">철학자별 결과</h2><div class="by-philosopher">' +
+      s.byPhilosopher.map((p) => barRow(p.name, p.count, pmax, p.count + ' (' + pctText(p.count, t) + ')')).join('') + '</div>';
+    html += '<h2 class="h">문항별 선택</h2><p class="note-small">보기 비율은 그 문항에 응답한 사람 기준이고, 시간 초과는 따로 표시합니다.</p><div class="questions">' +
+      QUESTIONS.map((q, i) => {
+        const qs = s.questions[i];
+        const opts = q.options.map((o, j) => barRow(NUMS[j] + ' ' + o.text, qs.counts[j], qs.answered, qs.counts[j] + ' (' + pctText(qs.counts[j], qs.answered) + ')')).join('');
+        return '<div class="q-block"><h3>' + (i + 1) + '. ' + esc(q.title) + ' <small>응답 ' + qs.answered + '명 기준</small></h3>' + opts +
+          (q.timed ? '<p class="q-missing">시간 초과 ' + qs.missing + '명 (전체의 ' + pctText(qs.missing, t) + ')</p>' : '') + '</div>';
+      }).join('') + '</div></section></main>';
+    return html;
+  }
+
+  function openLogin() { loginOpen = true; loginError = ''; render(); }
+
+  async function submitLogin() {
+    if (loginBusy) return;
+    const input = document.getElementById('admin-pw');
+    const pw = input ? input.value : '';
+    if (!pw) { loginError = '비밀번호를 입력해 주세요.'; render(); return; }
+    loginBusy = true;
+    try {
+      state.adminToken = await adminLogin(pw, cfg, fetchFn);
+    } catch (e) {
+      loginBusy = false;
+      loginError = '비밀번호가 맞지 않습니다.';
+      render();
+      return;
+    }
+    loginBusy = false;
+    loginOpen = false;
+    await openAdmin();
+  }
+
+  async function openAdmin() {
+    state.screen = 'admin';
+    state.admin = { loading: true, error: false, stats: null, rows: [], truncated: false };
+    render();
+    try {
+      const { rows, truncated } = await fetchAllRows(state.adminToken, cfg, fetchFn);
+      state.admin = { loading: false, error: false, rows, truncated, stats: aggregate(rows, Date.now(), PHILOSOPHERS, QUESTIONS) };
+    } catch (e) {
+      state.admin = { loading: false, error: true, stats: null, rows: [], truncated: false };
+    }
+    if (state.screen === 'admin') render();
+  }
+
+  function downloadCsv(kind) {
+    const a = state.admin;
+    if (!a || !a.stats) return;
+    const text = kind === 'raw' ? toRawCsv(a.rows, PHILOSOPHERS) : toSummaryCsv(a.stats, QUESTIONS);
+    const stamp = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10).replace(/-/g, '');
+    window.philo.deps.download(new Blob([text], { type: 'text/csv;charset=utf-8' }), 'philo-' + (kind === 'raw' ? '원본' : '요약') + '-' + stamp + '.csv');
+  }
+
+  function adminLogout() {
+    state.adminToken = null;
+    state.admin = null;
+    state.screen = 'start';
+    render();
+  }
+
+  function portraitHtml(p) {
+    if (!cfg.IMAGE_DIR) return emblemSvg(p);
+    return '<img class="portrait emblem" src="' + esc(cfg.IMAGE_DIR + p.id + '.jpg') + '" alt="' + esc(p.name) + ' 초상" data-pid="' + esc(p.id) + '" loading="lazy">';
+  }
+
+  function moreLinkHtml(p) {
+    const url = MORE_LINKS[p.id];
+    return url && /^https:\/\//.test(url) ? '<a class="more-link" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">더보기 →</a>' : '';
+  }
+
+  function publicHtml() {
+    const p = state.publicData;
+    const head = '<main class="stage"><section class="card public"><div class="admin-top"><h1 class="h">지금까지 나온 철학자</h1>' +
+      '<div class="admin-actions"><button class="mini-btn" type="button" data-act="public-back">돌아가기</button></div></div>';
+    if (!p || p.loading) return head + '<p class="admin-loading public-loading">불러오는 중…</p></section></main>';
+    if (p.error) return head + '<p class="admin-error public-error">분포를 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요.</p></section></main>';
+    const d = p.dist;
+    if (!d.total) return head + '<p class="public-empty">아직 참여 기록이 없어요. 첫 번째 참여자가 되어 보세요.</p></section></main>';
+    const max = Math.max(1, ...d.list.map((x) => x.count));
+    const mineId = state.result ? state.result.ranking.best.id : null;
+    return head + '<p class="public-total">지금까지 <b>' + d.total + '명</b>이 참여했어요.</p><div class="by-philosopher">' +
+      d.list.map((x) => barRow(x.name, x.count, max, x.count + ' (' + pctText(x.count, d.total) + ')', x.id === mineId ? 'mine' : '')).join('') +
+      '</div>' + (mineId ? '<p class="note-small">굵게 표시된 줄이 내 결과예요.</p>' : '') + '</section></main>';
+  }
+
+  async function openPublic() {
+    if (state.screen !== 'public') state.prevScreen = state.screen;
+    state.screen = 'public';
+    state.publicData = { loading: true, error: false, dist: null };
+    render();
+    try {
+      const rows = await fetchPublicCounts(cfg, fetchFn);
+      state.publicData = { loading: false, error: false, dist: publicDistribution(rows, PHILOSOPHERS) };
+    } catch (e) {
+      state.publicData = { loading: false, error: true, dist: null };
+    }
+    if (state.screen === 'public') render();
   }
 
   function toast(msg) {
@@ -786,10 +1246,12 @@ if (typeof document !== 'undefined') (function () {
 
   function startTimer() {
     const bar = $app.querySelector('.timer .bar i');
-    const sec = $app.querySelector('.timer .sec');
+    const num = $app.querySelector('.timer .n');
+    const box = $app.querySelector('.timer');
     timer = createTimer(TIMED_MS, nowMs, (s, ratio) => {
       bar.style.width = (ratio * 100) + '%';
-      sec.textContent = s + '초';
+      num.textContent = s;
+      box.classList.toggle('urgent', s <= 3);
     }, () => chooseOption(null));
     timer.start();
     tickHandle = setInterval(() => { if (timer) timer.tick(); }, 100);
@@ -800,8 +1262,11 @@ if (typeof document !== 'undefined') (function () {
     let html = '';
     if (state.screen === 'start') html = startHtml();
     else if (state.screen === 'quiz') html = quizHtml();
+    else if (state.screen === 'admin') html = adminHtml();
+    else if (state.screen === 'public') html = publicHtml();
     else html = resultHtml();
-    $app.innerHTML = html + (modalOpen ? modalHtml() : '');
+    $app.innerHTML = html + (modalOpen ? modalHtml() : '') + (loginOpen ? loginModalHtml() : '');
+    if (loginOpen) { const pw = document.getElementById('admin-pw'); if (pw) pw.focus(); }
     document.documentElement.scrollTop = 0;
     if (state.screen === 'quiz' && QUESTIONS[state.index].timed) startTimer();
   }
@@ -829,6 +1294,7 @@ if (typeof document !== 'undefined') (function () {
     state.result = { vector, ranking: rankPhilosophers(vector, PHILOSOPHERS) };
     state.screen = 'result';
     render();
+    sendResult();
   }
 
   function chooseOption(choice) {
@@ -855,10 +1321,28 @@ if (typeof document !== 'undefined') (function () {
     else if (el.dataset.act === 'retry') retry();
     else if (el.dataset.act === 'save') onSave(el);
     else if (el.dataset.act === 'compare') onCompare();
+    else if (el.id === 'admin-btn') { if (state.adminToken) openAdmin(); else openLogin(); }
+    else if (el.id === 'admin-cancel') { loginOpen = false; loginError = ''; render(); }
+    else if (el.id === 'admin-submit') submitLogin();
+    else if (el.dataset.act === 'admin-refresh') openAdmin();
+    else if (el.dataset.act === 'admin-logout') adminLogout();
+    else if (el.dataset.act === 'admin-back') { state.screen = 'start'; render(); }
+    else if (el.dataset.act === 'csv-raw') downloadCsv('raw');
+    else if (el.dataset.act === 'csv-summary') downloadCsv('summary');
+    else if (el.id === 'public-btn' || el.dataset.act === 'public') openPublic();
+    else if (el.dataset.act === 'public-back') { state.screen = state.prevScreen === 'result' && state.result ? 'result' : 'start'; render(); }
   });
+  $app.addEventListener('error', (e) => {
+    const el = e.target;
+    if (el && el.tagName === 'IMG' && el.dataset.pid) {
+      const p = PHILOSOPHERS.find((x) => x.id === el.dataset.pid);
+      if (p) el.outerHTML = emblemSvg(p);
+    }
+  }, true);
+  $app.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target && e.target.id === 'admin-pw') submitLogin(); });
   document.addEventListener('visibilitychange', () => { if (timer) timer.tick(); });
 
-  window.philo = { deps: defaultDeps, rank: (v) => rankPhilosophers(v, PHILOSOPHERS), state, chooseOption, startQuiz, finish, render, tickTimer: () => { if (timer) timer.tick(); } };
+  window.philo = { moreLinks: MORE_LINKS, config: cfg, fetch: (...a) => window.fetch(...a), delay: (ms) => new Promise((r) => setTimeout(r, ms)), deps: defaultDeps, rank: (v) => rankPhilosophers(v, PHILOSOPHERS), state, chooseOption, startQuiz, finish, render, tickTimer: () => { if (timer) timer.tick(); } };
   parseHash();
   render();
 })();
