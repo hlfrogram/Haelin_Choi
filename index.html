@@ -175,6 +175,13 @@ button { font-family: inherit; -webkit-tap-highlight-color: transparent; touch-a
 .bar-row.mine .lab, .bar-row.mine .val { color: var(--cream); font-weight: 800; }
 .bar-row.mine .track i { background: var(--cream); }
 
+/* 다음으로 이동 버튼, 선택 표시, 오류 정보 */
+.btn-gold:disabled { opacity: .35; box-shadow: none; cursor: default; transform: none; }
+.options button.selected { background: rgba(192, 154, 85, .16); box-shadow: inset 4px 0 0 var(--gold-btn); }
+.options button.selected .no { color: var(--gold-btn); }
+.btn-gold.next { position: sticky; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 2; margin-top: 14px; }
+.error-detail { margin: 6px 0 0; color: var(--muted); font-size: 12px; }
+
 </style>
 </head>
 <body>
@@ -187,55 +194,55 @@ const PHILOSOPHERS = [
     tagline: "묻는 일을 멈추지 않은 철학자",
     bio: "아테네 광장을 돌며 사람들에게 질문을 던졌다. 아는 척하는 이들의 허점을 드러내다 고발당했고, 재판 끝에 독배를 받았다. 글은 남기지 않아 제자들의 기록으로 전해진다.",
     work: "직접 저서 없음 (플라톤이 기록한 『변론』)",
-    critique: "답을 안다고 했지? 그럼 이유를 세 번만 더 설명해 보게." },
+    critique: "답을 안다고 했지?ㅋㅋ 그럼 이유를 세 번만 더 설명해 보던가~" },
   { id: "plato", name: "플라톤", years: "기원전 427~347", place: "그리스(아테네)", vector: [1,4,1,1,4],
     quote: "눈에 보이는 것 너머에 변하지 않는 참모습이 있다.",
     tagline: "이데아로 세상을 설명한 철학자",
     bio: "소크라테스의 제자로, 아카데메이아라는 학교를 세워 학문을 가르쳤다. 대화 형식으로 철학을 썼고 이상적인 나라의 모습을 그려 보였다. 서양 철학 전체의 뿌리라 불린다.",
     work: "『국가』",
-    critique: "자네 선택은 벽에 비친 그림자만 보고 내린 결정 같군." },
+    critique: "자네 선택은 벽에 비친 그림자만 보고 내린 결정 같군.ㅋ" },
   { id: "aristotle", name: "아리스토텔레스", years: "기원전 384~322", place: "그리스(스타게이로스)", vector: [1,4,4,2,3],
     quote: "좋은 삶은 올바른 습관을 거듭하는 데서 만들어진다.",
     tagline: "중용을 말한 철학자",
     bio: "플라톤의 학교에서 20년 가까이 공부한 뒤 자신의 학교 리케이온을 세웠다. 논리학, 윤리학, 생물학 등 거의 모든 분야를 체계적으로 다뤘다. 알렉산드로스 대왕의 스승이기도 했다.",
     work: "『니코마코스 윤리학』",
-    critique: "극단으로만 달리지 말고 알맞은 지점을 찾는 연습부터 하게." },
+    critique: "ㅉㅉ 극단으로만 달리지 말고 알맞은 지점을 찾는 연습부터 하게." },
   { id: "epicurus", name: "에피쿠로스", years: "기원전 341~270", place: "그리스(사모스)", vector: [3,2,4,4,5],
     quote: "좋은 친구와 소박한 식탁이면 마음은 충분히 평온하다.",
     tagline: "고요한 즐거움을 권한 철학자",
     bio: "아테네 변두리에 '정원'이라 불린 공동체를 만들어 친구들과 함께 살았다. 그가 말한 쾌락은 사치가 아니라 고통과 불안이 없는 상태였다. 죽음을 두려워할 이유가 없다고 가르쳤다.",
     work: "『주요 교설』",
-    critique: "그렇게 바쁘게 사는 동안 정작 즐거운 순간은 몇 번이나 챙겼나?" },
+    critique: "그렇게 바쁘게 사는 동안 정작 즐거운 순간은 몇 번이나 챙겼나…?" },
   { id: "diogenes", name: "디오게네스", years: "기원전 약 412~323", place: "그리스(시노페)", vector: [4,1,4,5,1],
     quote: "체면과 관습을 벗어던질 때 사람은 비로소 자유로워진다.",
     tagline: "통 속에서 살았다고 전해지는 철학자",
     bio: "집 없이 거리에서 지내며 관습과 허세를 거침없이 비웃었다. 알렉산드로스 대왕 앞에서도 햇빛이나 가리지 말라고 했다는 일화가 전한다. 소박한 삶 자체를 철학으로 삼았다.",
     work: "직접 저서 없음 (『그리스 철학자 열전』 속 일화)",
-    critique: "남들이 박수 쳐 줄 길만 골라 온 건 아닌가?" },
+    critique: "남들이 박수 쳐 줄 길만 골라 온 건 아닌가??" },
   { id: "epictetus", name: "에픽테토스", years: "약 55~135", place: "로마 제국(히에라폴리스)", vector: [1,2,2,2,4],
     quote: "내 힘으로 바꿀 수 있는 일에만 마음을 쓰는 것이 평온의 시작이다.",
     tagline: "노예에서 스토아 철학의 스승이 된 철학자",
     bio: "노예로 태어났지만 자유를 얻은 뒤 철학을 가르쳤다. 우리가 통제할 수 있는 것과 없는 것을 구분하라고 거듭 강조했다. 가르침은 제자 아리아노스의 기록으로 전해진다.",
     work: "『엥케이리디온』",
-    critique: "바꿀 수 없는 일에 쓴 밤이 며칠인지 세어 본 적 있나?" },
+    critique: "바꿀 수 없는 일에 쓴 밤이 며칠인지 세어 본 적 있나? 그 시간에 잠을 자거라" },
   { id: "marcus-aurelius", name: "마르쿠스 아우렐리우스", years: "121~180", place: "로마 제국(로마)", vector: [1,5,2,1,3],
     quote: "오늘 맡은 일을 성실히 해내는 것으로 하루는 충분하다.",
     tagline: "황제이면서 스토아 철학자였던 사람",
     bio: "로마 제국의 황제로 전쟁터와 궁정을 오가며 일했다. 틈틈이 스스로를 다잡는 글을 써 두었고, 그것이 훗날 책으로 묶였다. 의무와 절제를 삶의 중심에 두었다.",
     work: "『명상록』",
-    critique: "하기 싫은 일 앞에서 핑계를 찾는 순간 자네는 이미 한 발 물러선 걸세." },
+    critique: "하기 싫은 일 앞에서 핑계를 찾는 순간… 자네는 이미 한 발 물러선 걸세.ㅋ" },
   { id: "augustine", name: "아우구스티누스", years: "354~430", place: "로마 제국(히포)", vector: [4,4,1,1,4],
     quote: "마음은 참된 안식을 찾기 전까지 가만히 있지 못한다.",
     tagline: "방황 끝에 신앙을 철학으로 풀어낸 철학자",
     bio: "젊은 시절 방황과 쾌락에 빠졌다가 회심해 기독교 사상가가 되었다. 자신의 삶을 솔직하게 되돌아본 글로 이름을 남겼다. 시간과 의지에 대한 사유로도 유명하다.",
     work: "『고백록』",
-    critique: "자네가 그토록 쫓는 것이 정말 마음을 채워 주던가?" },
+    critique: "자네가 그토록 쫓는 것이 정말 마음을 채워 주던가?(ㅋㅋ?)" },
   { id: "aquinas", name: "토마스 아퀴나스", years: "1225~1274", place: "이탈리아(아퀴노 인근)", vector: [2,5,1,1,5],
     quote: "믿음과 이성은 서로를 밀어내지 않고 함께 진리로 나아간다.",
     tagline: "믿음과 이성을 이어 붙인 철학자",
     bio: "도미니코 수도회 수사로 파리와 이탈리아에서 가르쳤다. 아리스토텔레스의 철학을 기독교 신학과 결합해 거대한 체계를 세웠다. 중세 철학을 대표하는 인물로 꼽힌다.",
     work: "『신학대전』",
-    critique: "생각은 많은데 질서가 없군. 근거부터 한 줄로 세워 보게." },
+    critique: "생각은 많은데 질서가 없군. ㅉ 근거부터 한 줄로 세워 보게." },
   { id: "machiavelli", name: "마키아벨리", years: "1469~1527", place: "이탈리아(피렌체)", vector: [1,2,5,1,1],
     quote: "좋은 의도만으로는 나라를 지키기 어렵다. 현실을 읽는 눈이 먼저다.",
     tagline: "이상보다 현실을 앞세운 정치사상가",
@@ -247,31 +254,31 @@ const PHILOSOPHERS = [
     tagline: "질서 없이는 평화도 없다고 본 철학자",
     bio: "영국 내전의 혼란기에 살며 국가가 왜 필요한지를 고민했다. 사람들이 서로 약속해 주권자에게 권한을 넘긴다는 사회 계약 이론을 펼쳤다. 근대 정치철학의 출발점으로 꼽힌다.",
     work: "『리바이어던』",
-    critique: "규칙이 없어도 다들 알아서 잘 지낼 거라고 정말 믿나?" },
+    critique: "규칙이 없어도 다들 알아서 잘 지낼 거라고 정말 믿나…?" },
   { id: "descartes", name: "데카르트", years: "1596~1650", place: "프랑스(라에)", vector: [1,1,2,3,5],
     quote: "모든 것을 의심해 보아도, 의심하고 있는 나 자신만은 남는다.",
     tagline: "의심에서 출발한 근대 철학의 시조",
     bio: "프랑스에서 태어나 네덜란드 등지에서 연구하며 수학과 철학을 함께 다뤘다. 확실한 지식의 기초를 찾으려고 모든 것을 의심하는 방법을 택했다. 좌표 기하학을 만든 수학자이기도 하다.",
     work: "『방법서설』",
-    critique: "그 확신, 한 번이라도 의심해 보고 내놓은 건가?" },
+    critique: "그 확신, 한 번이라도 ‘의심’해 보고 내놓은 건가?" },
   { id: "spinoza", name: "스피노자", years: "1632~1677", place: "네덜란드(암스테르담)", vector: [1,3,3,4,5],
     quote: "세상을 이해할수록 감정에 끌려다니는 일이 줄어든다.",
     tagline: "신과 자연을 하나로 본 철학자",
     bio: "유대인 공동체에서 쫓겨난 뒤 렌즈를 갈아 생계를 이으며 사색했다. 신과 자연이 같다고 보는 독자적인 체계를 기하학 방식으로 서술했다. 생전에는 위험한 사상가로 취급받았다.",
     work: "『에티카』",
-    critique: "화가 나는 이유부터 이해하면 그 화는 절반으로 줄 텐데." },
+    critique: "화가 나는 이유부터 이해하면 그 화는 절반으로 줄 텐데;;" },
   { id: "locke", name: "로크", years: "1632~1704", place: "영국(링턴)", vector: [2,2,2,5,2],
     quote: "누구에게나 자기 삶과 자유, 재산을 함부로 빼앗기지 않을 권리가 있다.",
     tagline: "개인의 권리를 앞세운 철학자",
     bio: "의사이자 정치 조언자로 일하며 영국의 정치 격변을 가까이서 겪었다. 정부는 시민의 동의 위에 서야 하며 이를 어기면 저항할 수 있다고 주장했다. 이 생각은 근대 민주주의에 큰 영향을 주었다.",
     work: "『통치론』",
-    critique: "권리를 요구하는 만큼 책임질 준비도 되어 있나?" },
+    critique: "권리를 요구하는 만큼 책임질 준비도 되어 있나? …아닌듯?" },
   { id: "hume", name: "흄", years: "1711~1776", place: "영국(에든버러)", vector: [5,3,4,2,4],
     quote: "이성은 감정을 섬기는 도구에 가깝다고 보았다.",
     tagline: "경험과 감정을 중시한 철학자",
     bio: "스코틀랜드 출신으로, 지식은 오직 경험에서 나온다고 보았다. 원인과 결과도 습관에서 비롯된 믿음일 뿐이라는 도발적인 주장을 폈다. 훗날 칸트에게 깊은 충격을 준 사상가다.",
     work: "『인간 본성에 관한 논고』",
-    critique: "이성적으로 골랐다고? 그 밑에 깔린 기분은 모른 척하는군." },
+    critique: "이성적으로 골랐다고? 그 밑에 깔린 기분은 모른 척하는군. ㅉㅉ" },
   { id: "rousseau", name: "루소", years: "1712~1778", place: "스위스(제네바)", vector: [5,5,4,4,3],
     quote: "사람은 본래 자유롭지만 사회 속에서는 늘 무언가에 매여 산다.",
     tagline: "자연과 공동의 뜻을 말한 철학자",
@@ -283,25 +290,25 @@ const PHILOSOPHERS = [
     tagline: "원칙으로 도덕을 세운 철학자",
     bio: "평생 고향 쾨니히스베르크에서 가르치며 규칙적인 생활로 유명했다. 인간의 이성이 무엇을 알 수 있고 어떻게 행동해야 하는지를 체계적으로 따졌다. 도덕은 결과가 아니라 원칙에 달려 있다고 보았다.",
     work: "『도덕형이상학 정초』",
-    critique: "상황이 그랬다는 말은 원칙을 어긴 사람이 가장 먼저 꺼내는 변명이지." },
+    critique: "상황이 그랬다는 말은 ’원칙을 어긴 사람(너)‘이 가장 먼저 꺼내는 변명이지." },
   { id: "hegel", name: "헤겔", years: "1770~1831", place: "독일(슈투트가르트)", vector: [2,5,4,2,2],
     quote: "대립은 사라지지 않고, 부딪치면서 더 높은 단계로 나아간다.",
     tagline: "대립 속에서 역사를 읽은 철학자",
     bio: "독일 관념론을 완성한 철학자로 베를린 대학에서 가르쳤다. 사상과 역사가 대립과 종합을 거치며 발전한다고 보았다. 마르크스를 비롯한 많은 사상가가 그의 영향을 받았다.",
     work: "『정신현상학』",
-    critique: "맞다 틀리다만 따지니 더 큰 그림이 안 보이는 걸세." },
+    critique: "맞다 틀리다만 따지니 더 큰 그림이 안 보이는 걸세. ㅉㅉ" },
   { id: "bentham", name: "벤담", years: "1748~1832", place: "영국(런던)", vector: [1,5,5,3,1],
     quote: "더 많은 사람이 더 행복해지는 쪽이 더 나은 선택이다.",
     tagline: "행복의 총합을 따진 철학자",
     bio: "법과 제도를 개혁하려 했던 영국의 사상가로, 공리주의를 처음 체계화했다. 행복의 양을 따져 정책을 판단하자고 주장했다. 자신의 유해를 보존해 전시하도록 유언했다는 일화로도 알려져 있다.",
     work: "『도덕과 입법의 원리 서설』",
-    critique: "마음 편한 선택과 더 많은 사람에게 나은 선택은 다를 수 있다네." },
+    critique: "마음 편한 선택과 더 많은 사람에게 나은 선택은 다를 수 있다네..!" },
   { id: "mill", name: "존 스튜어트 밀", years: "1806~1873", place: "영국(런던)", vector: [1,4,5,4,3],
     quote: "남에게 해를 끼치지 않는다면 각자 자기 방식대로 살 자유가 있다.",
     tagline: "개인의 자유를 지킨 철학자",
     bio: "어릴 때부터 아버지에게 엄격한 영재 교육을 받았고, 훗날 공리주의를 다듬었다. 의회 의원으로 일하며 여성 참정권을 주장하기도 했다. 다수의 압력으로부터 개인을 지켜야 한다고 강조했다.",
     work: "『자유론』",
-    critique: "다수가 편하다는 이유로 소수의 길까지 막고 있지는 않은가?" },
+    critique: "다수가 편하다는 이유로 소수의 길까지 막고 있지는 않은가??" },
   { id: "schopenhauer", name: "쇼펜하우어", years: "1788~1860", place: "독일(단치히)", vector: [5,1,3,3,5],
     quote: "끝없는 욕망 때문에 삶은 만족과 권태 사이를 오간다.",
     tagline: "삶의 고통을 직시한 철학자",
@@ -313,19 +320,19 @@ const PHILOSOPHERS = [
     tagline: "홀로 결단하는 삶을 말한 철학자",
     bio: "코펜하겐에서 평생 살며 사회와 교회의 안일함을 비판했다. 개인이 불안 속에서 스스로 결단해야 한다고 보아 실존철학의 선구자로 불린다. 약혼을 파기한 경험도 글에 깊이 반영되었다.",
     work: "『공포와 전율』",
-    critique: "군중 속에 편히 있다가 홀로 서야 할 순간이 오면 어쩔 텐가?" },
+    critique: "군중 속에 편히 있다가 홀로 서야 할 순간이 오면 어쩔 텐가..?" },
   { id: "marx", name: "마르크스", years: "1818~1883", place: "독일(트리어)", vector: [2,5,4,4,1],
     quote: "사람의 생각은 그가 살아가는 물질적 조건 위에서 자라난다.",
     tagline: "경제 구조로 사회를 분석한 철학자",
     bio: "독일에서 태어나 영국 런던에서 망명 생활을 하며 자본주의를 분석했다. 사회의 변화는 생산 방식과 계급 갈등에서 나온다고 설명했다. 철학을 현실을 바꾸는 도구로 삼으려 했다.",
     work: "『자본』",
-    critique: "자네의 노력이 누구의 주머니를 채우는지 한번 따져 보게." },
+    critique: "자네의 노력이 ’누구‘의 주머니를 채우는지 한번 따져 보게." },
   { id: "nietzsche", name: "니체", years: "1844~1900", place: "독일(뢰켄)", vector: [5,1,5,5,2],
     quote: "남이 정한 가치를 거부하고 자기만의 가치를 스스로 만들어 가라.",
     tagline: "자기 삶의 가치를 스스로 세우라고 외친 철학자",
     bio: "젊은 나이에 교수가 되었지만 건강 문제로 일찍 물러나 여러 곳을 떠돌며 글을 썼다. 기존의 도덕과 신념을 날카롭게 의심하고 자신만의 가치를 창조하라고 외쳤다. 말년에는 정신 질환으로 고통받았다.",
     work: "『차라투스트라는 이렇게 말했다』",
-    critique: "그 안전한 선택, 자네가 원한 건가 남들이 원할 것 같은 건가?" },
+    critique: "그 안전한 선택, 자네가 원한 건가 남들이 원할 것 같은 건가..?" },
   { id: "sartre", name: "사르트르", years: "1905~1980", place: "프랑스(파리)", vector: [3,2,5,5,1],
     quote: "사람은 먼저 존재하고, 어떤 사람이 될지는 선택으로 만들어진다.",
     tagline: "선택이 곧 나라고 말한 철학자",
@@ -343,7 +350,7 @@ const PHILOSOPHERS = [
     tagline: "부조리 속에서 살기를 택한 철학자",
     bio: "알제리에서 가난하게 자라 작가이자 저널리스트로 활동했다. 의미를 구하는 인간과 침묵하는 세계 사이의 어긋남을 부조리라 부르고, 그럼에도 삶을 긍정하라고 말했다. 1957년 노벨 문학상을 받았다.",
     work: "『시시포스 신화』",
-    critique: "의미가 없다고 주저앉기엔 자네가 해 볼 일이 아직 많네." },
+    critique: "의미가 없다고 주저앉기엔 자네가 해 볼 일이 아직 많네. ㅎ_ㅎ" },
   { id: "wittgenstein", name: "비트겐슈타인", years: "1889~1951", place: "오스트리아(빈)", vector: [1,2,4,2,5],
     quote: "말로 분명히 할 수 없는 것 앞에서는 입을 다무는 편이 낫다.",
     tagline: "언어의 한계를 따진 철학자",
@@ -407,7 +414,7 @@ const QUESTIONS = [
     ] },
   { id: "q3", title: "건널목", timed: true,
     text: "횡단보도 신호가 빨간불입니다. 건너편에서 아이가 공을 따라 차도로 뛰어들려 하고, 차 한 대가 다가오고 있습니다.",
-    prompt: "신호를 어기고 뛰어듭니까? 7초 안에 고르세요.",
+    prompt: "신호를 어기고 뛰어듭니까? 10초 안에 고르세요.",
     options: [
       { text: "뛰어든다. 생각할 틈이 없다", effects: { A: 2, C: 2 } },
       { text: "소리쳐 아이를 멈추게 하고 신호는 지킨다", effects: { A: -1, C: -2 } },
@@ -479,7 +486,7 @@ const QUESTIONS = [
     ] },
   { id: "q11", title: "마지막 한 시간", timed: true,
     text: "알림이 울렸습니다. 당신에게 남은 시간은 정확히 한 시간입니다.",
-    prompt: "무엇을 하겠습니까? 7초 안에 고르세요.",
+    prompt: "무엇을 하겠습니까? 10초 안에 고르세요.",
     options: [
       { text: "가장 소중한 사람에게 달려가 안아 준다", effects: { A: 2, E: -2 } },
       { text: "혼자 조용히 지나온 삶을 돌아본다", effects: { A: -1, E: 2 } },
@@ -571,7 +578,7 @@ if (typeof module !== 'undefined') {
 const CONFIG = {
   SUPABASE_URL: 'https://vtpootsgqbxhdxcgjqmz.supabase.co',
   SUPABASE_ANON_KEY: 'sb_publishable_BTtb5VOUJIXSDoV8CmXfrA_SxaS9Bhk',
-  ADMIN_EMAIL: '',
+  ADMIN_EMAIL: 'hlfrogram@gmail.com',
   // 철학자 이미지를 올린 폴더 경로(예: 'img/'). 파일 이름은 <철학자id>.jpg. 비워 두면 문자 엠블럼을 쓴다.
   IMAGE_DIR: '',
 };
@@ -730,7 +737,6 @@ async function submitResult(payload, cfg, fetchFn, delayFn) {
         method: 'POST',
         headers: { ...restHeaders(cfg), 'Content-Type': 'application/json', Prefer: 'return=minimal' },
         body: JSON.stringify(payload),
-        keepalive: true,
       });
     } catch (e) {
       return { ok: false, retry: true };
@@ -758,6 +764,16 @@ async function adminLogin(password, cfg, fetchFn) {
   return data.access_token;
 }
 
+// 실패한 응답에서 상태 코드와 Supabase 오류 코드를 꺼내 오류로 만든다.
+async function failure(res) {
+  let body = {};
+  try { body = await res.json(); } catch (e) { body = {}; }
+  const err = new Error((body && body.message) || 'request failed');
+  err.status = res.status;
+  err.code = (body && body.code) || '';
+  return err;
+}
+
 async function fetchAllRows(token, cfg, fetchFn, opts) {
   const pageSize = (opts && opts.pageSize) || 1000;
   const maxRows = (opts && opts.maxRows) || 20000;
@@ -772,7 +788,7 @@ async function fetchAllRows(token, cfg, fetchFn, opts) {
         Range: from + '-' + (from + pageSize - 1),
       },
     });
-    if (!res.ok) throw new Error('fetch failed');
+    if (!res.ok) throw await failure(res);
     const page = await res.json();
     rows.push(...page);
     if (page.length < pageSize) return { rows, truncated: false };
@@ -788,7 +804,7 @@ async function fetchPublicCounts(cfg, fetchFn) {
     headers: { ...restHeaders(cfg), 'Content-Type': 'application/json' },
     body: '{}',
   });
-  if (!res.ok) throw new Error('fetch failed');
+  if (!res.ok) throw await failure(res);
   return res.json();
 }
 
@@ -897,8 +913,8 @@ if (typeof module !== 'undefined') module.exports = { buildCompareLink, saveImag
 if (typeof document !== 'undefined') (function () {
   const $app = document.getElementById('app');
   const NUMS = ['①', '②', '③', '④'];
-  const TIMED_MS = 7000;
-  const state = { screen: 'start', index: 0, answers: [], result: null, friendAnswers: null, adminToken: null, admin: null, prevScreen: null, publicData: null };
+  const TIMED_MS = 10000;
+  const state = { screen: 'start', index: 0, answers: [], result: null, friendAnswers: null, adminToken: null, admin: null, prevScreen: null, publicData: null, pending: null };
   const cfg = CONFIG;
   let timer = null;
   let tickHandle = null;
@@ -936,14 +952,16 @@ if (typeof document !== 'undefined') (function () {
   function quizHtml() {
     const q = QUESTIONS[state.index];
     const options = q.options.map((o, i) =>
-      '<li><button type="button" data-i="' + i + '"><span class="no">' + NUMS[i] + '</span>' + esc(o.text) + '</button></li>').join('');
+      '<li><button type="button" data-i="' + i + '" aria-pressed="false"><span class="no">' + NUMS[i] + '</span>' + esc(o.text) + '</button></li>').join('');
     return '<main class="stage"><section class="card quiz">' +
       '<div class="q-meta"><span class="count">' + (state.index + 1) + ' / ' + QUESTIONS.length + '</span>' +
       (q.timed ? '<span class="fast">즉답 모드</span>' : '') + '</div>' +
       '<h2 class="q-title">' + esc(q.title) + '</h2><div class="rule"></div>' +
       '<p class="q-text">' + esc(q.text) + '</p><p class="q-prompt">' + esc(q.prompt) + '</p><div class="spacer"></div>' +
-      (q.timed ? '<div class="timer" role="timer" aria-label="남은 시간"><div class="bar"><i></i></div><span class="sec"><b class="n">7</b><small>초</small></span></div>' : '') +
-      '<ol class="options">' + options + '</ol></section></main>';
+      (q.timed ? '<div class="timer" role="timer" aria-label="남은 시간"><div class="bar"><i></i></div><span class="sec"><b class="n">10</b><small>초</small></span></div>' : '') +
+      '<ol class="options">' + options + '</ol>' +
+      '<button class="btn-gold next" id="next-btn" type="button" disabled>' +
+      (state.index === QUESTIONS.length - 1 ? '결과 보기 →' : '다음으로 이동 →') + '</button></section></main>';
   }
 
   const AXIS_LABELS = [['이성', '감정'], ['나', '우리'], ['규칙', '상황'], ['질서', '자유'], ['행동', '관조']];
@@ -1014,6 +1032,7 @@ if (typeof document !== 'undefined') (function () {
   const fetchFn = (...a) => window.philo.fetch(...a);
   const cloudOn = () => Boolean(cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY);
   const adminOn = () => cloudOn() && Boolean(cfg.ADMIN_EMAIL);
+  const errorDetail = (e) => (e && e.status ? e.status + (e.code ? ' ' + e.code : '') : '네트워크 연결 실패');
   const pctText = (n, d) => (d ? (Math.round((n / d) * 1000) / 10) + '%' : '-');
 
   function sendResult() {
@@ -1021,7 +1040,9 @@ if (typeof document !== 'undefined') (function () {
     state.result.sent = true;
     const payload = buildPayload(state.answers, state.result, Array.isArray(state.friendAnswers));
     if (!payload) return;
-    submitResult(payload, cfg, fetchFn, (ms) => window.philo.delay(ms)).catch(() => {});
+    submitResult(payload, cfg, fetchFn, (ms) => window.philo.delay(ms))
+      .then((ok) => { if (!ok) console.warn('결과 저장에 실패했습니다'); })
+      .catch(() => {});
   }
 
   function adminBarHtml() {
@@ -1067,7 +1088,7 @@ if (typeof document !== 'undefined') (function () {
       '<button class="mini-btn" type="button" data-act="admin-back">사이트로 돌아가기</button>' +
       '<button class="mini-btn" type="button" data-act="admin-logout">로그아웃</button></div></div>';
     if (!a || a.loading) return html + '<p class="admin-loading">불러오는 중…</p></section></main>';
-    if (a.error) return html + '<p class="admin-error">통계를 불러오지 못했어요. 새로고침하거나, 로그아웃 후 다시 로그인해 주세요.</p></section></main>';
+    if (a.error) return html + '<p class="admin-error">통계를 불러오지 못했어요. 새로고침하거나, 로그아웃 후 다시 로그인해 주세요.</p><p class="error-detail">오류 정보: ' + esc(a.detail || '') + '</p></section></main>';
     const s = a.stats;
     const t = s.total;
     html += (a.truncated ? '<p class="truncated">최근 20,000건 기준입니다.</p>' : '') +
@@ -1124,7 +1145,7 @@ if (typeof document !== 'undefined') (function () {
       const { rows, truncated } = await fetchAllRows(state.adminToken, cfg, fetchFn);
       state.admin = { loading: false, error: false, rows, truncated, stats: aggregate(rows, Date.now(), PHILOSOPHERS, QUESTIONS) };
     } catch (e) {
-      state.admin = { loading: false, error: true, stats: null, rows: [], truncated: false };
+      state.admin = { loading: false, error: true, detail: errorDetail(e), stats: null, rows: [], truncated: false };
     }
     if (state.screen === 'admin') render();
   }
@@ -1159,7 +1180,7 @@ if (typeof document !== 'undefined') (function () {
     const head = '<main class="stage"><section class="card public"><div class="admin-top"><h1 class="h">지금까지 나온 철학자</h1>' +
       '<div class="admin-actions"><button class="mini-btn" type="button" data-act="public-back">돌아가기</button></div></div>';
     if (!p || p.loading) return head + '<p class="admin-loading public-loading">불러오는 중…</p></section></main>';
-    if (p.error) return head + '<p class="admin-error public-error">분포를 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요.</p></section></main>';
+    if (p.error) return head + '<p class="admin-error public-error">분포를 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요.</p><p class="error-detail">오류 정보: ' + esc(p.detail || '') + '</p></section></main>';
     const d = p.dist;
     if (!d.total) return head + '<p class="public-empty">아직 참여 기록이 없어요. 첫 번째 참여자가 되어 보세요.</p></section></main>';
     const max = Math.max(1, ...d.list.map((x) => x.count));
@@ -1178,7 +1199,7 @@ if (typeof document !== 'undefined') (function () {
       const rows = await fetchPublicCounts(cfg, fetchFn);
       state.publicData = { loading: false, error: false, dist: publicDistribution(rows, PHILOSOPHERS) };
     } catch (e) {
-      state.publicData = { loading: false, error: true, dist: null };
+      state.publicData = { loading: false, error: true, detail: errorDetail(e), dist: null };
     }
     if (state.screen === 'public') render();
   }
@@ -1252,7 +1273,7 @@ if (typeof document !== 'undefined') (function () {
       bar.style.width = (ratio * 100) + '%';
       num.textContent = s;
       box.classList.toggle('urgent', s <= 3);
-    }, () => chooseOption(null));
+    }, () => commit(state.pending));
     timer.start();
     tickHandle = setInterval(() => { if (timer) timer.tick(); }, 100);
   }
@@ -1276,6 +1297,7 @@ if (typeof document !== 'undefined') (function () {
     state.index = 0;
     state.answers = [];
     state.result = null;
+    state.pending = null;
     lockedUntil = nowMs() + 250;
     render();
   }
@@ -1297,12 +1319,25 @@ if (typeof document !== 'undefined') (function () {
     sendResult();
   }
 
-  function chooseOption(choice) {
+  // 선택지를 누르면 선택만 표시한다(화면을 다시 그리지 않으므로 타이머가 유지된다). 넘어가려면 '다음으로 이동'을 눌러야 한다.
+  function selectOption(i) {
     if (state.screen !== 'quiz') return;
-    const t = nowMs();
-    if (choice !== null && t < lockedUntil) return;
-    lockedUntil = t + 250;
+    state.pending = i;
+    $app.querySelectorAll('.options button').forEach((b) => {
+      const on = Number(b.dataset.i) === i;
+      b.classList.toggle('selected', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    const next = document.getElementById('next-btn');
+    if (next) next.disabled = false;
+  }
+
+  // 현재 문항의 답을 기록하고 다음으로 넘어간다. choice가 null이면 결측(시간 초과, 선택 없음).
+  function commit(choice) {
+    if (state.screen !== 'quiz') return;
+    lockedUntil = nowMs() + 250;
     state.answers[state.index] = choice;
+    state.pending = null;
     if (state.index < QUESTIONS.length - 1) {
       state.index += 1;
       render();
@@ -1311,13 +1346,20 @@ if (typeof document !== 'undefined') (function () {
     }
   }
 
+  function goNext() {
+    if (state.screen !== 'quiz' || state.pending === null) return;
+    if (nowMs() < lockedUntil) return;
+    commit(state.pending);
+  }
+
   $app.addEventListener('click', (e) => {
     const el = e.target.closest('button');
     if (!el) return;
     if (el.id === 'start-btn') startQuiz();
     else if (el.id === 'privacy-btn') { modalOpen = true; render(); }
     else if (el.id === 'modal-close') { modalOpen = false; render(); }
-    else if (el.dataset.i !== undefined) chooseOption(Number(el.dataset.i));
+    else if (el.dataset.i !== undefined) selectOption(Number(el.dataset.i));
+    else if (el.id === 'next-btn') goNext();
     else if (el.dataset.act === 'retry') retry();
     else if (el.dataset.act === 'save') onSave(el);
     else if (el.dataset.act === 'compare') onCompare();
@@ -1342,7 +1384,7 @@ if (typeof document !== 'undefined') (function () {
   $app.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target && e.target.id === 'admin-pw') submitLogin(); });
   document.addEventListener('visibilitychange', () => { if (timer) timer.tick(); });
 
-  window.philo = { moreLinks: MORE_LINKS, config: cfg, fetch: (...a) => window.fetch(...a), delay: (ms) => new Promise((r) => setTimeout(r, ms)), deps: defaultDeps, rank: (v) => rankPhilosophers(v, PHILOSOPHERS), state, chooseOption, startQuiz, finish, render, tickTimer: () => { if (timer) timer.tick(); } };
+  window.philo = { moreLinks: MORE_LINKS, config: cfg, fetch: (...a) => window.fetch(...a), delay: (ms) => new Promise((r) => setTimeout(r, ms)), deps: defaultDeps, rank: (v) => rankPhilosophers(v, PHILOSOPHERS), state, selectOption, goNext, startQuiz, finish, render, tickTimer: () => { if (timer) timer.tick(); } };
   parseHash();
   render();
 })();
