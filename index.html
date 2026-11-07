@@ -1167,7 +1167,7 @@ if (typeof document !== 'undefined') (function () {
 
   function portraitHtml(p) {
     if (!cfg.IMAGE_DIR) return emblemSvg(p);
-    return '<img class="portrait emblem" src="' + esc(cfg.IMAGE_DIR + p.id + '.jpg') + '" alt="' + esc(p.name) + ' 초상" data-pid="' + esc(p.id) + '" loading="lazy">';
+    return '<img class="portrait emblem" src="' + esc(cfg.IMAGE_DIR + p.id + '.png') + '" alt="' + esc(p.name) + ' 초상" data-pid="' + esc(p.id) + '" loading="lazy">';
   }
 
   function moreLinkHtml(p) {
