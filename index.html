@@ -182,6 +182,60 @@ button { font-family: inherit; -webkit-tap-highlight-color: transparent; touch-a
 .btn-gold.next { position: sticky; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 2; margin-top: 14px; }
 .error-detail { margin: 6px 0 0; color: var(--muted); font-size: 12px; }
 
+/* 4차: 결과 화면 버튼 배치, 정반대 철학자, 다시 하기 */
+.actions { margin-top: 18px; }
+.actions .btn-gold { margin-top: 0; }
+.actions .btn-dark { margin-top: 12px; }
+.actions .btn-line.wide { margin-top: 12px; }
+.actions + .card { margin-top: 36px; }
+.minis.two { grid-template-columns: repeat(2, 1fr); }
+.opposite { margin-top: 26px; padding: 18px 16px 16px; border: 2px solid var(--accent); background: rgba(229, 138, 108, .08); --accent: #e58a6c; }
+.opposite .opp-label { margin: 0 0 12px; color: var(--accent); font-size: 13px; font-weight: 800; letter-spacing: .08em; }
+.opp-body { display: flex; align-items: center; gap: 14px; }
+.opp-body .portrait, .opp-body .emblem { width: 88px; max-width: 88px; margin: 0; flex: none; border: 2px solid var(--accent); }
+.opp-info { display: flex; flex-direction: column; gap: 2px; }
+.opp-info .name { font-family: var(--serif); font-size: 22px; font-weight: 800; }
+.opp-info .pct { color: var(--accent); font-size: 14px; }
+.opposite .critique { margin-top: 16px; font-size: 19px; }
+.opposite .critique-by { color: var(--accent); }
+.retry-zone { margin-top: 34px; padding-top: 22px; border-top: 1px solid rgba(26, 25, 21, .2); }
+.retry-zone .btn-line { margin-top: 0; }
+
+/* 문항 설명 이미지 칸 */
+.q-figure { margin: 18px 0 0; }
+.q-img { display: block; width: 100%; height: auto; border: 1px solid var(--line); background: #14130f; }
+.q-placeholder { display: flex; align-items: center; justify-content: center; min-height: 150px; border: 1px dashed var(--line);
+  color: var(--muted); font-size: 15px; letter-spacing: .04em; background: rgba(192, 154, 85, .06); }
+
+/* 개인정보 처리방침 */
+.modal .policy { max-height: calc(100dvh - 40px); overflow-y: auto; }
+.policy h3 { margin: 18px 0 6px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--gold-btn); font-size: 15px; }
+.policy .policy-lead { padding: 10px 12px; margin: 0 0 4px; border-left: 3px solid var(--gold); background: rgba(192, 154, 85, .1); }
+.policy ul { margin: 0 0 12px; padding-left: 20px; font-size: 15px; line-height: 1.7; }
+.policy li { margin: 2px 0; }
+.policy-date { margin-top: 16px; color: var(--muted); font-size: 13px; }
+
+/* 관리자: 꺾은선 그래프, 철학자 줄, 상세 */
+.daily { margin-top: 6px; }
+.line-chart { display: block; width: 100%; height: auto; }
+.line-chart .grid { stroke: rgba(192, 154, 85, .18); stroke-width: 1; }
+.line-chart .ln { stroke: var(--gold-btn); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.line-chart .pt { fill: var(--ink); stroke: var(--gold-btn); stroke-width: 2.5; }
+.line-chart text { fill: var(--muted); font-size: 12px; font-family: var(--sans); }
+.line-chart .vlab { fill: var(--cream); font-weight: 700; }
+.bar-row.p-row { grid-template-columns: minmax(70px, 30%) 1fr auto auto; }
+.detail-btn { padding: 5px 9px; font-size: 12px; white-space: nowrap; }
+.detail-title { font-size: 21px; }
+.detail-total { margin: 16px 0 0; font-size: 15px; }
+.detail-total b { color: var(--gold-btn); font-family: var(--serif); font-size: 22px; }
+.detail-empty { margin: 20px 0 0; color: var(--muted); font-size: 15px; }
+
+/* 다음 버튼: 비활성일 때도 투명하지 않게(뒤의 보기 글자가 비치지 않도록) */
+.btn-gold.next:disabled { opacity: 1; background: #5b5039; color: rgba(245, 239, 226, .5); box-shadow: 0 0 0 10px var(--ink); }
+.btn-gold.next { box-shadow: 0 5px 0 #8a6f3c, 0 0 0 10px var(--ink); }
+.q-placeholder { min-height: 110px; }
+.credit { margin: 6px 2px 0; color: #8a8576; font-size: 12px; line-height: 1.5; }
+
 </style>
 </head>
 <body>
@@ -217,13 +271,13 @@ const PHILOSOPHERS = [
     quote: "체면과 관습을 벗어던질 때 사람은 비로소 자유로워진다.",
     tagline: "통 속에서 살았다고 전해지는 철학자",
     bio: "집 없이 거리에서 지내며 관습과 허세를 거침없이 비웃었다. 알렉산드로스 대왕 앞에서도 햇빛이나 가리지 말라고 했다는 일화가 전한다. 소박한 삶 자체를 철학으로 삼았다.",
-    work: "직접 저서 없음 (『그리스 철학자 열전』 속 일화)",
+    work: "전해지는 저서 없음 (『그리스 철학자 열전』 속 일화로 전해짐)",
     critique: "남들이 박수 쳐 줄 길만 골라 온 건 아닌가??" },
   { id: "epictetus", name: "에픽테토스", years: "약 55~135", place: "로마 제국(히에라폴리스)", vector: [1,2,2,2,4],
     quote: "내 힘으로 바꿀 수 있는 일에만 마음을 쓰는 것이 평온의 시작이다.",
     tagline: "노예에서 스토아 철학의 스승이 된 철학자",
     bio: "노예로 태어났지만 자유를 얻은 뒤 철학을 가르쳤다. 우리가 통제할 수 있는 것과 없는 것을 구분하라고 거듭 강조했다. 가르침은 제자 아리아노스의 기록으로 전해진다.",
-    work: "『엥케이리디온』",
+    work: "직접 저서 없음 (제자 아리아노스가 기록한 『담화록』·『엥케이리디온』)",
     critique: "바꿀 수 없는 일에 쓴 밤이 며칠인지 세어 본 적 있나? 그 시간에 잠을 자거라" },
   { id: "marcus-aurelius", name: "마르쿠스 아우렐리우스", years: "121~180", place: "로마 제국(로마)", vector: [1,5,2,1,3],
     quote: "오늘 맡은 일을 성실히 해내는 것으로 하루는 충분하다.",
@@ -231,13 +285,13 @@ const PHILOSOPHERS = [
     bio: "로마 제국의 황제로 전쟁터와 궁정을 오가며 일했다. 틈틈이 스스로를 다잡는 글을 써 두었고, 그것이 훗날 책으로 묶였다. 의무와 절제를 삶의 중심에 두었다.",
     work: "『명상록』",
     critique: "하기 싫은 일 앞에서 핑계를 찾는 순간… 자네는 이미 한 발 물러선 걸세.ㅋ" },
-  { id: "augustine", name: "아우구스티누스", years: "354~430", place: "로마 제국(히포)", vector: [4,4,1,1,4],
+  { id: "augustine", name: "아우구스티누스", years: "354~430", place: "로마 제국(타가스테)", vector: [4,4,1,1,4],
     quote: "마음은 참된 안식을 찾기 전까지 가만히 있지 못한다.",
     tagline: "방황 끝에 신앙을 철학으로 풀어낸 철학자",
     bio: "젊은 시절 방황과 쾌락에 빠졌다가 회심해 기독교 사상가가 되었다. 자신의 삶을 솔직하게 되돌아본 글로 이름을 남겼다. 시간과 의지에 대한 사유로도 유명하다.",
     work: "『고백록』",
     critique: "자네가 그토록 쫓는 것이 정말 마음을 채워 주던가?(ㅋㅋ?)" },
-  { id: "aquinas", name: "토마스 아퀴나스", years: "1225~1274", place: "이탈리아(아퀴노 인근)", vector: [2,5,1,1,5],
+  { id: "aquinas", name: "토마스 아퀴나스", years: "1225~1274", place: "이탈리아(로카세카)", vector: [2,5,1,1,5],
     quote: "믿음과 이성은 서로를 밀어내지 않고 함께 진리로 나아간다.",
     tagline: "믿음과 이성을 이어 붙인 철학자",
     bio: "도미니코 수도회 수사로 파리와 이탈리아에서 가르쳤다. 아리스토텔레스의 철학을 기독교 신학과 결합해 거대한 체계를 세웠다. 중세 철학을 대표하는 인물로 꼽힌다.",
@@ -258,7 +312,7 @@ const PHILOSOPHERS = [
   { id: "descartes", name: "데카르트", years: "1596~1650", place: "프랑스(라에)", vector: [1,1,2,3,5],
     quote: "모든 것을 의심해 보아도, 의심하고 있는 나 자신만은 남는다.",
     tagline: "의심에서 출발한 근대 철학의 시조",
-    bio: "프랑스에서 태어나 네덜란드 등지에서 연구하며 수학과 철학을 함께 다뤘다. 확실한 지식의 기초를 찾으려고 모든 것을 의심하는 방법을 택했다. 좌표 기하학을 만든 수학자이기도 하다.",
+    bio: "프랑스에서 태어나 네덜란드 등지에서 연구하며 수학과 철학을 함께 다뤘다. 확실한 지식의 기초를 찾으려고 모든 것을 의심하는 방법을 택했다. 해석기하학의 기초를 놓은 수학자이기도 하다.",
     work: "『방법서설』",
     critique: "그 확신, 한 번이라도 ‘의심’해 보고 내놓은 건가?" },
   { id: "spinoza", name: "스피노자", years: "1632~1677", place: "네덜란드(암스테르담)", vector: [1,3,3,4,5],
@@ -289,7 +343,7 @@ const PHILOSOPHERS = [
     quote: "모두가 따라도 괜찮은 원칙이 아니라면 그대로 행동하지 말라.",
     tagline: "원칙으로 도덕을 세운 철학자",
     bio: "평생 고향 쾨니히스베르크에서 가르치며 규칙적인 생활로 유명했다. 인간의 이성이 무엇을 알 수 있고 어떻게 행동해야 하는지를 체계적으로 따졌다. 도덕은 결과가 아니라 원칙에 달려 있다고 보았다.",
-    work: "『도덕형이상학 정초』",
+    work: "『순수이성비판』·『도덕형이상학 정초』",
     critique: "상황이 그랬다는 말은 ’원칙을 어긴 사람(너)‘이 가장 먼저 꺼내는 변명이지." },
   { id: "hegel", name: "헤겔", years: "1770~1831", place: "독일(슈투트가르트)", vector: [2,5,4,2,2],
     quote: "대립은 사라지지 않고, 부딪치면서 더 높은 단계로 나아간다.",
@@ -309,7 +363,7 @@ const PHILOSOPHERS = [
     bio: "어릴 때부터 아버지에게 엄격한 영재 교육을 받았고, 훗날 공리주의를 다듬었다. 의회 의원으로 일하며 여성 참정권을 주장하기도 했다. 다수의 압력으로부터 개인을 지켜야 한다고 강조했다.",
     work: "『자유론』",
     critique: "다수가 편하다는 이유로 소수의 길까지 막고 있지는 않은가??" },
-  { id: "schopenhauer", name: "쇼펜하우어", years: "1788~1860", place: "독일(단치히)", vector: [5,1,3,3,5],
+  { id: "schopenhauer", name: "쇼펜하우어", years: "1788~1860", place: "독일(단치히, 현 폴란드 그단스크)", vector: [5,1,3,3,5],
     quote: "끝없는 욕망 때문에 삶은 만족과 권태 사이를 오간다.",
     tagline: "삶의 고통을 직시한 철학자",
     bio: "세상의 밑바탕에 끝없이 갈망하는 의지가 있다고 보았다. 그래서 삶에는 고통이 많다고 진단하며 예술과 연민에서 위안을 찾으라고 했다. 염세주의자로 불리지만 독설과 유머도 풍부했다.",
@@ -579,8 +633,15 @@ const CONFIG = {
   SUPABASE_URL: 'https://vtpootsgqbxhdxcgjqmz.supabase.co',
   SUPABASE_ANON_KEY: 'sb_publishable_BTtb5VOUJIXSDoV8CmXfrA_SxaS9Bhk',
   ADMIN_EMAIL: 'hlfrogram@gmail.com',
-  // 철학자 이미지를 올린 폴더 경로(예: 'img/'). 파일 이름은 <철학자id>.jpg. 비워 두면 문자 엠블럼을 쓴다.
+  // 철학자 이미지를 올린 폴더 경로(예: 'img/'). 파일 이름은 <철학자id>.png. 비워 두면 문자 엠블럼을 쓴다.
   IMAGE_DIR: 'https://vtpootsgqbxhdxcgjqmz.supabase.co/storage/v1/object/public/philosophers/',
+  IMAGE_EXT: '.png',
+  // 문항 설명 이미지: Supabase Storage의 'questions' 버킷에 q1.png ~ q12.png로 올리면 자동으로 나타난다. 올리기 전에는 '1번 문항 설명' 자리표시가 보인다.
+  QUESTION_IMAGE_DIR: 'https://vtpootsgqbxhdxcgjqmz.supabase.co/storage/v1/object/public/questions/',
+  QUESTION_IMAGE_EXT: '.png',
+  // 개인정보 처리방침에 적는 문의처(이메일 등). 비워 두면 문의처 항목은 나오지 않는다.
+  PRIVACY_CONTACT: '',
+  PRIVACY_DATE: '2026년 11월 8일',
 };
 
 if (typeof module !== 'undefined') module.exports = { CONFIG };
@@ -705,6 +766,19 @@ function toSummaryCsv(stats, questions) {
   return '\uFEFF' + lines.map(csvLine).join('\r\n');
 }
 
+// 철학자별 상세 CSV: 그 철학자가 나온 사람들의 문항별 선택 비율(분모는 그 문항 응답자, 시간 초과는 그 철학자 인원 기준)
+function toGroupCsv(name, stats, questions, allTotal) {
+  const t = stats.total;
+  const lines = [['구분', '항목', '라벨', '건수', '비율(%)', '분모']];
+  lines.push(['철학자', '결과 인원', name, t, pct(t, allTotal), allTotal]);
+  questions.forEach((q, i) => {
+    const s = stats.questions[i];
+    q.options.forEach((o, j) => lines.push(['문항', 'q' + (i + 1), q.title + ' / ' + CIRCLED[j] + ' ' + o.text, s.counts[j], pct(s.counts[j], s.answered), s.answered]));
+    if (q.timed) lines.push(['문항', 'q' + (i + 1), q.title + ' / 시간 초과', s.missing, pct(s.missing, t), t]);
+  });
+  return '\uFEFF' + lines.map(csvLine).join('\r\n');
+}
+
 // 공개 분포: [{philosopher_id, count}] → 32명 전체를 많은 순으로
 function publicDistribution(rows, philosophers) {
   const byId = {};
@@ -716,7 +790,7 @@ function publicDistribution(rows, philosophers) {
   return { total: list.reduce((n, x) => n + x.count, 0), list };
 }
 
-if (typeof module !== 'undefined') module.exports = { buildPayload, aggregate, toRawCsv, toSummaryCsv, csvEscape, publicDistribution };
+if (typeof module !== 'undefined') module.exports = { buildPayload, aggregate, toRawCsv, toSummaryCsv, toGroupCsv, csvEscape, publicDistribution };
 
 // Supabase REST·Auth 호출. 외부 라이브러리 없이 fetch만 쓴다. fetch는 주입받아 테스트할 수 있다.
 const ROW_COLUMNS = 'created_at,answers,philosopher_id,match_percent,axis_a,axis_b,axis_c,axis_d,axis_e,from_friend,timeout_count';
@@ -849,7 +923,7 @@ function wrapLines(ctx, text, maxWidth) {
   return lines;
 }
 
-function drawResultCanvas(canvas, result) {
+function drawResultCanvas(canvas, result, img) {
   const W = 1080;
   const H = 1350;
   canvas.width = W;
@@ -884,18 +958,40 @@ function drawResultCanvas(canvas, result) {
 
   const cx = W / 2;
   const cy = 1030;
-  ctx.strokeStyle = '#c09a55'; ctx.lineWidth = 5; ctx.beginPath(); ctx.arc(cx, cy, 150, 0, Math.PI * 2); ctx.stroke();
-  ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, 130, 0, Math.PI * 2); ctx.stroke();
-  ctx.fillStyle = '#dbb871'; ctx.font = '800 150px ' + serif; ctx.fillText(best.name.charAt(0), cx, cy + 52);
+  if (img) {
+    // 초상 이미지를 원 안에 꽉 채워(정사각형 중앙 크롭) 그린다
+    const side = Math.min(img.naturalWidth || img.width, img.naturalHeight || img.height);
+    const sx = ((img.naturalWidth || img.width) - side) / 2;
+    const sy = ((img.naturalHeight || img.height) - side) / 2;
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cx, cy, 148, 0, Math.PI * 2); ctx.clip();
+    ctx.drawImage(img, sx, sy, side, side, cx - 148, cy - 148, 296, 296);
+    ctx.restore();
+    ctx.strokeStyle = '#c09a55'; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(cx, cy, 152, 0, Math.PI * 2); ctx.stroke();
+  } else {
+    ctx.strokeStyle = '#c09a55'; ctx.lineWidth = 5; ctx.beginPath(); ctx.arc(cx, cy, 150, 0, Math.PI * 2); ctx.stroke();
+    ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, 130, 0, Math.PI * 2); ctx.stroke();
+    ctx.fillStyle = '#dbb871'; ctx.font = '800 150px ' + serif; ctx.fillText(best.name.charAt(0), cx, cy + 52);
+  }
 
   ctx.fillStyle = 'rgba(245,239,226,0.62)'; ctx.font = '28px ' + sans;
   ctx.fillText('나와 닮은 철학자 찾기', W / 2, H - 130);
 }
 
 async function saveImage(result, deps) {
-  const canvas = deps.makeCanvas();
-  (deps.draw || drawResultCanvas)(canvas, result);
-  const blob = await deps.toBlob(canvas);
+  // 초상 이미지를 불러온다. 실패하거나 캔버스 내보내기가 막히면 이미지 없이(이니셜 엠블럼) 만든다.
+  let img = null;
+  if (result.portraitUrl && deps.loadImage) {
+    try { img = await deps.loadImage(result.portraitUrl); } catch (e) { img = null; }
+  }
+  const make = async (withImg) => {
+    const canvas = deps.makeCanvas();
+    (deps.draw || drawResultCanvas)(canvas, result, withImg);
+    return deps.toBlob(canvas);
+  };
+  let blob = null;
+  try { blob = await make(img); } catch (e) { blob = null; }
+  if (!blob && img) blob = await make(null);
   if (!blob) throw new Error('이미지를 만들지 못했어요');
   const name = 'philosopher-match.png';
   const file = typeof File !== 'undefined' ? new File([blob], name, { type: 'image/png' }) : blob;
@@ -914,7 +1010,7 @@ if (typeof document !== 'undefined') (function () {
   const $app = document.getElementById('app');
   const NUMS = ['①', '②', '③', '④'];
   const TIMED_MS = 10000;
-  const state = { screen: 'start', index: 0, answers: [], result: null, friendAnswers: null, adminToken: null, admin: null, prevScreen: null, publicData: null, pending: null };
+  const state = { screen: 'start', index: 0, answers: [], result: null, friendAnswers: null, adminToken: null, admin: null, prevScreen: null, publicData: null, pending: null, detailId: null };
   const cfg = CONFIG;
   let timer = null;
   let tickHandle = null;
@@ -946,7 +1042,19 @@ if (typeof document !== 'undefined') (function () {
       '</section><button class="btn-gold" id="start-btn" type="button">시작해 볼까요 →</button>' +
       (cloudOn() ? '<button class="link" id="public-btn" type="button">지금까지 나온 철학자 분포 보기</button>' : '') +
       '<button class="link" id="privacy-btn" type="button">개인정보 처리방침</button>' +
-      (cloudOn() ? '<p class="notice">설문 결과는 자동으로 저장됩니다.</p>' : '') + '</main>';
+      '<p class="credit">이 설문은 불량품 철학(@bull.yangpum)님의 설문을 바탕으로 제작되었습니다.</p></main>';
+  }
+
+  // 문항 설명 이미지 칸. 이미지가 없거나 불러오지 못하면 'n번 문항 설명' 자리표시가 보인다.
+  function questionPlaceholderHtml(n) {
+    return '<div class="q-placeholder" role="img" aria-label="' + n + '번 문항 설명 이미지 자리">' + n + '번 문항 설명</div>';
+  }
+  function questionFigureHtml(q, i) {
+    const n = i + 1;
+    const inner = cfg.QUESTION_IMAGE_DIR
+      ? '<img class="q-img" src="' + esc(cfg.QUESTION_IMAGE_DIR + q.id + (cfg.QUESTION_IMAGE_EXT || '.png')) + '" alt="' + n + '번 문항 설명" data-qn="' + n + '">'
+      : questionPlaceholderHtml(n);
+    return '<figure class="q-figure">' + inner + '</figure>';
   }
 
   function quizHtml() {
@@ -957,7 +1065,7 @@ if (typeof document !== 'undefined') (function () {
       '<div class="q-meta"><span class="count">' + (state.index + 1) + ' / ' + QUESTIONS.length + '</span>' +
       (q.timed ? '<span class="fast">즉답 모드</span>' : '') + '</div>' +
       '<h2 class="q-title">' + esc(q.title) + '</h2><div class="rule"></div>' +
-      '<p class="q-text">' + esc(q.text) + '</p><p class="q-prompt">' + esc(q.prompt) + '</p><div class="spacer"></div>' +
+      '<p class="q-text">' + esc(q.text) + '</p><p class="q-prompt">' + esc(q.prompt) + '</p>' + questionFigureHtml(q, state.index) + '<div class="spacer"></div>' +
       (q.timed ? '<div class="timer" role="timer" aria-label="남은 시간"><div class="bar"><i></i></div><span class="sec"><b class="n">10</b><small>초</small></span></div>' : '') +
       '<ol class="options">' + options + '</ol>' +
       '<button class="btn-gold next" id="next-btn" type="button" disabled>' +
@@ -1014,18 +1122,20 @@ if (typeof document !== 'undefined') (function () {
       '<p class="result-years">' + esc(best.years) + ' · ' + esc(best.place) + '</p><div class="rule"></div>' +
       '<p class="result-quote">“' + esc(best.quote) + '”</p><p class="result-tagline">' + esc(best.tagline) + '</p>' +
       portraitHtml(best) + '</section>' +
+      '<div class="actions"><button class="btn-gold compare-btn" type="button" data-act="compare">친구와 비교해 보기</button>' +
       '<button class="btn-dark" type="button" data-act="save">결과 카드 저장</button>' +
-      '<div class="btn-row"><button class="btn-line" type="button" data-act="compare">친구와 견주어 보기</button>' +
-      '<button class="btn-line" type="button" data-act="retry">처음부터 다시</button></div>' +
-      (cloudOn() ? '<button class="btn-line wide" type="button" data-act="public">지금까지 나온 철학자 분포 보기</button>' : '') +
+      (cloudOn() ? '<button class="btn-line wide" type="button" data-act="public">지금까지 나온 철학자 분포 보기</button>' : '') + '</div>' +
       compare + '<section class="card detail"><h2 class="h">어떤 사람이었을까</h2><p class="bio">' + esc(best.bio) + '</p>' + moreLinkHtml(best) +
       '<h2 class="h">대표 저서</h2><p class="work">' + esc(best.work) + '</p>' +
       '<h2 class="h">내 생각의 다섯 갈래</h2><div class="thoughts">' + rows + '</div>' +
       '<p class="legend"><i class="key me"></i>내 답 <i class="key phil"></i>' + esc(best.name) + '</p></section>' +
-      '<section class="card others"><h2 class="h">이웃한 생각들</h2><div class="minis">' +
-      mini(ranking.similar[0], '가까운 철학자') + mini(ranking.similar[1], '가까운 철학자') + mini(ranking.opposite, '정반대 철학자') +
-      '</div><blockquote class="critique">“' + esc(ranking.opposite.critique) + '”</blockquote>' +
-      '<p class="critique-by">' + esc(subj(ranking.opposite.name)) + ' 나에게 하는 말</p></section></main>';
+      '<section class="card others"><h2 class="h">이웃한 생각들</h2><div class="minis two">' +
+      mini(ranking.similar[0], '가까운 철학자') + mini(ranking.similar[1], '가까운 철학자') + '</div>' +
+      '<div class="opposite"><p class="opp-label">정반대 철학자</p><div class="opp-body">' + portraitHtml(ranking.opposite) +
+      '<div class="opp-info"><span class="name">' + esc(ranking.opposite.name) + '</span><span class="pct">' + pct[ranking.opposite.id] + '%</span></div></div>' +
+      '<blockquote class="critique">“' + esc(ranking.opposite.critique) + '”</blockquote>' +
+      '<p class="critique-by">' + esc(subj(ranking.opposite.name)) + ' 나에게 하는 말</p></div></section>' +
+      '<div class="retry-zone"><button class="btn-line wide" type="button" data-act="retry">처음부터 다시</button></div></main>';
   }
 
   // ---- Supabase 저장 / 관리자 통계 ----
@@ -1051,14 +1161,33 @@ if (typeof document !== 'undefined') (function () {
       (state.adminToken ? '통계 보기' : '관리자 로그인') + '</button></div>';
   }
 
+  function policyHtml() {
+    const sec = (title, inner) => '<h3>' + title + '</h3>' + inner;
+    const ul = (items) => '<ul>' + items.map((x) => '<li>' + x + '</li>').join('') + '</ul>';
+    if (!cloudOn()) {
+      return '<p class="policy-lead">이 사이트는 답변이나 결과를 서버로 보내거나 저장하지 않습니다. 모든 계산은 이 기기의 브라우저 안에서만 이루어집니다.</p>' +
+        sec('친구 비교 링크', '<p>‘친구와 비교해 보기’ 링크에는 선택한 보기 번호만 담기며, 이름이나 연락처 같은 개인정보는 들어가지 않습니다.</p>');
+    }
+    return '<p class="policy-lead">이 사이트는 이용자를 식별할 수 있는 정보를 수집하지 않으며, 설문 결과를 익명 통계 목적으로만 서버에 저장합니다.</p>' +
+      sec('1. 수집하는 항목', ul([
+        '12개 문항에서 고른 보기 번호 (시간 초과 문항은 ‘응답 없음’으로 기록)',
+        '결과로 나온 철학자와 일치율, 5개 성향 점수',
+        '결과가 만들어진 시각',
+        '친구 비교 링크로 들어와 참여했는지 여부',
+      ])) +
+      sec('2. 수집하지 않는 항목', '<p>이름, 연락처, 계정 정보, 기기 정보, 위치 정보는 수집하지 않으며, 쿠키나 브라우저 저장소도 사용하지 않습니다.</p>') +
+      sec('3. 이용 목적', '<p>참여 현황과 문항별 선택 경향을 파악하는 익명 통계에만 사용하며, 광고나 개인 식별에는 사용하지 않습니다.</p>') +
+      sec('4. 보관 및 파기', '<p>통계 목적이 달성될 때까지 보관하며, 서비스를 종료하거나 운영자가 삭제하기로 한 때에는 지체 없이 파기합니다.</p>') +
+      sec('5. 저장 위치와 위탁', '<p>데이터는 클라우드 데이터베이스 서비스(Supabase)에 저장되며, 해당 서비스의 서버는 국외에 있을 수 있습니다. 이 서비스의 접속 기록에는 접속 IP 주소 등이 일정 기간 남을 수 있습니다.</p>') +
+      sec('6. 공개 범위', '<p>‘지금까지 나온 철학자 분포’ 화면에는 철학자별 인원수만 공개되며, 개별 응답은 공개되지 않습니다. 개별 응답은 운영자만 열람할 수 있습니다.</p>') +
+      sec('7. 친구 비교 링크', '<p>링크에는 선택한 보기 번호만 담기며, 개인정보는 들어가지 않습니다.</p>') +
+      (cfg.PRIVACY_CONTACT ? sec('8. 문의처', '<p>' + esc(cfg.PRIVACY_CONTACT) + '</p>') : '');
+  }
+
   function modalHtml() {
-    const body = cloudOn()
-      ? '<p>이 사이트는 설문 결과를 통계 목적으로 익명으로 서버에 저장합니다. 저장되는 것은 12개 문항에서 고른 보기 번호(시간 초과 포함), 결과 철학자와 일치율, 성향 점수, 참여 시각뿐이며 이름·연락처 같은 개인정보는 받지 않습니다.</p>' +
-        '<p>‘지금까지 나온 철학자 분포’ 화면에는 철학자별 인원수만 공개되고, 개별 응답은 공개되지 않습니다. 서버(Supabase)의 접속 기록에는 접속 IP 등이 남을 수 있습니다. ‘친구와 견주어 보기’ 링크에는 선택한 보기 번호만 담깁니다.</p>'
-      : '<p>이 사이트는 답변이나 결과를 서버로 보내거나 저장하지 않습니다. 모든 계산은 이 기기의 브라우저 안에서만 이루어집니다.</p>' +
-        '<p>‘친구와 견주어 보기’ 링크에는 선택한 보기 번호만 담기며, 이름이나 연락처 같은 개인 정보는 들어가지 않습니다.</p>';
-    return '<div class="modal" role="dialog" aria-modal="true" aria-label="개인정보 처리방침"><section class="card">' +
-      '<h2>개인정보 처리방침</h2>' + body +
+    return '<div class="modal" role="dialog" aria-modal="true" aria-label="개인정보 처리방침"><section class="card policy">' +
+      '<h2>개인정보 처리방침</h2>' + policyHtml() +
+      '<p class="policy-date">시행일: ' + esc(cfg.PRIVACY_DATE || '') + '</p>' +
       '<button class="btn-gold" id="modal-close" type="button">닫기</button></section></div>';
   }
 
@@ -1077,6 +1206,60 @@ if (typeof document !== 'undefined') (function () {
       '<span class="val">' + esc(valueText) + '</span></div>';
   }
 
+  // 최근 14일 참여: 꺾은선 그래프(SVG)
+  function lineChartSvg(daily) {
+    const W = 600; const H = 230; const L = 34; const R = 14; const T = 26; const B = 34;
+    const max = Math.max(1, ...daily.map((d) => d.count));
+    const top = max <= 4 ? max : Math.ceil(max / 4) * 4;
+    const x = (i) => L + (i * (W - L - R)) / Math.max(1, daily.length - 1);
+    const y = (v) => T + (H - T - B) * (1 - v / top);
+    const grid = [0, 1, 2, 3, 4].map((k) => {
+      const v = (top * k) / 4;
+      return '<line class="grid" x1="' + L + '" x2="' + (W - R) + '" y1="' + y(v) + '" y2="' + y(v) + '"/>' +
+        '<text class="ylab" x="' + (L - 6) + '" y="' + (y(v) + 4) + '" text-anchor="end">' + (Number.isInteger(v) ? v : v.toFixed(1)) + '</text>';
+    }).join('');
+    const pts = daily.map((d, i) => x(i) + ',' + y(d.count)).join(' ');
+    const dots = daily.map((d, i) => '<circle class="pt" cx="' + x(i) + '" cy="' + y(d.count) + '" r="4"><title>' + d.date + ' · ' + d.count + '명</title></circle>' +
+      (d.count > 0 ? '<text class="vlab" x="' + x(i) + '" y="' + (y(d.count) - 9) + '" text-anchor="middle">' + d.count + '</text>' : '')).join('');
+    const xl = daily.map((d, i) => (i % 2 === (daily.length - 1) % 2 ? '<text class="xlab" x="' + x(i) + '" y="' + (H - 10) + '" text-anchor="middle">' + d.date.slice(5) + '</text>' : '')).join('');
+    return '<svg class="line-chart" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="최근 14일 일별 참여 수 꺾은선 그래프" xmlns="http://www.w3.org/2000/svg">' +
+      grid + '<polyline class="ln" fill="none" points="' + pts + '"/>' + dots + xl + '</svg>';
+  }
+
+  // 철학자별 결과 한 줄: 이름 → 막대 → 숫자 → 상세보기
+  function philosopherRow(p, max, total) {
+    const w = max ? Math.round((p.count / max) * 100) : 0;
+    return '<div class="bar-row p-row"><span class="lab">' + esc(p.name) + '</span><span class="track"><i style="width:' + w + '%"></i></span>' +
+      '<span class="val">' + p.count + ' (' + pctText(p.count, total) + ')</span>' +
+      '<button class="mini-btn detail-btn" type="button" data-act="admin-detail" data-id="' + esc(p.id) + '">상세보기</button></div>';
+  }
+
+  function questionBlocksHtml(s, total) {
+    return QUESTIONS.map((q, i) => {
+      const qs = s.questions[i];
+      const opts = q.options.map((o, j) => barRow(NUMS[j] + ' ' + o.text, qs.counts[j], qs.answered, qs.counts[j] + ' (' + pctText(qs.counts[j], qs.answered) + ')')).join('');
+      return '<div class="q-block"><h3>' + (i + 1) + '. ' + esc(q.title) + ' <small>응답 ' + qs.answered + '명 기준</small></h3>' + opts +
+        (q.timed ? '<p class="q-missing">시간 초과 ' + qs.missing + '명 (전체의 ' + pctText(qs.missing, total) + ')</p>' : '') + '</div>';
+    }).join('');
+  }
+
+  function groupRows(id) { return state.admin.rows.filter((r) => r.philosopher_id === id); }
+
+  function adminDetailHtml(id) {
+    const a = state.admin;
+    const p = PHILOSOPHERS.find((x) => x.id === id);
+    const gs = aggregate(groupRows(id), Date.now(), PHILOSOPHERS, QUESTIONS);
+    const dis = gs.total ? '' : ' disabled';
+    let html = '<main class="stage admin"><section class="card"><div class="admin-top"><h1 class="h detail-title">' + esc(p.name) + ' 결과가 나온 사람들</h1><div class="admin-actions">' +
+      '<button class="mini-btn" type="button" data-act="admin-detail-back">목록으로</button>' +
+      '<button class="mini-btn" type="button" data-act="csv-group-ratio"' + dis + '>선택 비율 CSV</button>' +
+      '<button class="mini-btn" type="button" data-act="csv-group-raw"' + dis + '>응답 원본 CSV</button></div></div>' +
+      '<p class="detail-total">이 결과가 나온 사람 <b>' + gs.total + '명</b> (전체 ' + a.stats.total + '명의 ' + pctText(gs.total, a.stats.total) + ')</p>';
+    if (!gs.total) return html + '<p class="detail-empty">아직 이 결과가 나온 참여자가 없어요.</p></section></main>';
+    return html + '<h2 class="h">문항별 선택</h2><p class="note-small">보기 비율은 이 결과가 나온 사람 중 그 문항에 응답한 사람 기준이고, 시간 초과는 따로 표시합니다.</p><div class="questions">' +
+      questionBlocksHtml(gs, gs.total) + '</div></section></main>';
+  }
+
   function adminHtml() {
     const a = state.admin;
     const ready = Boolean(a && a.stats);
@@ -1089,6 +1272,7 @@ if (typeof document !== 'undefined') (function () {
       '<button class="mini-btn" type="button" data-act="admin-logout">로그아웃</button></div></div>';
     if (!a || a.loading) return html + '<p class="admin-loading">불러오는 중…</p></section></main>';
     if (a.error) return html + '<p class="admin-error">통계를 불러오지 못했어요. 새로고침하거나, 로그아웃 후 다시 로그인해 주세요.</p><p class="error-detail">오류 정보: ' + esc(a.detail || '') + '</p></section></main>';
+    if (state.detailId) return adminDetailHtml(state.detailId);
     const s = a.stats;
     const t = s.total;
     html += (a.truncated ? '<p class="truncated">최근 20,000건 기준입니다.</p>' : '') +
@@ -1100,19 +1284,12 @@ if (typeof document !== 'undefined') (function () {
       '<div class="stat"><span class="k">친구 링크 유입</span><span class="v stat-friend">' + s.friendCount + ' (' + pctText(s.friendCount, t) + ')</span></div>' +
       '<div class="stat"><span class="k">시간 초과 1개 이상</span><span class="v stat-timeout">' + s.timeoutAny + ' (' + pctText(s.timeoutAny, t) + ')</span></div>' +
       '<div class="stat"><span class="k">시간 초과 2개</span><span class="v stat-timeout2">' + s.timeoutBoth + ' (' + pctText(s.timeoutBoth, t) + ')</span></div></div>';
-    const dmax = Math.max(1, ...s.daily.map((d) => d.count));
-    html += '<h2 class="h">최근 14일 참여</h2><div class="daily">' +
-      s.daily.map((d) => barRow(d.date.slice(5), d.count, dmax, String(d.count))).join('') + '</div>';
+    html += '<h2 class="h">최근 14일 참여</h2><div class="daily">' + lineChartSvg(s.daily) + '</div>';
     const pmax = Math.max(1, ...s.byPhilosopher.map((p) => p.count));
     html += '<h2 class="h">철학자별 결과</h2><div class="by-philosopher">' +
-      s.byPhilosopher.map((p) => barRow(p.name, p.count, pmax, p.count + ' (' + pctText(p.count, t) + ')')).join('') + '</div>';
+      s.byPhilosopher.map((p) => philosopherRow(p, pmax, t)).join('') + '</div>';
     html += '<h2 class="h">문항별 선택</h2><p class="note-small">보기 비율은 그 문항에 응답한 사람 기준이고, 시간 초과는 따로 표시합니다.</p><div class="questions">' +
-      QUESTIONS.map((q, i) => {
-        const qs = s.questions[i];
-        const opts = q.options.map((o, j) => barRow(NUMS[j] + ' ' + o.text, qs.counts[j], qs.answered, qs.counts[j] + ' (' + pctText(qs.counts[j], qs.answered) + ')')).join('');
-        return '<div class="q-block"><h3>' + (i + 1) + '. ' + esc(q.title) + ' <small>응답 ' + qs.answered + '명 기준</small></h3>' + opts +
-          (q.timed ? '<p class="q-missing">시간 초과 ' + qs.missing + '명 (전체의 ' + pctText(qs.missing, t) + ')</p>' : '') + '</div>';
-      }).join('') + '</div></section></main>';
+      questionBlocksHtml(s, t) + '</div></section></main>';
     return html;
   }
 
@@ -1153,21 +1330,41 @@ if (typeof document !== 'undefined') (function () {
   function downloadCsv(kind) {
     const a = state.admin;
     if (!a || !a.stats) return;
-    const text = kind === 'raw' ? toRawCsv(a.rows, PHILOSOPHERS) : toSummaryCsv(a.stats, QUESTIONS);
     const stamp = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10).replace(/-/g, '');
-    window.philo.deps.download(new Blob([text], { type: 'text/csv;charset=utf-8' }), 'philo-' + (kind === 'raw' ? '원본' : '요약') + '-' + stamp + '.csv');
+    let text;
+    let name;
+    if (kind === 'group-ratio' || kind === 'group-raw') {
+      const id = state.detailId;
+      const p = PHILOSOPHERS.find((x) => x.id === id);
+      if (!p) return;
+      const rows = groupRows(id);
+      if (kind === 'group-ratio') {
+        text = toGroupCsv(p.name, aggregate(rows, Date.now(), PHILOSOPHERS, QUESTIONS), QUESTIONS, a.stats.total);
+        name = 'philo-' + p.name + '-선택비율-' + stamp + '.csv';
+      } else {
+        text = toRawCsv(rows, PHILOSOPHERS);
+        name = 'philo-' + p.name + '-응답원본-' + stamp + '.csv';
+      }
+    } else {
+      text = kind === 'raw' ? toRawCsv(a.rows, PHILOSOPHERS) : toSummaryCsv(a.stats, QUESTIONS);
+      name = 'philo-' + (kind === 'raw' ? '원본' : '요약') + '-' + stamp + '.csv';
+    }
+    window.philo.deps.download(new Blob([text], { type: 'text/csv;charset=utf-8' }), name);
   }
 
   function adminLogout() {
     state.adminToken = null;
     state.admin = null;
+    state.detailId = null;
     state.screen = 'start';
     render();
   }
 
+  const portraitUrl = (p) => (cfg.IMAGE_DIR ? cfg.IMAGE_DIR + p.id + (cfg.IMAGE_EXT || '.png') : null);
+
   function portraitHtml(p) {
     if (!cfg.IMAGE_DIR) return emblemSvg(p);
-    return '<img class="portrait emblem" src="' + esc(cfg.IMAGE_DIR + p.id + '.png') + '" alt="' + esc(p.name) + ' 초상" data-pid="' + esc(p.id) + '" loading="lazy">';
+    return '<img class="portrait emblem" src="' + esc(portraitUrl(p)) + '" alt="' + esc(p.name) + ' 초상" data-pid="' + esc(p.id) + '" loading="lazy">';
   }
 
   function moreLinkHtml(p) {
@@ -1218,6 +1415,13 @@ if (typeof document !== 'undefined') (function () {
     makeCanvas: () => document.createElement('canvas'),
     toBlob: (cv) => new Promise((resolve) => cv.toBlob(resolve, 'image/png')),
     share: (file) => (navigator.canShare && navigator.canShare({ files: [file] }) ? navigator.share({ files: [file], title: '나와 닮은 철학자' }) : null),
+    loadImage: (url) => new Promise((resolve, reject) => {
+      const im = new Image();
+      im.crossOrigin = 'anonymous';
+      im.onload = () => resolve(im);
+      im.onerror = () => reject(new Error('image load failed'));
+      im.src = url;
+    }),
     download: (blob, name) => {
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
@@ -1313,7 +1517,8 @@ if (typeof document !== 'undefined') (function () {
   function finish(answers) {
     state.answers = answers.slice();
     const vector = scoreAnswers(state.answers, QUESTIONS);
-    state.result = { vector, ranking: rankPhilosophers(vector, PHILOSOPHERS) };
+    const ranking = rankPhilosophers(vector, PHILOSOPHERS);
+    state.result = { vector, ranking, portraitUrl: portraitUrl(ranking.best) };
     state.screen = 'result';
     render();
     sendResult();
@@ -1368,7 +1573,11 @@ if (typeof document !== 'undefined') (function () {
     else if (el.id === 'admin-submit') submitLogin();
     else if (el.dataset.act === 'admin-refresh') openAdmin();
     else if (el.dataset.act === 'admin-logout') adminLogout();
-    else if (el.dataset.act === 'admin-back') { state.screen = 'start'; render(); }
+    else if (el.dataset.act === 'admin-back') { state.screen = 'start'; state.detailId = null; render(); }
+    else if (el.dataset.act === 'admin-detail') { state.detailId = el.dataset.id; render(); }
+    else if (el.dataset.act === 'admin-detail-back') { state.detailId = null; render(); }
+    else if (el.dataset.act === 'csv-group-ratio') downloadCsv('group-ratio');
+    else if (el.dataset.act === 'csv-group-raw') downloadCsv('group-raw');
     else if (el.dataset.act === 'csv-raw') downloadCsv('raw');
     else if (el.dataset.act === 'csv-summary') downloadCsv('summary');
     else if (el.id === 'public-btn' || el.dataset.act === 'public') openPublic();
@@ -1379,6 +1588,8 @@ if (typeof document !== 'undefined') (function () {
     if (el && el.tagName === 'IMG' && el.dataset.pid) {
       const p = PHILOSOPHERS.find((x) => x.id === el.dataset.pid);
       if (p) el.outerHTML = emblemSvg(p);
+    } else if (el && el.tagName === 'IMG' && el.dataset.qn) {
+      el.outerHTML = questionPlaceholderHtml(el.dataset.qn);
     }
   }, true);
   $app.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target && e.target.id === 'admin-pw') submitLogin(); });
