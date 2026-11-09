@@ -41,7 +41,6 @@ button { font-family: inherit; -webkit-tap-highlight-color: transparent; touch-a
 .lead { margin: 0; font-size: 17px; }
 .note { margin: 22px 0 6px; font-size: 17px; font-weight: 700; line-height: 1.5; }
 .meta { margin: 0; color: var(--muted); font-size: 14px; }
-.ornament { display: block; width: 62%; max-width: 250px; margin: 26px auto 6px; }
 .btn-gold { display: block; width: 100%; margin-top: 18px; padding: 18px; border: 0; border-radius: 4px; cursor: pointer;
   background: var(--gold-btn); color: var(--ink); font-size: 22px; font-weight: 800;
   box-shadow: 0 5px 0 #8a6f3c, 0 12px 24px rgba(0, 0, 0, .16); }
@@ -200,11 +199,6 @@ button { font-family: inherit; -webkit-tap-highlight-color: transparent; touch-a
 .retry-zone { margin-top: 34px; padding-top: 22px; border-top: 1px solid rgba(26, 25, 21, .2); }
 .retry-zone .btn-line { margin-top: 0; }
 
-/* 문항 설명 이미지 칸 */
-.q-figure { margin: 18px 0 0; }
-.q-img { display: block; width: 100%; height: auto; border: 1px solid var(--line); background: #14130f; }
-.q-placeholder { display: flex; align-items: center; justify-content: center; min-height: 150px; border: 1px dashed var(--line);
-  color: var(--muted); font-size: 15px; letter-spacing: .04em; background: rgba(192, 154, 85, .06); }
 
 /* 개인정보 처리방침 */
 .modal .policy { max-height: calc(100dvh - 40px); overflow-y: auto; }
@@ -231,7 +225,6 @@ button { font-family: inherit; -webkit-tap-highlight-color: transparent; touch-a
 
 /* 다음 버튼: 비활성일 때도 투명하지 않게(뒤의 보기 글자가 비치지 않도록) */
 .btn-gold.next:disabled { opacity: 1; background: #5b5039; color: rgba(245, 239, 226, .5); }
-.q-placeholder { min-height: 110px; }
 .credit { margin: 6px 2px 0; color: #8a8576; font-size: 12px; line-height: 1.5; }
 
 /* 철학자 사진: 저장 카드와 같게 원형 + 금색 테두리 */
@@ -256,6 +249,12 @@ button { font-family: inherit; -webkit-tap-highlight-color: transparent; touch-a
 .back-btn:focus-visible { outline: 3px solid var(--gold-btn); outline-offset: 2px; }
 .kbd-hint { display: none; margin: 10px 0 0; color: var(--muted); font-size: 12px; text-align: center; }
 @media (hover: hover) and (pointer: fine) { .kbd-hint { display: block; } }
+
+/* 6차: 문항 강조, 시작 화면 카뮈 사진, 연구 목적 안내 */
+.hl { color: #f0cf86; font-weight: 800; box-shadow: inset 0 -0.38em 0 rgba(192, 154, 85, .3); }
+.start-photo { display: block; width: 176px; height: 176px; margin: 26px auto 0; border-radius: 50%; border: 5px solid var(--gold); object-fit: cover; background: #14130f; }
+.start-photo.empty { box-shadow: inset 0 0 0 2px rgba(192, 154, 85, .25); }
+.purpose { margin: 14px 0 0; padding: 9px 12px; border-left: 3px solid var(--gold); background: rgba(192, 154, 85, .09); color: rgba(245, 239, 226, .82); font-size: 13px; line-height: 1.6; text-align: left; }
 
 </style>
 </head>
@@ -470,7 +469,7 @@ if (typeof module !== 'undefined') module.exports = { MORE_LINKS };
 // 상황 12개. 축: A 이성(-)↔감정(+), B 나(-)↔우리(+), C 규칙(-)↔상황(+), D 질서(-)↔자유(+), E 행동(-)↔관조(+)
 const QUESTIONS = [
   { id: "q1", title: "구명보트의 마지막 자리", timed: false,
-    text: "정원이 다 찬 구명보트에 자리가 하나 남았습니다. 아이를 안은 낯선 사람, 몸이 불편한 노인, 오랜 친구가 보트 옆에 서 있습니다.",
+    text: "정원이 다 찬 구명보트에 [[자리가 하나]] 남았습니다. 아이를 안은 낯선 사람, 몸이 불편한 노인, 오랜 친구가 보트 옆에 서 있습니다.",
     prompt: "그 자리를 누구에게 주겠습니까?",
     options: [
       { text: "아이를 안은 사람. 살아갈 날이 더 많은 쪽이 먼저다", effects: { B: 2, C: -1 } },
@@ -479,7 +478,7 @@ const QUESTIONS = [
       { text: "내가 먼저 내려서 자리를 하나 더 만든다", effects: { B: 2, C: 1 } },
     ] },
   { id: "q2", title: "동창의 이력서", timed: false,
-    text: "오랜 동창이 면접을 앞두고, 이력서에 없는 경력을 한 줄만 넣어 달라고 부탁합니다. 확인할 사람은 거의 없습니다.",
+    text: "오랜 동창이 면접을 앞두고, [[이력서에 없는 경력]]을 한 줄만 넣어 달라고 부탁합니다. 확인할 사람은 [[거의 없습니다]].",
     prompt: "그 부탁을 어떻게 하겠습니까?",
     options: [
       { text: "거절한다. 거짓은 친구 사이에서도 거짓이다", effects: { C: -2, B: -1 } },
@@ -488,7 +487,7 @@ const QUESTIONS = [
       { text: "이번 한 번만 해 주고 다시는 안 된다고 못 박는다", effects: { C: 2, B: -1 } },
     ] },
   { id: "q3", title: "건널목", timed: true,
-    text: "횡단보도 신호가 빨간불입니다. 건너편에서 아이가 공을 따라 차도로 뛰어들려 하고, 차 한 대가 다가오고 있습니다.",
+    text: "횡단보도 신호가 [[빨간불]]입니다. 건너편에서 아이가 공을 따라 차도로 뛰어들려 하고, [[차 한 대가 다가오고]] 있습니다.",
     prompt: "신호를 어기고 뛰어듭니까? 10초 안에 고르세요.",
     options: [
       { text: "뛰어든다. 생각할 틈이 없다", effects: { A: 2, C: 2 } },
@@ -497,7 +496,7 @@ const QUESTIONS = [
       { text: "얼어붙어 한동안 아무것도 하지 못한다", effects: { A: 2, C: -1 } },
     ] },
   { id: "q4", title: "우연히 읽은 일기", timed: false,
-    text: "친구의 책상에 펼쳐진 일기장에서, 나에 대한 서운한 속마음을 우연히 읽었습니다. 친구는 내가 읽은 줄 모릅니다.",
+    text: "친구의 책상에 펼쳐진 일기장에서, 나에 대한 [[서운한 속마음]]을 우연히 읽었습니다. 친구는 내가 [[읽은 줄 모릅니다]].",
     prompt: "어떻게 하겠습니까?",
     options: [
       { text: "못 본 척하고 평소처럼 지낸다", effects: { D: -1, A: -1 } },
@@ -506,7 +505,7 @@ const QUESTIONS = [
       { text: "서운해서 한동안 거리를 둔다", effects: { A: 2, D: 1 } },
     ] },
   { id: "q5", title: "3년째 같은 야근", timed: false,
-    text: "퇴근 시간이 가까워질 때마다 같은 보고서를 같은 양식으로 올립니다. 벌써 3년째이고, 앞으로도 비슷할 것 같습니다.",
+    text: "퇴근 시간이 가까워질 때마다 [[같은 보고서를 같은 양식으로]] 올립니다. 벌써 [[3년째]]이고, 앞으로도 비슷할 것 같습니다.",
     prompt: "이 반복되는 삶을 어떻게 대하겠습니까?",
     options: [
       { text: "판을 바꿀 계획을 세우고 당장 움직인다", effects: { E: -2, D: 2 } },
@@ -515,7 +514,7 @@ const QUESTIONS = [
       { text: "맡은 일을 흠 없이 해내는 데서 자부심을 찾는다", effects: { E: -1, D: -2 } },
     ] },
   { id: "q6", title: "예언자의 한마디", timed: false,
-    text: "용하다는 예언자가 당신의 앞날을 보았다며, 단 한 가지만 알려 주겠다고 합니다. 좋은 일인지 나쁜 일인지는 말해 주지 않습니다.",
+    text: "용하다는 예언자가 당신의 앞날을 보았다며, [[단 한 가지만]] 알려 주겠다고 합니다. [[좋은 일인지 나쁜 일인지는]] 말해 주지 않습니다.",
     prompt: "들어 보겠습니까?",
     options: [
       { text: "듣는다. 알아야 대비할 수 있다", effects: { E: -2, A: -1 } },
@@ -524,7 +523,7 @@ const QUESTIONS = [
       { text: "그때그때 기분이 끌리는 대로 정한다", effects: { A: 2, E: -1 } },
     ] },
   { id: "q7", title: "만장일치 속의 반대", timed: false,
-    text: "회의에서 모두가 찬성하는 안건 하나에 나만 마음이 걸립니다. 분위기는 이미 결론 쪽으로 기울었습니다.",
+    text: "회의에서 [[모두가 찬성]]하는 안건 하나에 [[나만]] 마음이 걸립니다. 분위기는 이미 결론 쪽으로 기울었습니다.",
     prompt: "어떻게 하겠습니까?",
     options: [
       { text: "걸리는 점을 끝까지 말하고 표결에 부친다", effects: { B: -1, D: 2 } },
@@ -533,7 +532,7 @@ const QUESTIONS = [
       { text: "내 몫만 하고 이 일에서 빠진다", effects: { B: -2, D: 1 } },
     ] },
   { id: "q8", title: "새벽의 비밀 번호", timed: false,
-    text: "새벽 두 시, 모르는 번호로 문자가 옵니다. '아이가 아파요. 병원까지 태워 줄 수 있나요?' 가까이 사는 사람 같지만 사기일 수도 있습니다.",
+    text: "새벽 두 시, 모르는 번호로 문자가 옵니다. '아이가 아파요. [[병원까지 태워 줄 수 있나요?]]' 가까이 사는 사람 같지만 [[사기일 수도]] 있습니다.",
     prompt: "어떻게 하겠습니까?",
     options: [
       { text: "일단 전화를 걸어 목소리를 듣고 판단한다", effects: { A: -1, C: 2 } },
@@ -542,7 +541,7 @@ const QUESTIONS = [
       { text: "의심스러워서 답장을 보내지 않는다", effects: { A: -2, C: -1 } },
     ] },
   { id: "q9", title: "무한 휴가", timed: false,
-    text: "한 달 동안 아무 의무 없이 쉴 수 있는 시간이 생겼습니다. 돈 걱정도 없습니다.",
+    text: "한 달 동안 [[아무 의무 없이]] 쉴 수 있는 시간이 생겼습니다. 돈 걱정도 없습니다.",
     prompt: "어떻게 보내겠습니까?",
     options: [
       { text: "미뤄 둔 일과 계획을 하나씩 해치운다", effects: { E: -2, D: -1 } },
@@ -551,7 +550,7 @@ const QUESTIONS = [
       { text: "오래 못 만난 사람들과 밀린 이야기를 나눈다", effects: { E: -1, D: 1 } },
     ] },
   { id: "q10", title: "낡은 다리의 철거", timed: false,
-    text: "마을 사람들이 오래 건너온 다리가 안전 진단에서 위험 판정을 받았습니다. 철거하면 먼 길로 돌아가야 하고, 두면 사고가 날 수 있습니다. 결정은 당신 몫입니다.",
+    text: "마을 사람들이 오래 건너온 다리가 안전 진단에서 [[위험 판정]]을 받았습니다. 철거하면 [[먼 길로 돌아가야]] 하고, 두면 [[사고가 날 수]] 있습니다. 결정은 당신 몫입니다.",
     prompt: "어떻게 하겠습니까?",
     options: [
       { text: "규정대로 즉시 통행을 막고 철거한다", effects: { B: 1, C: -2 } },
@@ -560,7 +559,7 @@ const QUESTIONS = [
       { text: "내 책임이 되지 않도록 상급 기관에 판단을 넘긴다", effects: { B: -2, C: -1 } },
     ] },
   { id: "q11", title: "마지막 한 시간", timed: true,
-    text: "알림이 울렸습니다. 당신에게 남은 시간은 정확히 한 시간입니다.",
+    text: "알림이 울렸습니다. 당신에게 남은 시간은 [[정확히 한 시간]]입니다.",
     prompt: "무엇을 하겠습니까? 10초 안에 고르세요.",
     options: [
       { text: "가장 소중한 사람에게 달려가 안아 준다", effects: { A: 2, E: -2 } },
@@ -569,7 +568,7 @@ const QUESTIONS = [
       { text: "창밖을 바라보며 아무 생각 없이 앉아 있는다", effects: { A: 1, E: 2 } },
     ] },
   { id: "q12", title: "오래된 편지", timed: false,
-    text: "서랍에서 10년 전 쓴 편지가 나왔습니다. 친구에게 '언젠가 같이 가게를 열자'고 적은 약속입니다. 친구는 잊은 듯하고, 지금 나는 안정된 직장에 다닙니다.",
+    text: "서랍에서 10년 전 쓴 편지가 나왔습니다. 친구에게 '[[언젠가 같이 가게를 열자]]'고 적은 약속입니다. 친구는 [[잊은 듯]]하고, 지금 나는 [[안정된 직장]]에 다닙니다.",
     prompt: "그 약속을 어떻게 하겠습니까?",
     options: [
       { text: "약속은 약속이다. 연락해서 진지하게 다시 꺼낸다", effects: { B: 1, C: -2 } },
@@ -648,10 +647,6 @@ if (typeof module !== 'undefined') {
   };
 }
 
-// QR Code Generator for JavaScript (c) 2009 Kazuhiko Arase, MIT License. QR Code is a registered trademark of DENSO WAVE INCORPORATED.
-var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],f={},c=function(t,r){o=function(t){for(var r=new Array(t),e=0;e<t;e+=1){r[e]=new Array(t);for(var n=0;n<t;n+=1)r[e][n]=null}return r}(i=4*e+17),l(0,0),l(i-7,0),l(0,i-7),s(),h(),d(t,r),e>=7&&v(t),null==a&&(a=p(e,n,u)),w(a,r)},l=function(t,r){for(var e=-1;e<=7;e+=1)if(!(t+e<=-1||i<=t+e))for(var n=-1;n<=7;n+=1)r+n<=-1||i<=r+n||(o[t+e][r+n]=0<=e&&e<=6&&(0==n||6==n)||0<=n&&n<=6&&(0==e||6==e)||2<=e&&e<=4&&2<=n&&n<=4)},h=function(){for(var t=8;t<i-8;t+=1)null==o[t][6]&&(o[t][6]=t%2==0);for(var r=8;r<i-8;r+=1)null==o[6][r]&&(o[6][r]=r%2==0)},s=function(){for(var t=B.getPatternPosition(e),r=0;r<t.length;r+=1)for(var n=0;n<t.length;n+=1){var i=t[r],a=t[n];if(null==o[i][a])for(var u=-2;u<=2;u+=1)for(var f=-2;f<=2;f+=1)o[i+u][a+f]=-2==u||2==u||-2==f||2==f||0==u&&0==f}},v=function(t){for(var r=B.getBCHTypeNumber(e),n=0;n<18;n+=1){var a=!t&&1==(r>>n&1);o[Math.floor(n/3)][n%3+i-8-3]=a}for(n=0;n<18;n+=1){a=!t&&1==(r>>n&1);o[n%3+i-8-3][Math.floor(n/3)]=a}},d=function(t,r){for(var e=n<<3|r,a=B.getBCHTypeInfo(e),u=0;u<15;u+=1){var f=!t&&1==(a>>u&1);u<6?o[u][8]=f:u<8?o[u+1][8]=f:o[i-15+u][8]=f}for(u=0;u<15;u+=1){f=!t&&1==(a>>u&1);u<8?o[8][i-u-1]=f:u<9?o[8][15-u-1+1]=f:o[8][15-u-1]=f}o[i-8][8]=!t},w=function(t,r){for(var e=-1,n=i-1,a=7,u=0,f=B.getMaskFunction(r),c=i-1;c>0;c-=2)for(6==c&&(c-=1);;){for(var g=0;g<2;g+=1)if(null==o[n][c-g]){var l=!1;u<t.length&&(l=1==(t[u]>>>a&1)),f(n,c-g)&&(l=!l),o[n][c-g]=l,-1==(a-=1)&&(u+=1,a=7)}if((n+=e)<0||i<=n){n-=e,e=-e;break}}},p=function(t,r,e){for(var n=A.getRSBlocks(t,r),o=b(),i=0;i<e.length;i+=1){var a=e[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var u=0;for(i=0;i<n.length;i+=1)u+=n[i].dataCount;if(o.getLengthInBits()>8*u)throw"code length overflow. ("+o.getLengthInBits()+">"+8*u+")";for(o.getLengthInBits()+4<=8*u&&o.put(0,4);o.getLengthInBits()%8!=0;)o.putBit(!1);for(;!(o.getLengthInBits()>=8*u||(o.put(236,8),o.getLengthInBits()>=8*u));)o.put(17,8);return function(t,r){for(var e=0,n=0,o=0,i=new Array(r.length),a=new Array(r.length),u=0;u<r.length;u+=1){var f=r[u].dataCount,c=r[u].totalCount-f;n=Math.max(n,f),o=Math.max(o,c),i[u]=new Array(f);for(var g=0;g<i[u].length;g+=1)i[u][g]=255&t.getBuffer()[g+e];e+=f;var l=B.getErrorCorrectPolynomial(c),h=k(i[u],l.getLength()-1).mod(l);for(a[u]=new Array(l.getLength()-1),g=0;g<a[u].length;g+=1){var s=g+h.getLength()-a[u].length;a[u][g]=s>=0?h.getAt(s):0}}var v=0;for(g=0;g<r.length;g+=1)v+=r[g].totalCount;var d=new Array(v),w=0;for(g=0;g<n;g+=1)for(u=0;u<r.length;u+=1)g<i[u].length&&(d[w]=i[u][g],w+=1);for(g=0;g<o;g+=1)for(u=0;u<r.length;u+=1)g<a[u].length&&(d[w]=a[u][g],w+=1);return d}(o,n)};f.addData=function(t,r){var e=null;switch(r=r||"Byte"){case"Numeric":e=M(t);break;case"Alphanumeric":e=x(t);break;case"Byte":e=m(t);break;case"Kanji":e=L(t);break;default:throw"mode:"+r}u.push(e),a=null},f.isDark=function(t,r){if(t<0||i<=t||r<0||i<=r)throw t+","+r;return o[t][r]},f.getModuleCount=function(){return i},f.make=function(){if(e<1){for(var t=1;t<40;t++){for(var r=A.getRSBlocks(t,n),o=b(),i=0;i<u.length;i++){var a=u[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var g=0;for(i=0;i<r.length;i++)g+=r[i].dataCount;if(o.getLengthInBits()<=8*g)break}e=t}c(!1,function(){for(var t=0,r=0,e=0;e<8;e+=1){c(!0,e);var n=B.getLostPoint(f);(0==e||t>n)&&(t=n,r=e)}return r}())},f.createTableTag=function(t,r){t=t||2;var e="";e+='<table style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: "+(r=void 0===r?4*t:r)+"px;",e+='">',e+="<tbody>";for(var n=0;n<f.getModuleCount();n+=1){e+="<tr>";for(var o=0;o<f.getModuleCount();o+=1)e+='<td style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: 0px;",e+=" width: "+t+"px;",e+=" height: "+t+"px;",e+=" background-color: ",e+=f.isDark(n,o)?"#000000":"#ffffff",e+=";",e+='"/>';e+="</tr>"}return e+="</tbody>",e+="</table>"},f.createSvgTag=function(t,r,e,n){var o={};"object"==typeof arguments[0]&&(t=(o=arguments[0]).cellSize,r=o.margin,e=o.alt,n=o.title),t=t||2,r=void 0===r?4*t:r,(e="string"==typeof e?{text:e}:e||{}).text=e.text||null,e.id=e.text?e.id||"qrcode-description":null,(n="string"==typeof n?{text:n}:n||{}).text=n.text||null,n.id=n.text?n.id||"qrcode-title":null;var i,a,u,c,g=f.getModuleCount()*t+2*r,l="";for(c="l"+t+",0 0,"+t+" -"+t+",0 0,-"+t+"z ",l+='<svg version="1.1" xmlns="http://www.w3.org/2000/svg"',l+=o.scalable?"":' width="'+g+'px" height="'+g+'px"',l+=' viewBox="0 0 '+g+" "+g+'" ',l+=' preserveAspectRatio="xMinYMin meet"',l+=n.text||e.text?' role="img" aria-labelledby="'+y([n.id,e.id].join(" ").trim())+'"':"",l+=">",l+=n.text?'<title id="'+y(n.id)+'">'+y(n.text)+"</title>":"",l+=e.text?'<description id="'+y(e.id)+'">'+y(e.text)+"</description>":"",l+='<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>',l+='<path d="',a=0;a<f.getModuleCount();a+=1)for(u=a*t+r,i=0;i<f.getModuleCount();i+=1)f.isDark(a,i)&&(l+="M"+(i*t+r)+","+u+c);return l+='" stroke="transparent" fill="black"/>',l+="</svg>"},f.createDataURL=function(t,r){t=t||2,r=void 0===r?4*t:r;var e=f.getModuleCount()*t+2*r,n=r,o=e-r;return I(e,e,function(r,e){if(n<=r&&r<o&&n<=e&&e<o){var i=Math.floor((r-n)/t),a=Math.floor((e-n)/t);return f.isDark(a,i)?0:1}return 1})},f.createImgTag=function(t,r,e){t=t||2,r=void 0===r?4*t:r;var n=f.getModuleCount()*t+2*r,o="";return o+="<img",o+=' src="',o+=f.createDataURL(t,r),o+='"',o+=' width="',o+=n,o+='"',o+=' height="',o+=n,o+='"',e&&(o+=' alt="',o+=y(e),o+='"'),o+="/>"};var y=function(t){for(var r="",e=0;e<t.length;e+=1){var n=t.charAt(e);switch(n){case"<":r+="&lt;";break;case">":r+="&gt;";break;case"&":r+="&amp;";break;case'"':r+="&quot;";break;default:r+=n}}return r};return f.createASCII=function(t,r){if((t=t||1)<2)return function(t){t=void 0===t?2:t;var r,e,n,o,i,a=1*f.getModuleCount()+2*t,u=t,c=a-t,g={"██":"█","█ ":"▀"," █":"▄","  ":" "},l={"██":"▀","█ ":"▀"," █":" ","  ":" "},h="";for(r=0;r<a;r+=2){for(n=Math.floor((r-u)/1),o=Math.floor((r+1-u)/1),e=0;e<a;e+=1)i="█",u<=e&&e<c&&u<=r&&r<c&&f.isDark(n,Math.floor((e-u)/1))&&(i=" "),u<=e&&e<c&&u<=r+1&&r+1<c&&f.isDark(o,Math.floor((e-u)/1))?i+=" ":i+="█",h+=t<1&&r+1>=c?l[i]:g[i];h+="\n"}return a%2&&t>0?h.substring(0,h.length-a-1)+Array(a+1).join("▀"):h.substring(0,h.length-1)}(r);t-=1,r=void 0===r?2*t:r;var e,n,o,i,a=f.getModuleCount()*t+2*r,u=r,c=a-r,g=Array(t+1).join("██"),l=Array(t+1).join("  "),h="",s="";for(e=0;e<a;e+=1){for(o=Math.floor((e-u)/t),s="",n=0;n<a;n+=1)i=1,u<=n&&n<c&&u<=e&&e<c&&f.isDark(o,Math.floor((n-u)/t))&&(i=0),s+=i?g:l;for(o=0;o<t;o+=1)h+=s+"\n"}return h.substring(0,h.length-1)},f.renderTo2dContext=function(t,r){r=r||2;for(var e=f.getModuleCount(),n=0;n<e;n++)for(var o=0;o<e;o++)t.fillStyle=f.isDark(n,o)?"black":"white",t.fillRect(o*r,n*r,r,r)},f};t.stringToBytes=(t.stringToBytesFuncs={default:function(t){for(var r=[],e=0;e<t.length;e+=1){var n=t.charCodeAt(e);r.push(255&n)}return r}}).default,t.createStringToBytes=function(t,r){var e=function(){for(var e=S(t),n=function(){var t=e.read();if(-1==t)throw"eof";return t},o=0,i={};;){var a=e.read();if(-1==a)break;var u=n(),f=n()<<8|n();i[String.fromCharCode(a<<8|u)]=f,o+=1}if(o!=r)throw o+" != "+r;return i}(),n="?".charCodeAt(0);return function(t){for(var r=[],o=0;o<t.length;o+=1){var i=t.charCodeAt(o);if(i<128)r.push(i);else{var a=e[t.charAt(o)];"number"==typeof a?(255&a)==a?r.push(a):(r.push(a>>>8),r.push(255&a)):r.push(n)}}return r}};var r,e,n,o,i,a=1,u=2,f=4,c=8,g={L:1,M:0,Q:3,H:2},l=0,h=1,s=2,v=3,d=4,w=5,p=6,y=7,B=(r=[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],[6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],[6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],[6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],[6,32,58,84,110,136,162],[6,26,54,82,110,138,166],[6,30,58,86,114,142,170]],e=1335,n=7973,i=function(t){for(var r=0;0!=t;)r+=1,t>>>=1;return r},(o={}).getBCHTypeInfo=function(t){for(var r=t<<10;i(r)-i(e)>=0;)r^=e<<i(r)-i(e);return 21522^(t<<10|r)},o.getBCHTypeNumber=function(t){for(var r=t<<12;i(r)-i(n)>=0;)r^=n<<i(r)-i(n);return t<<12|r},o.getPatternPosition=function(t){return r[t-1]},o.getMaskFunction=function(t){switch(t){case l:return function(t,r){return(t+r)%2==0};case h:return function(t,r){return t%2==0};case s:return function(t,r){return r%3==0};case v:return function(t,r){return(t+r)%3==0};case d:return function(t,r){return(Math.floor(t/2)+Math.floor(r/3))%2==0};case w:return function(t,r){return t*r%2+t*r%3==0};case p:return function(t,r){return(t*r%2+t*r%3)%2==0};case y:return function(t,r){return(t*r%3+(t+r)%2)%2==0};default:throw"bad maskPattern:"+t}},o.getErrorCorrectPolynomial=function(t){for(var r=k([1],0),e=0;e<t;e+=1)r=r.multiply(k([1,C.gexp(e)],0));return r},o.getLengthInBits=function(t,r){if(1<=r&&r<10)switch(t){case a:return 10;case u:return 9;case f:case c:return 8;default:throw"mode:"+t}else if(r<27)switch(t){case a:return 12;case u:return 11;case f:return 16;case c:return 10;default:throw"mode:"+t}else{if(!(r<41))throw"type:"+r;switch(t){case a:return 14;case u:return 13;case f:return 16;case c:return 12;default:throw"mode:"+t}}},o.getLostPoint=function(t){for(var r=t.getModuleCount(),e=0,n=0;n<r;n+=1)for(var o=0;o<r;o+=1){for(var i=0,a=t.isDark(n,o),u=-1;u<=1;u+=1)if(!(n+u<0||r<=n+u))for(var f=-1;f<=1;f+=1)o+f<0||r<=o+f||0==u&&0==f||a==t.isDark(n+u,o+f)&&(i+=1);i>5&&(e+=3+i-5)}for(n=0;n<r-1;n+=1)for(o=0;o<r-1;o+=1){var c=0;t.isDark(n,o)&&(c+=1),t.isDark(n+1,o)&&(c+=1),t.isDark(n,o+1)&&(c+=1),t.isDark(n+1,o+1)&&(c+=1),0!=c&&4!=c||(e+=3)}for(n=0;n<r;n+=1)for(o=0;o<r-6;o+=1)t.isDark(n,o)&&!t.isDark(n,o+1)&&t.isDark(n,o+2)&&t.isDark(n,o+3)&&t.isDark(n,o+4)&&!t.isDark(n,o+5)&&t.isDark(n,o+6)&&(e+=40);for(o=0;o<r;o+=1)for(n=0;n<r-6;n+=1)t.isDark(n,o)&&!t.isDark(n+1,o)&&t.isDark(n+2,o)&&t.isDark(n+3,o)&&t.isDark(n+4,o)&&!t.isDark(n+5,o)&&t.isDark(n+6,o)&&(e+=40);var g=0;for(o=0;o<r;o+=1)for(n=0;n<r;n+=1)t.isDark(n,o)&&(g+=1);return e+=Math.abs(100*g/r/r-50)/5*10},o),C=function(){for(var t=new Array(256),r=new Array(256),e=0;e<8;e+=1)t[e]=1<<e;for(e=8;e<256;e+=1)t[e]=t[e-4]^t[e-5]^t[e-6]^t[e-8];for(e=0;e<255;e+=1)r[t[e]]=e;var n={glog:function(t){if(t<1)throw"glog("+t+")";return r[t]},gexp:function(r){for(;r<0;)r+=255;for(;r>=256;)r-=255;return t[r]}};return n}();function k(t,r){if(void 0===t.length)throw t.length+"/"+r;var e=function(){for(var e=0;e<t.length&&0==t[e];)e+=1;for(var n=new Array(t.length-e+r),o=0;o<t.length-e;o+=1)n[o]=t[o+e];return n}(),n={getAt:function(t){return e[t]},getLength:function(){return e.length},multiply:function(t){for(var r=new Array(n.getLength()+t.getLength()-1),e=0;e<n.getLength();e+=1)for(var o=0;o<t.getLength();o+=1)r[e+o]^=C.gexp(C.glog(n.getAt(e))+C.glog(t.getAt(o)));return k(r,0)},mod:function(t){if(n.getLength()-t.getLength()<0)return n;for(var r=C.glog(n.getAt(0))-C.glog(t.getAt(0)),e=new Array(n.getLength()),o=0;o<n.getLength();o+=1)e[o]=n.getAt(o);for(o=0;o<t.getLength();o+=1)e[o]^=C.gexp(C.glog(t.getAt(o))+r);return k(e,0).mod(t)}};return n}var A=function(){var t=[[1,26,19],[1,26,16],[1,26,13],[1,26,9],[1,44,34],[1,44,28],[1,44,22],[1,44,16],[1,70,55],[1,70,44],[2,35,17],[2,35,13],[1,100,80],[2,50,32],[2,50,24],[4,25,9],[1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],[2,86,68],[4,43,27],[4,43,19],[4,43,15],[2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],[2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],[2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],[2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16],[4,101,81],[1,80,50,4,81,51],[4,50,22,4,51,23],[3,36,12,8,37,13],[2,116,92,2,117,93],[6,58,36,2,59,37],[4,46,20,6,47,21],[7,42,14,4,43,15],[4,133,107],[8,59,37,1,60,38],[8,44,20,4,45,21],[12,33,11,4,34,12],[3,145,115,1,146,116],[4,64,40,5,65,41],[11,36,16,5,37,17],[11,36,12,5,37,13],[5,109,87,1,110,88],[5,65,41,5,66,42],[5,54,24,7,55,25],[11,36,12,7,37,13],[5,122,98,1,123,99],[7,73,45,3,74,46],[15,43,19,2,44,20],[3,45,15,13,46,16],[1,135,107,5,136,108],[10,74,46,1,75,47],[1,50,22,15,51,23],[2,42,14,17,43,15],[5,150,120,1,151,121],[9,69,43,4,70,44],[17,50,22,1,51,23],[2,42,14,19,43,15],[3,141,113,4,142,114],[3,70,44,11,71,45],[17,47,21,4,48,22],[9,39,13,16,40,14],[3,135,107,5,136,108],[3,67,41,13,68,42],[15,54,24,5,55,25],[15,43,15,10,44,16],[4,144,116,4,145,117],[17,68,42],[17,50,22,6,51,23],[19,46,16,6,47,17],[2,139,111,7,140,112],[17,74,46],[7,54,24,16,55,25],[34,37,13],[4,151,121,5,152,122],[4,75,47,14,76,48],[11,54,24,14,55,25],[16,45,15,14,46,16],[6,147,117,4,148,118],[6,73,45,14,74,46],[11,54,24,16,55,25],[30,46,16,2,47,17],[8,132,106,4,133,107],[8,75,47,13,76,48],[7,54,24,22,55,25],[22,45,15,13,46,16],[10,142,114,2,143,115],[19,74,46,4,75,47],[28,50,22,6,51,23],[33,46,16,4,47,17],[8,152,122,4,153,123],[22,73,45,3,74,46],[8,53,23,26,54,24],[12,45,15,28,46,16],[3,147,117,10,148,118],[3,73,45,23,74,46],[4,54,24,31,55,25],[11,45,15,31,46,16],[7,146,116,7,147,117],[21,73,45,7,74,46],[1,53,23,37,54,24],[19,45,15,26,46,16],[5,145,115,10,146,116],[19,75,47,10,76,48],[15,54,24,25,55,25],[23,45,15,25,46,16],[13,145,115,3,146,116],[2,74,46,29,75,47],[42,54,24,1,55,25],[23,45,15,28,46,16],[17,145,115],[10,74,46,23,75,47],[10,54,24,35,55,25],[19,45,15,35,46,16],[17,145,115,1,146,116],[14,74,46,21,75,47],[29,54,24,19,55,25],[11,45,15,46,46,16],[13,145,115,6,146,116],[14,74,46,23,75,47],[44,54,24,7,55,25],[59,46,16,1,47,17],[12,151,121,7,152,122],[12,75,47,26,76,48],[39,54,24,14,55,25],[22,45,15,41,46,16],[6,151,121,14,152,122],[6,75,47,34,76,48],[46,54,24,10,55,25],[2,45,15,64,46,16],[17,152,122,4,153,123],[29,74,46,14,75,47],[49,54,24,10,55,25],[24,45,15,46,46,16],[4,152,122,18,153,123],[13,74,46,32,75,47],[48,54,24,14,55,25],[42,45,15,32,46,16],[20,147,117,4,148,118],[40,75,47,7,76,48],[43,54,24,22,55,25],[10,45,15,67,46,16],[19,148,118,6,149,119],[18,75,47,31,76,48],[34,54,24,34,55,25],[20,45,15,61,46,16]],r=function(t,r){var e={};return e.totalCount=t,e.dataCount=r,e},e={};return e.getRSBlocks=function(e,n){var o=function(r,e){switch(e){case g.L:return t[4*(r-1)+0];case g.M:return t[4*(r-1)+1];case g.Q:return t[4*(r-1)+2];case g.H:return t[4*(r-1)+3];default:return}}(e,n);if(void 0===o)throw"bad rs block @ typeNumber:"+e+"/errorCorrectionLevel:"+n;for(var i=o.length/3,a=[],u=0;u<i;u+=1)for(var f=o[3*u+0],c=o[3*u+1],l=o[3*u+2],h=0;h<f;h+=1)a.push(r(c,l));return a},e}(),b=function(){var t=[],r=0,e={getBuffer:function(){return t},getAt:function(r){var e=Math.floor(r/8);return 1==(t[e]>>>7-r%8&1)},put:function(t,r){for(var n=0;n<r;n+=1)e.putBit(1==(t>>>r-n-1&1))},getLengthInBits:function(){return r},putBit:function(e){var n=Math.floor(r/8);t.length<=n&&t.push(0),e&&(t[n]|=128>>>r%8),r+=1}};return e},M=function(t){var r=a,e=t,n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=e,n=0;n+2<r.length;)t.put(o(r.substring(n,n+3)),10),n+=3;n<r.length&&(r.length-n==1?t.put(o(r.substring(n,n+1)),4):r.length-n==2&&t.put(o(r.substring(n,n+2)),7))}},o=function(t){for(var r=0,e=0;e<t.length;e+=1)r=10*r+i(t.charAt(e));return r},i=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);throw"illegal char :"+t};return n},x=function(t){var r=u,e=t,n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=e,n=0;n+1<r.length;)t.put(45*o(r.charAt(n))+o(r.charAt(n+1)),11),n+=2;n<r.length&&t.put(o(r.charAt(n)),6)}},o=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);if("A"<=t&&t<="Z")return t.charCodeAt(0)-"A".charCodeAt(0)+10;switch(t){case" ":return 36;case"$":return 37;case"%":return 38;case"*":return 39;case"+":return 40;case"-":return 41;case".":return 42;case"/":return 43;case":":return 44;default:throw"illegal char :"+t}};return n},m=function(r){var e=f,n=t.stringToBytes(r),o={getMode:function(){return e},getLength:function(t){return n.length},write:function(t){for(var r=0;r<n.length;r+=1)t.put(n[r],8)}};return o},L=function(r){var e=c,n=t.stringToBytesFuncs.SJIS;if(!n)throw"sjis not supported.";!function(){var t=n("友");if(2!=t.length||38726!=(t[0]<<8|t[1]))throw"sjis not supported."}();var o=n(r),i={getMode:function(){return e},getLength:function(t){return~~(o.length/2)},write:function(t){for(var r=o,e=0;e+1<r.length;){var n=(255&r[e])<<8|255&r[e+1];if(33088<=n&&n<=40956)n-=33088;else{if(!(57408<=n&&n<=60351))throw"illegal char at "+(e+1)+"/"+n;n-=49472}n=192*(n>>>8&255)+(255&n),t.put(n,13),e+=2}if(e<r.length)throw"illegal char at "+(e+1)}};return i},D=function(){var t=[],r={writeByte:function(r){t.push(255&r)},writeShort:function(t){r.writeByte(t),r.writeByte(t>>>8)},writeBytes:function(t,e,n){e=e||0,n=n||t.length;for(var o=0;o<n;o+=1)r.writeByte(t[o+e])},writeString:function(t){for(var e=0;e<t.length;e+=1)r.writeByte(t.charCodeAt(e))},toByteArray:function(){return t},toString:function(){var r="";r+="[";for(var e=0;e<t.length;e+=1)e>0&&(r+=","),r+=t[e];return r+="]"}};return r},S=function(t){var r=t,e=0,n=0,o=0,i={read:function(){for(;o<8;){if(e>=r.length){if(0==o)return-1;throw"unexpected end of file./"+o}var t=r.charAt(e);if(e+=1,"="==t)return o=0,-1;t.match(/^\s$/)||(n=n<<6|a(t.charCodeAt(0)),o+=6)}var i=n>>>o-8&255;return o-=8,i}},a=function(t){if(65<=t&&t<=90)return t-65;if(97<=t&&t<=122)return t-97+26;if(48<=t&&t<=57)return t-48+52;if(43==t)return 62;if(47==t)return 63;throw"c:"+t};return i},I=function(t,r,e){for(var n=function(t,r){var e=t,n=r,o=new Array(t*r),i={setPixel:function(t,r,n){o[r*e+t]=n},write:function(t){t.writeString("GIF87a"),t.writeShort(e),t.writeShort(n),t.writeByte(128),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(255),t.writeByte(255),t.writeByte(255),t.writeString(","),t.writeShort(0),t.writeShort(0),t.writeShort(e),t.writeShort(n),t.writeByte(0);var r=a(2);t.writeByte(2);for(var o=0;r.length-o>255;)t.writeByte(255),t.writeBytes(r,o,255),o+=255;t.writeByte(r.length-o),t.writeBytes(r,o,r.length-o),t.writeByte(0),t.writeString(";")}},a=function(t){for(var r=1<<t,e=1+(1<<t),n=t+1,i=u(),a=0;a<r;a+=1)i.add(String.fromCharCode(a));i.add(String.fromCharCode(r)),i.add(String.fromCharCode(e));var f,c,g,l=D(),h=(f=l,c=0,g=0,{write:function(t,r){if(t>>>r!=0)throw"length over";for(;c+r>=8;)f.writeByte(255&(t<<c|g)),r-=8-c,t>>>=8-c,g=0,c=0;g|=t<<c,c+=r},flush:function(){c>0&&f.writeByte(g)}});h.write(r,n);var s=0,v=String.fromCharCode(o[s]);for(s+=1;s<o.length;){var d=String.fromCharCode(o[s]);s+=1,i.contains(v+d)?v+=d:(h.write(i.indexOf(v),n),i.size()<4095&&(i.size()==1<<n&&(n+=1),i.add(v+d)),v=d)}return h.write(i.indexOf(v),n),h.write(e,n),h.flush(),l.toByteArray()},u=function(){var t={},r=0,e={add:function(n){if(e.contains(n))throw"dup key:"+n;t[n]=r,r+=1},size:function(){return r},indexOf:function(r){return t[r]},contains:function(r){return void 0!==t[r]}};return e};return i}(t,r),o=0;o<r;o+=1)for(var i=0;i<t;i+=1)n.setPixel(i,o,e(i,o));var a=D();n.write(a);for(var u=function(){var t=0,r=0,e=0,n="",o={},i=function(t){n+=String.fromCharCode(a(63&t))},a=function(t){if(t<0);else{if(t<26)return 65+t;if(t<52)return t-26+97;if(t<62)return t-52+48;if(62==t)return 43;if(63==t)return 47}throw"n:"+t};return o.writeByte=function(n){for(t=t<<8|255&n,r+=8,e+=1;r>=6;)i(t>>>r-6),r-=6},o.flush=function(){if(r>0&&(i(t<<6-r),t=0,r=0),e%3!=0)for(var o=3-e%3,a=0;a<o;a+=1)n+="="},o.toString=function(){return n},o}(),f=a.toByteArray(),c=0;c<f.length;c+=1)u.writeByte(f[c]);return u.flush(),"data:image/gif;base64,"+u};return t}();qrcode.stringToBytesFuncs["UTF-8"]=function(t){return function(t){for(var r=[],e=0;e<t.length;e++){var n=t.charCodeAt(e);n<128?r.push(n):n<2048?r.push(192|n>>6,128|63&n):n<55296||n>=57344?r.push(224|n>>12,128|n>>6&63,128|63&n):(e++,n=65536+((1023&n)<<10|1023&t.charCodeAt(e)),r.push(240|n>>18,128|n>>12&63,128|n>>6&63,128|63&n))}return r}(t)};
-if (typeof module !== 'undefined') module.exports = qrcode;
-
 // Supabase 설정. 세 값을 채우면 결과 저장과 관리자 통계가 켜진다. 비워 두면 예전처럼 동작한다.
 // SUPABASE_ANON_KEY는 공개되어도 되는 'anon public' 키다. service_role 키는 절대 넣지 말 것.
 const CONFIG = {
@@ -661,9 +656,8 @@ const CONFIG = {
   // 철학자 이미지를 올린 폴더 경로(예: 'img/'). 파일 이름은 <철학자id>.png. 비워 두면 문자 엠블럼을 쓴다.
   IMAGE_DIR: 'https://vtpootsgqbxhdxcgjqmz.supabase.co/storage/v1/object/public/philosophers/',
   IMAGE_EXT: '.png',
-  // 문항 설명 이미지: Supabase Storage의 'questions' 버킷에 q1.png ~ q12.png로 올리면 자동으로 나타난다. 올리기 전에는 '1번 문항 설명' 자리표시가 보인다.
-  QUESTION_IMAGE_DIR: 'https://vtpootsgqbxhdxcgjqmz.supabase.co/storage/v1/object/public/questions/',
-  QUESTION_IMAGE_EXT: '.png',
+  // 시작 화면에 넣을 카뮈 사진(전체 주소). 비워 두거나 불러오지 못하면 카뮈 기본 초상(philosophers/camus.png)을 쓴다.
+  START_IMAGE_URL: 'https://vtpootsgqbxhdxcgjqmz.supabase.co/storage/v1/object/public/philosophers/camus-start.png',
   // 개인정보 처리방침에 적는 문의처(이메일 등). 비워 두면 문의처 항목은 나오지 않는다.
   PRIVACY_CONTACT: '',
   PRIVACY_DATE: '2026년 11월 8일',
@@ -934,26 +928,6 @@ if (typeof module !== 'undefined') module.exports = { createTimer };
 // 공유: 결과 이미지(Canvas 2D로 직접 그림)와 친구 비교 링크
 const _core = (typeof module !== 'undefined') ? require('./core.js') : { encodeAnswers, matchPercent };
 
-const _qrcode = (typeof module !== 'undefined') ? require('./vendor/qrcode.js') : qrcode;
-
-// 사이트 주소 QR: 카드 오른쪽 아래 빈 곳에 밝은 바탕(여백 포함)으로 그린다. 만들지 못하면 그냥 건너뛴다.
-function drawQr(ctx, url, x, y, size) {
-  try {
-    const qr = _qrcode(0, 'L');
-    qr.addData(url);
-    qr.make();
-    const n = qr.getModuleCount();
-    const pad = 16;
-    const cell = Math.floor((size - pad * 2) / n);
-    const span = cell * n;
-    const off = Math.floor((size - span) / 2);
-    ctx.fillStyle = '#f5efe2'; ctx.fillRect(x, y, size, size);
-    ctx.fillStyle = '#1a1915';
-    for (let r = 0; r < n; r += 1) for (let c = 0; c < n; c += 1) if (qr.isDark(r, c)) ctx.fillRect(x + off + c * cell, y + off + r * cell, cell, cell);
-    return true;
-  } catch (e) { return false; }
-}
-
 function buildCompareLink(answers, location) {
   return location.origin + location.pathname + '#a=' + _core.encodeAnswers(answers);
 }
@@ -1021,7 +995,6 @@ function drawResultCanvas(canvas, result, img) {
 
   ctx.fillStyle = 'rgba(245,239,226,0.62)'; ctx.font = '28px ' + sans;
   ctx.fillText('나와 닮은 철학자 찾기', W / 2, H - 130);
-  if (result.siteUrl) drawQr(ctx, result.siteUrl, 740, 1010, 250);
 }
 
 async function saveImage(result, deps) {
@@ -1049,7 +1022,7 @@ async function saveImage(result, deps) {
   return 'downloaded';
 }
 
-if (typeof module !== 'undefined') module.exports = { buildCompareLink, saveImage, drawResultCanvas, drawQr };
+if (typeof module !== 'undefined') module.exports = { buildCompareLink, saveImage, drawResultCanvas };
 
 // UI: 상태, 화면 렌더링, 이벤트
 if (typeof document !== 'undefined') (function () {
@@ -1069,13 +1042,8 @@ if (typeof document !== 'undefined') (function () {
   const nowMs = () => (typeof window.__now === 'function' ? window.__now() : performance.now());
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-  function ornamentSvg() {
-    return '<svg class="ornament" viewBox="0 0 200 150" role="img" aria-label="고대 신전 장식" xmlns="http://www.w3.org/2000/svg">' +
-      '<g fill="none" stroke="#c09a55" stroke-width="3"><circle cx="100" cy="78" r="64" opacity=".5"/><circle cx="100" cy="78" r="50"/></g>' +
-      '<g fill="#c09a55"><path d="M52 52h96l-48-26z"/><rect x="56" y="56" width="88" height="7"/>' +
-      '<rect x="64" y="68" width="10" height="46"/><rect x="95" y="68" width="10" height="46"/><rect x="126" y="68" width="10" height="46"/>' +
-      '<rect x="52" y="116" width="96" height="8"/></g></svg>';
-  }
+  // 문항 본문의 [[강조]] 표시를 강조 글씨로 바꾼다(그 밖의 글자는 모두 이스케이프).
+  const hlHtml = (t) => esc(t).replace(/\[\[(.+?)\]\]/g, '<strong class="hl">$1</strong>');
 
   function participantsText() {
     return state.participants > 0 ? '지금까지 <b>' + state.participants.toLocaleString('ko-KR') + '명</b>이 참여했어요' : '';
@@ -1092,6 +1060,16 @@ if (typeof document !== 'undefined') (function () {
     } catch (e) { state.participantsAsked = false; /* 표시만 생략하고, 다음에 시작 화면이 열리면 다시 시도 */ }
   }
 
+  // 시작 화면의 카뮈 사진 자리. START_IMAGE_URL(새 사진)이 있으면 먼저 쓰고, 없거나 실패하면 카뮈 기본 초상, 그것도 없으면 빈 틀.
+  function startPhotoEmpty() { return '<div class="start-photo empty" aria-hidden="true"></div>'; }
+  function startPhotoHtml() {
+    const camus = PHILOSOPHERS.find((x) => x.id === 'camus');
+    const main = cfg.START_IMAGE_URL || portraitUrl(camus);
+    if (!main) return startPhotoEmpty();
+    const fb = cfg.START_IMAGE_URL ? portraitUrl(camus) : null;
+    return '<img class="start-photo" src="' + esc(main) + '"' + (fb ? ' data-fallback="' + esc(fb) + '"' : '') + ' alt="알베르 카뮈" decoding="async">';
+  }
+
   function startHtml() {
     return '<main class="stage">' + adminBarHtml() + '<section class="card start">' +
       '<p class="kicker">열두 가지 상황 · 서른두 명의 철학자</p>' +
@@ -1099,24 +1077,13 @@ if (typeof document !== 'undefined') (function () {
       '<div class="rule"></div><p class="lead">고른 답으로 가장 닮은 사람을 찾아 드립니다</p><div class="rule"></div>' +
       '<p class="note">맞고 틀린 답은 없어요.<br>지금의 나와 가까운 쪽을 골라 보세요.</p>' +
       '<p class="meta">약 3분이 걸립니다</p>' +
-      (cloudOn() ? '<p class="participants" id="participants">' + participantsText() + '</p>' : '') +
-      (state.friendAnswers ? '<p class="invite">친구가 답을 보내 왔어요. 같은 질문을 풀면 둘이 얼마나 닮았는지 알려 드려요.</p>' : '') + ornamentSvg() +
+      (cloudOn() ? '<p class="participants" id="participants">' + participantsText() + '</p>' +
+        '<p class="purpose">이 설문의 응답은 익명으로 수집되어 회귀분석 등 통계 분석에 사용되며, R&amp;E 기초 논문의 바탕 자료로 활용됩니다.</p>' : '') +
+      (state.friendAnswers ? '<p class="invite">친구가 답을 보내 왔어요. 같은 질문을 풀면 둘이 얼마나 닮았는지 알려 드려요.</p>' : '') + startPhotoHtml() +
       '</section><button class="btn-gold" id="start-btn" type="button">시작해 볼까요 →</button>' +
       (cloudOn() ? '<button class="link" id="public-btn" type="button">지금까지 나온 철학자 분포 보기</button>' : '') +
       '<button class="link" id="privacy-btn" type="button">개인정보 처리방침</button>' +
       '<p class="credit">이 설문은 불량품 철학(@bull.yangpum)님의 설문을 바탕으로 제작되었습니다.</p></main>';
-  }
-
-  // 문항 설명 이미지 칸. 이미지가 없거나 불러오지 못하면 'n번 문항 설명' 자리표시가 보인다.
-  function questionPlaceholderHtml(n) {
-    return '<div class="q-placeholder" role="img" aria-label="' + n + '번 문항 설명 이미지 자리">' + n + '번 문항 설명</div>';
-  }
-  function questionFigureHtml(q, i) {
-    const n = i + 1;
-    const inner = cfg.QUESTION_IMAGE_DIR
-      ? '<img class="q-img" src="' + esc(cfg.QUESTION_IMAGE_DIR + q.id + (cfg.QUESTION_IMAGE_EXT || '.png')) + '" alt="' + n + '번 문항 설명" data-qn="' + n + '">'
-      : questionPlaceholderHtml(n);
-    return '<figure class="q-figure">' + inner + '</figure>';
   }
 
   // 이전 문항으로: 지금 문항과 바로 앞 문항이 모두 즉답 문항이 아닐 때만(즉답 문항을 다시 풀 수 없도록)
@@ -1132,7 +1099,7 @@ if (typeof document !== 'undefined') (function () {
       '<div class="q-meta"><span class="count">' + (state.index + 1) + ' / ' + QUESTIONS.length + '</span>' +
       (q.timed ? '<span class="fast">즉답 모드</span>' : '') + '</div>' +
       '<h2 class="q-title">' + esc(q.title) + '</h2><div class="rule"></div>' +
-      '<p class="q-text">' + esc(q.text) + '</p><p class="q-prompt">' + esc(q.prompt) + '</p>' + questionFigureHtml(q, state.index) + '<div class="spacer"></div>' +
+      '<p class="q-text">' + hlHtml(q.text) + '</p><p class="q-prompt">' + esc(q.prompt) + '</p><div class="spacer"></div>' +
       (q.timed ? '<div class="timer" role="timer" aria-label="남은 시간"><div class="bar"><i></i></div><span class="sec"><b class="n">10</b><small>초</small></span></div>' : '') +
       '<ol class="options">' + options + '</ol>' +
       '<div class="nav-row">' + (canGoBack() ? '<button class="back-btn" type="button" data-act="back" aria-label="이전 문항으로" title="이전 문항 (←)">' +
@@ -1238,7 +1205,7 @@ if (typeof document !== 'undefined') (function () {
       return '<p class="policy-lead">이 사이트는 답변이나 결과를 서버로 보내거나 저장하지 않습니다. 모든 계산은 이 기기의 브라우저 안에서만 이루어집니다.</p>' +
         sec('친구 비교 링크', '<p>‘친구와 비교해 보기’ 링크에는 선택한 보기 번호만 담기며, 이름이나 연락처 같은 개인정보는 들어가지 않습니다.</p>');
     }
-    return '<p class="policy-lead">이 사이트는 이용자를 식별할 수 있는 정보를 수집하지 않으며, 설문 결과를 익명 통계 목적으로만 서버에 저장합니다.</p>' +
+    return '<p class="policy-lead">이 사이트는 이용자를 식별할 수 있는 정보를 수집하지 않으며, 설문 결과를 익명으로 서버에 저장해 연구(통계 분석) 목적으로만 사용합니다.</p>' +
       sec('1. 수집하는 항목', ul([
         '12개 문항에서 고른 보기 번호 (시간 초과 문항은 ‘응답 없음’으로 기록)',
         '결과로 나온 철학자와 일치율, 5개 성향 점수',
@@ -1246,7 +1213,7 @@ if (typeof document !== 'undefined') (function () {
         '친구 비교 링크로 들어와 참여했는지 여부',
       ])) +
       sec('2. 수집하지 않는 항목', '<p>이름, 연락처, 계정 정보, 기기 정보, 위치 정보는 수집하지 않으며, 쿠키나 브라우저 저장소도 사용하지 않습니다.</p>') +
-      sec('3. 이용 목적', '<p>참여 현황과 문항별 선택 경향을 파악하는 익명 통계에만 사용하며, 광고나 개인 식별에는 사용하지 않습니다.</p>') +
+      sec('3. 이용 목적', '<p>수집한 응답은 익명 상태로 회귀분석 등 통계 분석에 사용하며, R&amp;E 기초 논문의 바탕 자료로 활용합니다. 광고나 개인 식별에는 사용하지 않습니다.</p>') +
       sec('4. 보관 및 파기', '<p>통계 목적이 달성될 때까지 보관하며, 서비스를 종료하거나 운영자가 삭제하기로 한 때에는 지체 없이 파기합니다.</p>') +
       sec('5. 저장 위치와 위탁', '<p>데이터는 클라우드 데이터베이스 서비스(Supabase)에 저장되며, 해당 서비스의 서버는 국외에 있을 수 있습니다. 이 서비스의 접속 기록에는 접속 IP 주소 등이 일정 기간 남을 수 있습니다.</p>') +
       sec('6. 공개 범위', '<p>‘지금까지 나온 철학자 분포’ 화면에는 철학자별 인원수만 공개되며, 개별 응답은 공개되지 않습니다. 개별 응답은 운영자만 열람할 수 있습니다.</p>') +
@@ -1430,7 +1397,6 @@ if (typeof document !== 'undefined') (function () {
     render();
   }
 
-  const siteUrl = () => (/^https?:$/.test(window.location.protocol) ? window.location.origin + window.location.pathname : null);
   const portraitUrl = (p) => (cfg.IMAGE_DIR ? cfg.IMAGE_DIR + p.id + (cfg.IMAGE_EXT || '.png') : null);
 
   function portraitHtml(p) {
@@ -1611,7 +1577,7 @@ if (typeof document !== 'undefined') (function () {
     state.answers = answers.slice();
     const vector = scoreAnswers(state.answers, QUESTIONS);
     const ranking = rankPhilosophers(vector, PHILOSOPHERS);
-    state.result = { vector, ranking, portraitUrl: portraitUrl(ranking.best), siteUrl: siteUrl() };
+    state.result = { vector, ranking, portraitUrl: portraitUrl(ranking.best) };
     state.screen = 'result';
     render();
     animatePct();
@@ -1698,8 +1664,8 @@ if (typeof document !== 'undefined') (function () {
     if (el && el.tagName === 'IMG' && el.dataset.pid) {
       const p = PHILOSOPHERS.find((x) => x.id === el.dataset.pid);
       if (p) el.outerHTML = emblemSvg(p);
-    } else if (el && el.tagName === 'IMG' && el.dataset.qn) {
-      el.outerHTML = questionPlaceholderHtml(el.dataset.qn);
+    } else if (el && el.tagName === 'IMG' && el.classList.contains('start-photo')) {
+      if (el.dataset.fallback) { const f = el.dataset.fallback; delete el.dataset.fallback; el.src = f; } else el.outerHTML = startPhotoEmpty();
     }
   }, true);
   $app.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target && e.target.id === 'admin-pw') submitLogin(); });
