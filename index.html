@@ -252,8 +252,8 @@ button { font-family: inherit; -webkit-tap-highlight-color: transparent; touch-a
 
 /* 6차: 문항 강조, 시작 화면 카뮈 사진, 연구 목적 안내 */
 .hl { color: #f0cf86; font-weight: 800; box-shadow: inset 0 -0.38em 0 rgba(192, 154, 85, .3); }
-.start-photo { display: block; width: 176px; height: 176px; margin: 26px auto 0; border-radius: 50%; border: 5px solid var(--gold); object-fit: cover; background: #14130f; }
-.start-photo.empty { box-shadow: inset 0 0 0 2px rgba(192, 154, 85, .25); }
+.start-photo { display: block; width: auto; max-width: 100%; height: auto; max-height: 340px; margin: 26px auto 0; object-fit: contain; }
+.start-photo.empty { width: 100%; height: 220px; background: rgba(192, 154, 85, .06); box-shadow: inset 0 0 0 1px rgba(192, 154, 85, .25); }
 .purpose { margin: 14px 0 0; padding: 9px 12px; border-left: 3px solid var(--gold); background: rgba(192, 154, 85, .09); color: rgba(245, 239, 226, .82); font-size: 13px; line-height: 1.6; text-align: left; }
 
 </style>
