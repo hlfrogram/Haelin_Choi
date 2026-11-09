@@ -179,7 +179,6 @@ button { font-family: inherit; -webkit-tap-highlight-color: transparent; touch-a
 .btn-gold:disabled { opacity: .35; box-shadow: none; cursor: default; transform: none; }
 .options button.selected { background: rgba(192, 154, 85, .16); box-shadow: inset 4px 0 0 var(--gold-btn); }
 .options button.selected .no { color: var(--gold-btn); }
-.btn-gold.next { position: sticky; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 2; margin-top: 14px; }
 .error-detail { margin: 6px 0 0; color: var(--muted); font-size: 12px; }
 
 /* 4차: 결과 화면 버튼 배치, 정반대 철학자, 다시 하기 */
@@ -231,8 +230,7 @@ button { font-family: inherit; -webkit-tap-highlight-color: transparent; touch-a
 .detail-empty { margin: 20px 0 0; color: var(--muted); font-size: 15px; }
 
 /* 다음 버튼: 비활성일 때도 투명하지 않게(뒤의 보기 글자가 비치지 않도록) */
-.btn-gold.next:disabled { opacity: 1; background: #5b5039; color: rgba(245, 239, 226, .5); box-shadow: 0 0 0 10px var(--ink); }
-.btn-gold.next { box-shadow: 0 5px 0 #8a6f3c, 0 0 0 10px var(--ink); }
+.btn-gold.next:disabled { opacity: 1; background: #5b5039; color: rgba(245, 239, 226, .5); }
 .q-placeholder { min-height: 110px; }
 .credit { margin: 6px 2px 0; color: #8a8576; font-size: 12px; line-height: 1.5; }
 
@@ -242,6 +240,22 @@ button { font-family: inherit; -webkit-tap-highlight-color: transparent; touch-a
 .opp-body .portrait { border: 3px solid var(--accent); }
 .card .participants, .start .participants { color: var(--gold); }
 .card .participants b { color: var(--gold-btn); }
+
+/* 5차: 참여자 수, 이전 버튼, 키보드 안내 */
+.participants { margin: 8px 0 0; min-height: 1.5em; color: var(--gold); font-size: 14px; }
+.participants b { color: var(--gold-btn); font-weight: 700; }
+.card .participants, .start .participants { color: var(--gold); }
+.card .participants b { color: var(--gold-btn); }
+/* 아래쪽 고정 줄: [이전] [다음으로 이동] */
+.nav-row { position: sticky; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 2; display: flex; gap: 10px; margin-top: 14px; background: var(--ink); box-shadow: 0 0 0 10px var(--ink); }
+.nav-row .btn-gold.next { flex: 1; width: auto; margin-top: 0; box-shadow: 0 5px 0 #8a6f3c; }
+.nav-row .btn-gold.next:disabled { box-shadow: none; }
+.back-btn { flex: none; width: 62px; display: flex; align-items: center; justify-content: center; padding: 0; border: 2px solid var(--gold); border-radius: 4px;
+  background: transparent; color: var(--gold-btn); cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.back-btn:active { background: rgba(192, 154, 85, .18); transform: translateY(2px); }
+.back-btn:focus-visible { outline: 3px solid var(--gold-btn); outline-offset: 2px; }
+.kbd-hint { display: none; margin: 10px 0 0; color: var(--muted); font-size: 12px; text-align: center; }
+@media (hover: hover) and (pointer: fine) { .kbd-hint { display: block; } }
 
 </style>
 </head>
@@ -1115,15 +1129,16 @@ if (typeof document !== 'undefined') (function () {
     const options = q.options.map((o, i) =>
       '<li><button type="button" data-i="' + i + '" class="' + (state.pending === i ? 'selected' : '') + '" aria-pressed="' + (state.pending === i ? 'true' : 'false') + '"><span class="no">' + NUMS[i] + '</span>' + esc(o.text) + '</button></li>').join('');
     return '<main class="stage"><section class="card quiz">' +
-      '<div class="q-meta"><span class="q-left">' + (canGoBack() ? '<button class="back-btn" type="button" data-act="back" aria-label="이전 문항으로">‹ 이전</button>' : '') +
-      '<span class="count">' + (state.index + 1) + ' / ' + QUESTIONS.length + '</span></span>' +
+      '<div class="q-meta"><span class="count">' + (state.index + 1) + ' / ' + QUESTIONS.length + '</span>' +
       (q.timed ? '<span class="fast">즉답 모드</span>' : '') + '</div>' +
       '<h2 class="q-title">' + esc(q.title) + '</h2><div class="rule"></div>' +
       '<p class="q-text">' + esc(q.text) + '</p><p class="q-prompt">' + esc(q.prompt) + '</p>' + questionFigureHtml(q, state.index) + '<div class="spacer"></div>' +
       (q.timed ? '<div class="timer" role="timer" aria-label="남은 시간"><div class="bar"><i></i></div><span class="sec"><b class="n">10</b><small>초</small></span></div>' : '') +
       '<ol class="options">' + options + '</ol>' +
+      '<div class="nav-row">' + (canGoBack() ? '<button class="back-btn" type="button" data-act="back" aria-label="이전 문항으로" title="이전 문항 (←)">' +
+      '<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' : '') +
       '<button class="btn-gold next" id="next-btn" type="button"' + (state.pending === null ? ' disabled' : '') + '>' +
-      (state.index === QUESTIONS.length - 1 ? '결과 보기 →' : '다음으로 이동 →') + '</button>' +
+      (state.index === QUESTIONS.length - 1 ? '결과 보기 →' : '다음으로 이동 →') + '</button></div>' +
       '<p class="kbd-hint">키보드: 1~4 선택 · Enter 다음' + (canGoBack() ? ' · ← 이전' : '') + '</p></section></main>';
   }
 
