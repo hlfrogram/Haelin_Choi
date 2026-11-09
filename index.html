@@ -623,10 +623,16 @@ function rankPhilosophers(userVec, list) {
   rows.sort((x, y) => x.d - y.d || x.a - y.a || x.b - y.b || x.c - y.c);
   const percent = {};
   rows.forEach((r) => { percent[r.p.id] = matchPercent(userVec, r.p.vector); });
+  // 정반대: 내 점수를 3 기준으로 뒤집은 점(6-점수)에 가장 가까운 철학자. 최고 매칭과는 겹치지 않게 한다.
+  const mirror = userVec.map((x) => 6 - x);
+  const opp = list
+    .filter((p) => p.id !== rows[0].p.id)
+    .map((p) => ({ p, d: Math.round(distance(mirror, p.vector) * 1e9) / 1e9 }))
+    .sort((x, y) => x.d - y.d)[0].p;
   return {
     best: rows[0].p,
     similar: [rows[1].p, rows[2].p],
-    opposite: rows[rows.length - 1].p,
+    opposite: opp,
     percent,
   };
 }
@@ -657,7 +663,7 @@ const CONFIG = {
   IMAGE_DIR: 'https://vtpootsgqbxhdxcgjqmz.supabase.co/storage/v1/object/public/philosophers/',
   IMAGE_EXT: '.png',
   // 시작 화면에 넣을 카뮈 사진(전체 주소). 불러오지 못하거나 비워 두면 카뮈 초상(philosophers/camus.png)을 쓴다.
-  START_IMAGE_URL: 'https://vtpootsgqbxhdxcgjqmz.supabase.co/storage/v1/object/public/philosophers/camus-start.png',
+  START_IMAGE_URL: '',
   // 개인정보 처리방침에 적는 문의처(이메일 등). 비워 두면 문의처 항목은 나오지 않는다.
   PRIVACY_CONTACT: '',
   PRIVACY_DATE: '2026년 11월 8일',
@@ -1078,7 +1084,7 @@ if (typeof document !== 'undefined') (function () {
       '<p class="note">맞고 틀린 답은 없어요.<br>지금의 나와 가까운 쪽을 골라 보세요.</p>' +
       '<p class="meta">약 3분이 걸립니다</p>' +
       (cloudOn() ? '<p class="participants" id="participants">' + participantsText() + '</p>' +
-        '<p class="purpose">이 설문의 응답은 익명으로 수집되어 회귀분석 등 통계 분석에 사용되며, R&amp;E 기초 논문의 바탕 자료로 활용됩니다.</p>' : '') +
+        '<p class="purpose">이 설문의 응답은 익명으로 수집되어 10328 최해린의 R&amp;E 및 회귀분석에 사용됩니다.</p>' : '') +
       (state.friendAnswers ? '<p class="invite">친구가 답을 보내 왔어요. 같은 질문을 풀면 둘이 얼마나 닮았는지 알려 드려요.</p>' : '') + startPhotoHtml() +
       '</section><button class="btn-gold" id="start-btn" type="button">시작해 볼까요 →</button>' +
       (cloudOn() ? '<button class="link" id="public-btn" type="button">지금까지 나온 철학자 분포 보기</button>' : '') +
@@ -1213,7 +1219,7 @@ if (typeof document !== 'undefined') (function () {
         '친구 비교 링크로 들어와 참여했는지 여부',
       ])) +
       sec('2. 수집하지 않는 항목', '<p>이름, 연락처, 계정 정보, 기기 정보, 위치 정보는 수집하지 않으며, 쿠키나 브라우저 저장소도 사용하지 않습니다.</p>') +
-      sec('3. 이용 목적', '<p>수집한 응답은 익명 상태로 회귀분석 등 통계 분석에 사용하며, R&amp;E 기초 논문의 바탕 자료로 활용합니다. 광고나 개인 식별에는 사용하지 않습니다.</p>') +
+      sec('3. 이용 목적', '<p>수집한 응답은 익명 상태로 10328 최해린의 R&amp;E 및 회귀분석에 사용합니다. 광고나 개인 식별에는 사용하지 않습니다.</p>') +
       sec('4. 보관 및 파기', '<p>통계 목적이 달성될 때까지 보관하며, 서비스를 종료하거나 운영자가 삭제하기로 한 때에는 지체 없이 파기합니다.</p>') +
       sec('5. 저장 위치와 위탁', '<p>데이터는 클라우드 데이터베이스 서비스(Supabase)에 저장되며, 해당 서비스의 서버는 국외에 있을 수 있습니다. 이 서비스의 접속 기록에는 접속 IP 주소 등이 일정 기간 남을 수 있습니다.</p>') +
       sec('6. 공개 범위', '<p>‘지금까지 나온 철학자 분포’ 화면에는 철학자별 인원수만 공개되며, 개별 응답은 공개되지 않습니다. 개별 응답은 운영자만 열람할 수 있습니다.</p>') +
