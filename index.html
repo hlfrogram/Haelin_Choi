@@ -1280,7 +1280,7 @@ if (typeof document !== 'undefined') (function () {
   function devNoteHtml() {
     const hits = matchedRebuttals(false);
     if (!hits.length) return '';
-    return '<section class="card dev-note"><h2 class="h">개발자의 의견</h2>' +
+    return '<section class="card dev-note"><h2 class="h">개발자의 반론</h2>' +
       hits.map((ri) => '<button class="btn-line wide" type="button" data-rebuttal="' + ri + '">' + esc(REBUTTALS[ri].button) + '</button>').join('') +
       '</section>';
   }
