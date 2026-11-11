@@ -516,7 +516,7 @@ const QUESTIONS = [
     ] },
   { id: "q3", title: "트롤리", timed: true,
     text: "브레이크가 고장 난 트롤리가 선로 위 [[다섯 명]]을 향해 달려옵니다. 레버를 당기면 다른 선로로 넘어가지만, 그곳에는 [[한 명]]이 있습니다.",
-    prompt: "레버를 당깁니까? 10초 안에 고르세요.",
+    prompt: "레버를 당깁니까? 13초 안에 고르세요.",
     options: [
       { text: "본능적으로 몸이 먼저 움직여 레버를 당긴다", effects: { A: 2, C: 2 } },
       { text: "손대지 않는다. 내가 직접 한 사람의 죽음을 선택할 수는 없다", effects: { A: -1, C: -2 } },
@@ -588,7 +588,7 @@ const QUESTIONS = [
     ] },
   { id: "q11", title: "마지막 한 시간", timed: true,
     text: "알림이 울렸습니다. 당신에게 남은 시간은 [[정확히 한 시간]]입니다.",
-    prompt: "무엇을 하겠습니까? 10초 안에 고르세요.",
+    prompt: "무엇을 하겠습니까? 13초 안에 고르세요.",
     options: [
       { text: "가장 소중한 사람에게 달려가 안아 준다", effects: { A: 2, E: -2 } },
       { text: "혼자 조용히 지나온 삶을 돌아본다", effects: { A: -1, E: 2 } },
@@ -1103,7 +1103,7 @@ if (typeof module !== 'undefined') module.exports = { buildCompareLink, saveImag
 if (typeof document !== 'undefined') (function () {
   const $app = document.getElementById('app');
   const NUMS = ['①', '②', '③', '④'];
-  const TIMED_MS = 10000;
+  const TIMED_MS = 13000;
   const state = { screen: 'start', index: 0, answers: [], result: null, friendAnswers: null, adminToken: null, admin: null, prevScreen: null, publicData: null, pending: null, detailId: null, participants: null, participantsAsked: false, cueDone: false, cueStill: false };
   const cfg = CONFIG;
   let timer = null;
@@ -1176,7 +1176,7 @@ if (typeof document !== 'undefined') (function () {
       (q.timed ? '<span class="fast">즉답 모드</span>' : '') + '</div>' +
       '<h2 class="q-title">' + esc(q.title) + '</h2><div class="rule"></div>' +
       '<p class="q-text">' + hlHtml(q.text) + '</p><p class="q-prompt">' + esc(q.prompt) + '</p><div class="spacer"></div>' +
-      (q.timed ? '<div class="timer" role="timer" aria-label="남은 시간"><div class="bar"><i></i></div><span class="sec"><b class="n">10</b><small>초</small></span></div>' : '') +
+      (q.timed ? '<div class="timer" role="timer" aria-label="남은 시간"><div class="bar"><i></i></div><span class="sec"><b class="n">13</b><small>초</small></span></div>' : '') +
       '<ol class="options">' + options + '</ol>' +
       '<div class="nav-row">' + (canGoBack() ? '<button class="back-btn" type="button" data-act="back" aria-label="이전 문항으로" title="이전 문항 (←)">' +
       '<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' : '') +
